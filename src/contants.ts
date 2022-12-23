@@ -5,5 +5,5 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export * from './options';
-export * from './url';
+export const REGISTRY_GITHUB = 'ghcr.io';
+export const PACKAGE_PATH_DEFAULT = '.';

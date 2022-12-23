@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022.
+ * Copyright (c) 2022-2022.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
@@ -7,7 +7,7 @@
 
 import core from '@actions/core';
 import { AuthConfig, Image } from 'dockerode';
-import { useDocker } from './instance';
+import { useDocker } from '../instance';
 
 export async function pushImage(name: Image | string, authConfig: AuthConfig) {
     const image = typeof name === 'string' ?

@@ -8,25 +8,26 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import Dockerode, { AuthConfig } from 'dockerode';
-import * as fs from 'fs';
 import path from 'path';
-import { hasOwnProperty, isObject } from 'smob';
-import { Options } from './type';
+import { Octokit, Options } from './type';
 import {
-    buildDockerImage,
+    buildImage,
     buildImageURL,
-    buildOptions,
     pushImage,
     removeImage,
     tagImage,
     useDocker,
-    withoutLeadingSlash,
+} from './daemon';
+import {
+    buildOptions,
 } from './utils';
+import { hasPackageChanged } from './utils/package';
+import { getPackageJsonVersion } from './utils/package-json';
 
 export class Runner {
     protected client: Dockerode;
 
-    protected octokit: ReturnType<typeof github.getOctokit>;
+    protected octokit: Octokit;
 
     protected options: Options;
 
@@ -36,67 +37,14 @@ export class Runner {
         this.client = new Dockerode();
     }
 
-    async isPackageIncluded() : Promise<boolean> {
-        if (this.options.packagePath === '.') {
-            return true;
-        }
-
-        const packagePath = withoutLeadingSlash(this.options.packagePath);
-
-        const commit = await this.octokit.rest.repos.getCommit({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            ref: github.context.ref,
-        });
-
-        for (let i = 0; i < commit.data.files.length; i++) {
-            if (commit.data.files[i].filename.startsWith(packagePath)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    async getPackageVersion() : Promise<string | undefined> {
-        const filePath = path.join(process.cwd(), this.options.packagePath, 'package.json');
-
-        try {
-            await fs.promises.access(filePath, fs.constants.F_OK | fs.constants.R_OK);
-        } catch (e) {
-            return undefined;
-        }
-
-        const rawFile = await fs.promises.readFile(filePath, { encoding: 'utf-8' });
-        const file = JSON.parse(rawFile);
-
-        if (
-            isObject(file) &&
-            hasOwnProperty(file, 'version') &&
-            typeof file.version === 'string'
-        ) {
-            return file.version;
-        }
-
-        return undefined;
-    }
-
-    get authConfig() : AuthConfig {
-        return {
-            username: this.options.registryUser,
-            password: this.options.registryPassword,
-            serveraddress: this.options.registryHost,
-        };
-    }
-
     async execute() {
-        const isIncluded = await this.isPackageIncluded();
-        if (!isIncluded) {
+        const hasChanged = await hasPackageChanged(this.octokit, this.options);
+        if (!hasChanged) {
             core.info('Package path is not included.');
             return;
         }
 
-        const version = await this.getPackageVersion();
+        const version = await getPackageJsonVersion(path.join(process.cwd(), this.options.packagePath));
         if (!version) {
             core.error('The package version could not be determined.');
             return;
@@ -105,7 +53,7 @@ export class Runner {
         const imageName = `${this.options.registryHost}/${this.options.registryProject}/${this.options.registryRepository}`;
         const imageNameVersion = buildImageURL(imageName, version);
 
-        await buildDockerImage({
+        await buildImage({
             filePath: this.options.imageFile,
             tag: imageNameVersion,
             labels: {
@@ -114,11 +62,17 @@ export class Runner {
             },
         });
 
+        const authConfig : AuthConfig = {
+            username: this.options.registryUser,
+            password: this.options.registryPassword,
+            serveraddress: this.options.registryHost,
+        };
+
         const image = await useDocker().getImage(imageNameVersion);
 
         if (this.options.imageTag) {
             if (this.options.imageTagExtra) {
-                await pushImage(image, this.authConfig);
+                await pushImage(image, authConfig);
             }
 
             const imageNameTag = buildImageURL(imageName, this.options.imageTag);
@@ -129,10 +83,10 @@ export class Runner {
                 destinationImage: imageName,
             });
 
-            await pushImage(imageNameTag, this.authConfig);
+            await pushImage(imageNameTag, authConfig);
             await removeImage(imageNameTag);
         } else {
-            await pushImage(image, this.authConfig);
+            await pushImage(image, authConfig);
         }
 
         await removeImage(image);

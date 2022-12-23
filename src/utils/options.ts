@@ -7,6 +7,7 @@
 
 import core from '@actions/core';
 import github from '@actions/github';
+import { PACKAGE_PATH_DEFAULT, REGISTRY_GITHUB } from '../contants';
 import { Options } from '../type';
 import { toBoolean } from './boolean';
 
@@ -17,9 +18,9 @@ export function buildOptions() : Options {
     const imageTagExtra = toBoolean(core.getInput('imageTagExtra')) ?? false;
 
     const secret = core.getInput('token', { required: true });
-    const packagePath = core.getInput('packagePath', { trimWhitespace: true }) || '.';
+    const packagePath = core.getInput('packagePath', { trimWhitespace: true }) || PACKAGE_PATH_DEFAULT;
 
-    const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || 'ghcr.io';
+    const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || REGISTRY_GITHUB;
     const registryUser = core.getInput('registryUser', { trimWhitespace: true }) || github.context.actor;
     const registryPassword = core.getInput('registryPassword', { trimWhitespace: true }) || secret;
     const registryProject = core.getInput('registryProject', { trimWhitespace: true }) || github.context.repo.owner;

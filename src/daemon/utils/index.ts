@@ -5,5 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export * from './options';
-export * from './url';
+export * from './image-build';
+export * from './image-push';
+export * from './image-remove';
+export * from './image-tag';
+export * from './image-url';
