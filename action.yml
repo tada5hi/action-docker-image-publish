@@ -1,42 +1,27 @@
 name: 'DockerJs'
 description: 'Build and push docker image for js application/package.'
 inputs:
+    token:
+        description: 'Access token'
+        default: ${{ github.token }}
     imageFile:
         description: 'Path to the DockerFile'
-        required: false
-        default: '.'
     packagePath:
         description: 'Path to the package'
-        required: false
-        default: '.'
     imageTag:
         description: 'Custom image tag'
-        required: false
-        default: '.'
     imageTagExtra:
         description: 'Push version of package.json file in addition to imageTag.'
-        required: false
-        default: '.'
     registryHost:
         description: 'Registry host'
-        required: false
-        default: 'ghcr.io'
     registryUser:
         description: 'Registry user'
-        required: false
-        default: 'Repository owner'
     registryPassword:
         description: 'Registry password'
-        required: false
-        default: 'Action secret'
     registryProject:
         description: 'Registry project name (xxx/repository)'
-        required: false
-        default: 'Repository owner'
     registryRepository:
         description: 'Registry repository name (project/xxx)'
-        required: false
-        default: 'Repository name'
 runs:
     using: 'node16'
     main: 'dist/index.js'

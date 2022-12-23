@@ -19,7 +19,8 @@ import {
     pushImage,
     removeImage,
     tagImage,
-    useDocker, withoutLeadingSlash,
+    useDocker,
+    withoutLeadingSlash,
 } from './utils';
 
 export class Runner {
@@ -31,7 +32,7 @@ export class Runner {
 
     constructor() {
         this.options = buildOptions();
-        this.octokit = github.getOctokit(this.options.secret);
+        this.octokit = github.getOctokit(this.options.token);
         this.client = new Dockerode();
     }
 
@@ -43,8 +44,8 @@ export class Runner {
         const packagePath = withoutLeadingSlash(this.options.packagePath);
 
         const commit = await this.octokit.rest.repos.getCommit({
-            owner: this.options.registryProject,
-            repo: this.options.registryRepository,
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
             ref: github.context.ref,
         });
 

@@ -5,15 +5,21 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export function strToBooL(input: string) : boolean | undefined {
-    input = input.toLowerCase();
-
-    if (input === 'true' || input === 't') {
-        return true;
+export function toBoolean(input: unknown) : boolean | undefined {
+    if (typeof input === 'boolean') {
+        return input;
     }
 
-    if (input === 'false' || input === 'f') {
-        return false;
+    if (typeof input === 'string') {
+        input = input.toLowerCase();
+
+        if (input === 'true' || input === 't') {
+            return true;
+        }
+
+        if (input === 'false' || input === 'f') {
+            return false;
+        }
     }
 
     return undefined;

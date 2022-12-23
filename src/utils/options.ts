@@ -8,15 +8,15 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import { Options } from '../type';
-import { strToBooL } from './boolean';
+import { toBoolean } from './boolean';
 
 export function buildOptions() : Options {
     const imageFile = core.getInput('imagePath') || '.';
 
     const imageTag = core.getInput('imageTag') || undefined;
-    const imageTagExtra = strToBooL(core.getInput('imageTagExtra')) ?? false;
+    const imageTagExtra = toBoolean(core.getInput('imageTagExtra')) ?? false;
 
-    const secret = core.getInput('secret', { required: true });
+    const secret = core.getInput('token', { required: true });
     const packagePath = core.getInput('packagePath', { trimWhitespace: true }) || '.';
 
     const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || 'ghcr.io';
@@ -30,7 +30,7 @@ export function buildOptions() : Options {
         imageTag,
         imageTagExtra,
 
-        secret,
+        token: secret,
         packagePath,
 
         registryHost,

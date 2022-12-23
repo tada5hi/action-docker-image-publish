@@ -9,7 +9,7 @@ export type Options = {
     /**
      * Action secret
      */
-    secret: string,
+    token: string,
 
     /**
      * Path to Dockerfile
