@@ -1,3 +1,4 @@
+import github from '@actions/github';
 export type Options = {
     /**
      * Action secret
@@ -49,3 +50,5 @@ export type Options = {
      */
     registryRepository: string;
 };
+export type Octokit = ReturnType<typeof github.getOctokit>;
+export type GithubContext = typeof github.context;

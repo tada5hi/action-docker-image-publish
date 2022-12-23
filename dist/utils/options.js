@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildOptions = void 0;
 const core_1 = __importDefault(require("@actions/core"));
 const github_1 = __importDefault(require("@actions/github"));
+const contants_1 = require("../contants");
 const boolean_1 = require("./boolean");
 function buildOptions() {
     var _a;
@@ -19,8 +20,8 @@ function buildOptions() {
     const imageTag = core_1.default.getInput('imageTag') || undefined;
     const imageTagExtra = (_a = (0, boolean_1.toBoolean)(core_1.default.getInput('imageTagExtra'))) !== null && _a !== void 0 ? _a : false;
     const secret = core_1.default.getInput('token', { required: true });
-    const packagePath = core_1.default.getInput('packagePath', { trimWhitespace: true }) || '.';
-    const registryHost = core_1.default.getInput('registryHost', { trimWhitespace: true }) || 'ghcr.io';
+    const packagePath = core_1.default.getInput('packagePath', { trimWhitespace: true }) || contants_1.PACKAGE_PATH_DEFAULT;
+    const registryHost = core_1.default.getInput('registryHost', { trimWhitespace: true }) || contants_1.REGISTRY_GITHUB;
     const registryUser = core_1.default.getInput('registryUser', { trimWhitespace: true }) || github_1.default.context.actor;
     const registryPassword = core_1.default.getInput('registryPassword', { trimWhitespace: true }) || secret;
     const registryProject = core_1.default.getInput('registryProject', { trimWhitespace: true }) || github_1.default.context.repo.owner;

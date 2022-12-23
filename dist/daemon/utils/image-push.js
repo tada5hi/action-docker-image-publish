@@ -1,6 +1,6 @@
 "use strict";
 /*
- * Copyright (c) 2022.
+ * Copyright (c) 2022-2022.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
@@ -20,7 +20,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.pushImage = void 0;
 const core_1 = __importDefault(require("@actions/core"));
-const instance_1 = require("./instance");
+const instance_1 = require("../instance");
 function pushImage(name, authConfig) {
     return __awaiter(this, void 0, void 0, function* () {
         const image = typeof name === 'string' ?

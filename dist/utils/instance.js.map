@@ -1,1 +1,0 @@
-{"version":3,"file":"instance.js","sourceRoot":"","sources":["../../src/utils/instance.ts"],"names":[],"mappings":";AAAA;;;;;GAKG;;;;;;AAEH,0DAA+B;AAE/B,IAAI,QAA6B,CAAC;AAElC,SAAgB,SAAS;IACrB,IAAI,OAAO,QAAQ,KAAK,WAAW,EAAE;QACjC,OAAO,QAAQ,CAAC;KACnB;IAED,QAAQ,GAAG,IAAI,mBAAM,EAAE,CAAC;IACxB,OAAO,QAAQ,CAAC;AACpB,CAAC;AAPD,8BAOC"}

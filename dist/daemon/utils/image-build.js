@@ -1,6 +1,6 @@
 "use strict";
 /*
- * Copyright (c) 2022.
+ * Copyright (c) 2022-2022.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
@@ -18,10 +18,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildDockerImage = void 0;
+exports.buildImage = void 0;
 const core_1 = __importDefault(require("@actions/core"));
-const instance_1 = require("./instance");
-function buildDockerImage(context) {
+const instance_1 = require("../instance");
+function buildImage(context) {
     return __awaiter(this, void 0, void 0, function* () {
         const stream = yield (0, instance_1.useDocker)().buildImage(context.filePath, {
             t: context.tag,
@@ -48,5 +48,5 @@ function buildDockerImage(context) {
         }));
     });
 }
-exports.buildDockerImage = buildDockerImage;
+exports.buildImage = buildImage;
 //# sourceMappingURL=image-build.js.map

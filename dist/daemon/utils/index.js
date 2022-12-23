@@ -20,6 +20,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./options"), exports);
-__exportStar(require("./url"), exports);
+__exportStar(require("./image-build"), exports);
+__exportStar(require("./image-push"), exports);
+__exportStar(require("./image-remove"), exports);
+__exportStar(require("./image-tag"), exports);
+__exportStar(require("./image-url"), exports);
 //# sourceMappingURL=index.js.map
