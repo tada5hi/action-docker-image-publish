@@ -29,10 +29,39 @@ jobs:
               uses: ./.github/actions/install
               with:
                   node-version: ${{ env.PRIMARY_NODE_VERSION }}
+    dist:
+        name: Check dist directory
+        runs-on: ubuntu-latest
+        needs: [build]
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v3
 
+            -   name: Install
+                uses: ./.github/actions/install
+                with:
+                    node-version: ${{ env.PRIMARY_NODE_VERSION }}
+
+            -   name: Rebuild the dist/ directory
+                run: npm run build
+
+            -   name: Compare the expected and actual dist/ directories
+                run: |
+                    if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
+                      echo "Detected uncommitted changes after build.  See status below:"
+                      git diff
+                      exit 1
+                    fi
+                id: diff
+
+            -   uses: actions/upload-artifact@v3
+                if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+                with:
+                    name: dist
+                    path: dist/
     lint:
         name: lint Package
-        needs: [build]
+        needs: [build, dist]
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -66,7 +95,7 @@ jobs:
 
     release:
         name: Release
-        needs: [lint]
+        needs: [dist, lint]
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
