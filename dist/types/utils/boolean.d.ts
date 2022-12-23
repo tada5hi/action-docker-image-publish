@@ -1,1 +1,1 @@
-export declare function strToBooL(input: string): boolean | undefined;
+export declare function toBoolean(input: unknown): boolean | undefined;
