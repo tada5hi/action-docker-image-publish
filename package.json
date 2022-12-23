@@ -1,0 +1,73 @@
+{
+    "name": "action-docker-js",
+    "version": "0.0.0",
+    "description": "Build and publish docker images for node applications.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist/"
+    ],
+    "scripts": {
+        "build": "rimraf dist && tsc",
+        "commit": "npx git-cz",
+        "lint": "eslint --ext .js,.ts ./src",
+        "lint:fix": "npm run lint -- --fix",
+        "test": "cross-env NODE_ENV=test jest --config ./test/jest.config.js",
+        "test:coverage": "npm run test -- --coverage",
+        "prepare": "npx husky install",
+        "prepublishOnly": "npm run build"
+    },
+    "author": {
+        "name": "Peter Placzek",
+        "email": "contact@tada5hi.net",
+        "url": "https://github.com/tada5hi"
+    },
+    "license": "MIT",
+    "keywords": [
+        "js",
+        "docker",
+        "versioning"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Tada5hi/action-docker-js.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Tada5hi/action-docker-js/issues"
+    },
+    "homepage": "https://github.com/Tada5hi/action-docker-js#readme",
+    "devDependencies": {
+        "@commitlint/cli": "^17.3.0",
+        "@commitlint/config-angular": "^17.3.0",
+        "@commitlint/config-conventional": "^17.3.0",
+        "@commitlint/cz-commitlint": "^17.3.0",
+        "@semantic-release/changelog": "^6.0.1",
+        "@semantic-release/commit-analyzer": "^9.0.2",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/github": "^8.0.6",
+        "@semantic-release/npm": "^9.0.1",
+        "@semantic-release/release-notes-generator": "^10.0.3",
+        "@tada5hi/eslint-config-typescript": "^1.0.10",
+        "@types/dockerode": "^3.3.14",
+        "@types/jest": "^27.5.0",
+        "@types/node": "^18.11.9",
+        "cross-env": "^7.0.3",
+        "eslint": "^8.28.0",
+        "husky": "^8.0.2",
+        "jest": "^27.5.1",
+        "semantic-release": "^19.0.5",
+        "ts-jest": "^27.1.4",
+        "typescript": "^4.9.3"
+    },
+    "config": {
+        "commitizen": {
+            "path": "@commitlint/cz-commitlint"
+        }
+    },
+    "dependencies": {
+        "@actions/core": "^1.10.0",
+        "@actions/github": "^5.1.1",
+        "dockerode": "^3.3.4",
+        "smob": "^0.0.6"
+    }
+}
