@@ -88189,46 +88189,61 @@ function _hasPackageChanged() {
             url.searchParams.set('path', packagePath);
           }
           if (!(options.registryHost === REGISTRY_GITHUB)) {
-            _context.next = 10;
+            _context.next = 18;
             break;
           }
-          _context.next = 6;
+          _context.prev = 4;
+          _context.next = 7;
           return client.rest.packages.getPackageForUser({
             package_type: 'container',
             package_name: options.registryRepository,
             username: github.context.repo.owner
           });
-        case 6:
+        case 7:
           _yield$client$rest$pa = _context.sent;
           data = _yield$client$rest$pa.data;
           url.searchParams.set('since', data.created_at);
           url.searchParams.set('per_page', '1');
-        case 10:
-          _context.next = 12;
+          _context.next = 18;
+          break;
+        case 13:
+          _context.prev = 13;
+          _context.t0 = _context["catch"](4);
+          if (!(!a(_context.t0) || _context.t0.status !== 404)) {
+            _context.next = 18;
+            break;
+          }
+          if (!(_context.t0 instanceof Error)) {
+            _context.next = 18;
+            break;
+          }
+          throw _context.t0;
+        case 18:
+          _context.next = 20;
           return client.request(url.href);
-        case 12:
+        case 20:
           _yield$client$request = _context.sent;
           commits = _yield$client$request.data;
           if (!Array.isArray(commits)) {
-            _context.next = 19;
+            _context.next = 27;
             break;
           }
           if (!(commits.length === 0)) {
-            _context.next = 17;
+            _context.next = 25;
             break;
           }
           return _context.abrupt("return", false);
-        case 17:
+        case 25:
           // check if commit is most recent...
           commit = commits.shift();
           return _context.abrupt("return", a(commit) && commit.sha === github.context.sha);
-        case 19:
+        case 27:
           return _context.abrupt("return", false);
-        case 20:
+        case 28:
         case "end":
           return _context.stop();
       }
-    }, _callee);
+    }, _callee, null, [[4, 13]]);
   }));
   return _hasPackageChanged.apply(this, arguments);
 }

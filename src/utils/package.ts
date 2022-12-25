@@ -25,14 +25,25 @@ export async function hasPackageChanged(client: Octokit, options: Options) {
     }
 
     if (options.registryHost === REGISTRY_GITHUB) {
-        const { data } = await client.rest.packages.getPackageForUser({
-            package_type: 'container',
-            package_name: options.registryRepository,
-            username: github.context.repo.owner,
-        });
+        try {
+            const { data } = await client.rest.packages.getPackageForUser({
+                package_type: 'container',
+                package_name: options.registryRepository,
+                username: github.context.repo.owner,
+            });
 
-        url.searchParams.set('since', data.created_at);
-        url.searchParams.set('per_page', '1');
+            url.searchParams.set('since', data.created_at);
+            url.searchParams.set('per_page', '1');
+        } catch (e) {
+            if (
+                !isObject(e) ||
+                e.status !== 404
+            ) {
+                if (e instanceof Error) {
+                    throw e;
+                }
+            }
+        }
     }
 
     const { data: commits } = await client.request(url.href);
