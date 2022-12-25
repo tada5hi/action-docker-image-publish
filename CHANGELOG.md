@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/Tada5hi/action-docker-release/compare/v1.1.1...v1.1.2) (2022-12-25)
+
+
+### Bug Fixes
+
+* removing same image tag ([7806213](https://github.com/Tada5hi/action-docker-release/commit/78062132b55e5d1319b0f9fb7bc22d3c4604f01e))
+
 ## [1.1.1](https://github.com/Tada5hi/action-docker-release/compare/v1.1.0...v1.1.1) (2022-12-25)
 
 
