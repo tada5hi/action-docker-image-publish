@@ -7,21 +7,22 @@
 
 import github from '@actions/github';
 import { getApiBaseUrl } from '@actions/github/lib/internal/utils';
+import minimatch from 'minimatch';
 import { isObject } from 'smob';
 import { PACKAGE_PATH_DEFAULT, REGISTRY_GITHUB } from '../contants';
 import { Octokit, Options } from '../type';
 import { withoutLeadingSlash } from './url';
 
-export async function hasPackageChanged(client: Octokit, options: Options) {
-    const packagePath = withoutLeadingSlash(options.packagePath);
+export async function hasPathContentChanged(client: Octokit, options: Options) {
+    const path = withoutLeadingSlash(options.path);
 
     const url = new URL(
         `/repos/${github.context.repo.owner}/${github.context.repo.repo}/commits`,
         getApiBaseUrl(),
     );
 
-    if (packagePath !== PACKAGE_PATH_DEFAULT) {
-        url.searchParams.set('path', packagePath);
+    if (path !== PACKAGE_PATH_DEFAULT) {
+        url.searchParams.set('path', path);
     }
 
     if (options.registryHost === REGISTRY_GITHUB) {
@@ -33,7 +34,6 @@ export async function hasPackageChanged(client: Octokit, options: Options) {
             });
 
             url.searchParams.set('since', data.created_at);
-            url.searchParams.set('per_page', '1');
         } catch (e) {
             if (
                 !isObject(e) ||
@@ -46,17 +46,43 @@ export async function hasPackageChanged(client: Octokit, options: Options) {
         }
     }
 
+    // todo: check for most recent tag
+
     const { data: commits } = await client.request(url.href);
     if (Array.isArray(commits)) {
         if (commits.length === 0) {
             return false;
         }
 
-        // check if commit is most recent...
-        const commit = commits.shift();
-        return isObject(commit) && commit.sha === github.context.sha;
+        if (
+            !isObject(commits[0]) ||
+            commits[0].sha !== github.context.sha
+        ) {
+            // commit is not most recent...
+            return false;
+        }
 
-        // todo: check if match ignore option
+        if (options.ignores.length === 0) {
+            return true;
+        }
+
+        for (let i = 0; i < commits.length; i++) {
+            const { data: commit } = await client.rest.repos.getCommit({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                ref: commits[i].sha,
+            });
+
+            for (let j = 0; j < commit.files.length; j++) {
+                for (let k = 0; k < options.ignores.length; k++) {
+                    if (!minimatch(commit.files[j].filename, options.ignores[k])) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     return false;

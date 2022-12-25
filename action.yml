@@ -8,8 +8,10 @@ inputs:
         description: 'File name of Dockerfile'
     dockerFilePath:
         description: 'Relative path to DockerFile'
-    packagePath:
-        description: 'Relative path to the package'
+    path:
+        description: 'Relative path to check for changes'
+    ignores:
+        description: 'Glob pattern to ignore specific files & directories relative to the given directory.'
     imageTag:
         description: 'Tag for docker image'
     registryHost:

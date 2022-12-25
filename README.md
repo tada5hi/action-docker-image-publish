@@ -18,7 +18,10 @@ with:
     dockerFilePath: ''
 
     # Default: .
-    packagePath: ''
+    path: ''
+
+    # Default: ''
+    ignores: ''
 
     # Default: latest
     imageTag: ''

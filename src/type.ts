@@ -28,12 +28,16 @@ export type Options = {
     dockerFilePath: string,
 
     /**
-     * Repository package path.
-     * Will be checked for version in package.json
+     * Directory to check for changes.
      *
      * Default: .
      */
-    packagePath: string,
+    path: string,
+
+    /**
+     * Glob pattern to ignore specific files & directories for changes.
+     */
+    ignores: string[],
 
     /**
      * Publish by a specific tag.

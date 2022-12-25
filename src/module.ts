@@ -18,15 +18,15 @@ import {
 import {
     buildOptions,
     findVersionForPackage,
-    hasPackageChanged,
+    hasPathContentChanged,
 } from './utils';
 
 export async function execute() {
     const options = buildOptions();
     const octokit = github.getOctokit(options.token);
-    const hasChanged = await hasPackageChanged(octokit, options);
+    const hasChanged = await hasPathContentChanged(octokit, options);
     if (!hasChanged) {
-        core.info('Package has not changed since last build.');
+        core.info('Path content has not changed since last build.');
         return;
     }
 
@@ -51,7 +51,7 @@ export async function execute() {
     // ----------------------------------------------------
 
     const packageVersion = await findVersionForPackage(
-        options.packagePath,
+        options.path,
         process.cwd(),
     );
     if (packageVersion) {
