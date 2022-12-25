@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/Tada5hi/action-docker-js/compare/v1.0.2...v1.1.0) (2022-12-25)
+
+
+### Features
+
+* use lerna.json as fallback + docker logout on finish ([2d080ba](https://github.com/Tada5hi/action-docker-js/commit/2d080baae952529ad7b328991a05a9e21fe5394f))
+
 ## [1.0.2](https://github.com/Tada5hi/action-docker-js/compare/v1.0.1...v1.0.2) (2022-12-25)
 
 
