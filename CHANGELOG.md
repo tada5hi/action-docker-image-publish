@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/Tada5hi/action-docker-release/compare/v1.1.2...v1.2.0) (2022-12-25)
+
+
+### Features
+
+* add ignore otpion for change detection ([f4c36eb](https://github.com/Tada5hi/action-docker-release/commit/f4c36eba052bbca6e0010f1c0533eec20a115ca2))
+
 ## [1.1.2](https://github.com/Tada5hi/action-docker-release/compare/v1.1.1...v1.1.2) (2022-12-25)
 
 
