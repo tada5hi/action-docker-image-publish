@@ -9,7 +9,7 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { execSync } from 'child_process';
 import path from 'path';
-import { Octokit, Options } from './type';
+import { Options } from './type';
 import {
     buildImage,
     buildImageURL,
@@ -23,17 +23,16 @@ import {
 } from './utils';
 
 export class Runner {
-    protected octokit: Octokit;
-
     protected options: Options;
 
     constructor() {
         this.options = buildOptions();
-        this.octokit = github.getOctokit(this.options.token);
     }
 
     async execute() {
-        const hasChanged = await hasPackageChanged(this.octokit, this.options);
+        const octokit = github.getOctokit(this.options.token);
+        console.log(octokit);
+        const hasChanged = await hasPackageChanged(octokit, this.options);
         if (!hasChanged) {
             core.info('Package path is not included.');
             return;

@@ -51,4 +51,3 @@ export type Options = {
     registryRepository: string;
 };
 export type Octokit = ReturnType<typeof github.getOctokit>;
-export type GithubContext = typeof github.context;

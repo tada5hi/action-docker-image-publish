@@ -69,4 +69,3 @@ export type Options = {
 };
 
 export type Octokit = ReturnType<typeof github.getOctokit>;
-export type GithubContext = typeof github.context;

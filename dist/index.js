@@ -88338,30 +88338,31 @@ var Runner = /*#__PURE__*/function () {
   function Runner() {
     _classCallCheck(this, Runner);
     this.options = buildOptions();
-    this.octokit = github.getOctokit(this.options.token);
   }
   _createClass(Runner, [{
     key: "execute",
     value: function () {
       var _execute = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var hasChanged, imageId, imageUrl, packageVersion;
+        var octokit, hasChanged, imageId, imageUrl, packageVersion;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return hasPackageChanged(this.octokit, this.options);
-            case 2:
+              octokit = github.getOctokit(this.options.token);
+              console.log(octokit);
+              _context.next = 4;
+              return hasPackageChanged(octokit, this.options);
+            case 4:
               hasChanged = _context.sent;
               if (hasChanged) {
-                _context.next = 6;
+                _context.next = 8;
                 break;
               }
               core.info('Package path is not included.');
               return _context.abrupt("return");
-            case 6:
+            case 8:
               child_process.execSync("echo \"".concat(this.options.registryPassword, "\" | docker login ").concat(this.options.registryHost, " -u ").concat(this.options.registryUser, " --password-stdin"));
               imageId = "".concat(this.options.registryHost, "/").concat(this.options.registryProject, "/").concat(this.options.registryRepository);
-              _context.next = 10;
+              _context.next = 12;
               return buildImage({
                 filePath: this.options.imageFile,
                 imageId: imageId,
@@ -88370,33 +88371,33 @@ var Runner = /*#__PURE__*/function () {
                   runNumber: "".concat(github.context.runNumber)
                 }
               });
-            case 10:
-              _context.next = 12;
-              return getPackageJsonVersion(path.join(process.cwd(), this.options.packagePath));
             case 12:
+              _context.next = 14;
+              return getPackageJsonVersion(path.join(process.cwd(), this.options.packagePath));
+            case 14:
               packageVersion = _context.sent;
               if (!packageVersion) {
-                _context.next = 20;
+                _context.next = 22;
                 break;
               }
               imageUrl = buildImageURL(imageId, packageVersion);
-              _context.next = 17;
-              return tagImage(imageId, imageUrl);
-            case 17:
               _context.next = 19;
-              return pushImage(imageUrl);
+              return tagImage(imageId, imageUrl);
             case 19:
+              _context.next = 21;
+              return pushImage(imageUrl);
+            case 21:
               removeImage(imageUrl);
-            case 20:
+            case 22:
               if (this.options.imageTag) {
                 imageUrl = buildImageURL(imageId, this.options.imageTag);
                 tagImage(imageId, imageUrl);
                 pushImage(imageUrl);
                 removeImage(imageUrl);
               }
-              _context.next = 23;
+              _context.next = 25;
               return removeImage(imageId);
-            case 23:
+            case 25:
             case "end":
               return _context.stop();
           }
