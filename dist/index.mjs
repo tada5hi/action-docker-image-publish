@@ -3126,7 +3126,7 @@ var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function
     return result;
 };
 Object.defineProperty(utils$1, "__esModule", { value: true });
-utils$1.getApiBaseUrl = utils$1.getProxyAgent = utils$1.getAuthString = void 0;
+var getApiBaseUrl_1 = utils$1.getApiBaseUrl = utils$1.getProxyAgent = utils$1.getAuthString = void 0;
 const httpClient = __importStar$1(lib$1);
 function getAuthString(token, options) {
     if (!token && !options.auth) {
@@ -3146,7 +3146,7 @@ utils$1.getProxyAgent = getProxyAgent;
 function getApiBaseUrl() {
     return process.env['GITHUB_API_URL'] || 'https://api.github.com';
 }
-utils$1.getApiBaseUrl = getApiBaseUrl;
+getApiBaseUrl_1 = utils$1.getApiBaseUrl = getApiBaseUrl;
 
 function getUserAgent() {
     if (typeof navigator === "object" && "userAgent" in navigator) {
@@ -88182,7 +88182,7 @@ function _hasPackageChanged() {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           packagePath = withoutLeadingSlash(options.packagePath);
-          url = new URL("/repos/".concat(github.context.repo.owner, "/").concat(github.context.repo.repo, "/commits"));
+          url = new URL("/repos/".concat(github.context.repo.owner, "/").concat(github.context.repo.repo, "/commits"), getApiBaseUrl_1());
           if (packagePath !== PACKAGE_PATH_DEFAULT) {
             url.searchParams.set('path', packagePath);
           }

@@ -6,6 +6,7 @@
  */
 
 import github from '@actions/github';
+import { getApiBaseUrl } from '@actions/github/lib/internal/utils';
 import { isObject } from 'smob';
 import { PACKAGE_PATH_DEFAULT, REGISTRY_GITHUB } from '../contants';
 import { Octokit, Options } from '../type';
@@ -14,7 +15,10 @@ import { withoutLeadingSlash } from './url';
 export async function hasPackageChanged(client: Octokit, options: Options) {
     const packagePath = withoutLeadingSlash(options.packagePath);
 
-    const url = new URL(`/repos/${github.context.repo.owner}/${github.context.repo.repo}/commits`);
+    const url = new URL(
+        `/repos/${github.context.repo.owner}/${github.context.repo.repo}/commits`,
+        getApiBaseUrl(),
+    );
 
     if (packagePath !== PACKAGE_PATH_DEFAULT) {
         url.searchParams.set('path', packagePath);
