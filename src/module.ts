@@ -36,7 +36,7 @@ export async function execute() {
 
     const imageId = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`;
 
-    await buildImage({
+    buildImage({
         fileName: options.dockerFileName,
         filePath: options.dockerFilePath,
         imageId,
@@ -57,9 +57,9 @@ export async function execute() {
     if (packageVersion) {
         imageUrl = buildImageURL(imageId, packageVersion);
 
-        await tagImage(imageId, imageUrl);
+        tagImage(imageId, imageUrl);
 
-        await pushImage(imageUrl);
+        pushImage(imageUrl);
 
         removeImage(imageUrl);
     }
@@ -76,7 +76,9 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    removeImage(imageId);
+    if (options.imageTag !== 'latest') {
+        removeImage(imageId);
+    }
 
     execSync(`docker logout ${options.registryHost}`);
 }

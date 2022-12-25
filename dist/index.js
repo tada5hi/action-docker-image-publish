@@ -88008,7 +88008,7 @@ function executeDockerCommand(command) {
  * view the LICENSE file that was distributed with this source code.
  */
 function buildImage(context) {
-  core.notice("Building docker image: ".concat(context.imageId));
+  core.notice("Building image: ".concat(context.imageId));
   var options = [['file', context.fileName], ['tag', context.imageId]];
   if (context.labels) {
     var keys = Object.keys(context.labels);
@@ -88017,7 +88017,7 @@ function buildImage(context) {
     }
   }
   executeDockerCommand("build ".concat(context.filePath), options);
-  core.notice('Built docker image');
+  core.notice('Built image');
 }
 
 /*
@@ -88049,7 +88049,9 @@ function removeImage(image) {
  * view the LICENSE file that was distributed with this source code.
  */
 function tagImage(source, destination) {
+  core.notice("Tagging image ".concat(source, " with ").concat(destination));
   executeDockerCommand("tag ".concat(source, " ").concat(destination));
+  core.notice('Tagged image');
 }
 
 /*
@@ -91306,8 +91308,7 @@ function _execute() {
         case 8:
           child_process.execSync("echo \"".concat(options.registryPassword, "\" | docker login ").concat(options.registryHost, " -u ").concat(options.registryUser, " --password-stdin"));
           imageId = "".concat(options.registryHost, "/").concat(options.registryProject, "/").concat(options.registryRepository);
-          _context.next = 12;
-          return buildImage({
+          buildImage({
             fileName: options.dockerFileName,
             filePath: options.dockerFilePath,
             imageId: imageId,
@@ -91316,24 +91317,17 @@ function _execute() {
               runNumber: "".concat(github.context.runNumber)
             }
           });
-        case 12:
-          _context.next = 14;
+          _context.next = 13;
           return findVersionForPackage(options.packagePath, process.cwd());
-        case 14:
+        case 13:
           packageVersion = _context.sent;
-          if (!packageVersion) {
-            _context.next = 22;
-            break;
+          if (packageVersion) {
+            imageUrl = buildImageURL(imageId, packageVersion);
+            tagImage(imageId, imageUrl);
+            pushImage(imageUrl);
+            removeImage(imageUrl);
           }
-          imageUrl = buildImageURL(imageId, packageVersion);
-          _context.next = 19;
-          return tagImage(imageId, imageUrl);
-        case 19:
-          _context.next = 21;
-          return pushImage(imageUrl);
-        case 21:
-          removeImage(imageUrl);
-        case 22:
+
           // ----------------------------------------------------
 
           imageUrl = buildImageURL(imageId, options.imageTag);
@@ -91343,9 +91337,11 @@ function _execute() {
 
           // ----------------------------------------------------
 
-          removeImage(imageId);
+          if (options.imageTag !== 'latest') {
+            removeImage(imageId);
+          }
           child_process.execSync("docker logout ".concat(options.registryHost));
-        case 28:
+        case 21:
         case "end":
           return _context.stop();
       }

@@ -5,10 +5,15 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+import core from '@actions/core';
 import { executeDockerCommand } from './execute';
 
 export function tagImage(source: string, destination: string) {
+    core.notice(`Tagging image ${source} with ${destination}`);
+
     executeDockerCommand(
         `tag ${source} ${destination}`,
     );
+
+    core.notice('Tagged image');
 }
