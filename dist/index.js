@@ -374,28 +374,6 @@ function _asyncToGenerator(fn) {
     });
   };
 }
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);
-  }
-}
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  Object.defineProperty(Constructor, "prototype", {
-    writable: false
-  });
-  return Constructor;
-}
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
@@ -417,20 +395,6 @@ function _arrayLikeToArray(arr, len) {
 }
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-function _toPrimitive(input, hint) {
-  if (typeof input !== "object" || input === null) return input;
-  var prim = input[Symbol.toPrimitive];
-  if (prim !== undefined) {
-    var res = prim.call(input, hint || "default");
-    if (typeof res !== "object") return res;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return (hint === "string" ? String : Number)(input);
-}
-function _toPropertyKey(arg) {
-  var key = _toPrimitive(arg, "string");
-  return typeof key === "symbol" ? key : String(key);
 }
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -88334,83 +88298,73 @@ function _readPackageJson() {
   return _readPackageJson.apply(this, arguments);
 }
 
-var Runner = /*#__PURE__*/function () {
-  function Runner() {
-    _classCallCheck(this, Runner);
-    this.options = buildOptions();
-  }
-  _createClass(Runner, [{
-    key: "execute",
-    value: function () {
-      var _execute = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var octokit, hasChanged, imageId, imageUrl, packageVersion;
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
-            case 0:
-              octokit = github.getOctokit(this.options.token);
-              console.log(octokit);
-              _context.next = 4;
-              return hasPackageChanged(octokit, this.options);
-            case 4:
-              hasChanged = _context.sent;
-              if (hasChanged) {
-                _context.next = 8;
-                break;
-              }
-              core.info('Package path is not included.');
-              return _context.abrupt("return");
-            case 8:
-              child_process.execSync("echo \"".concat(this.options.registryPassword, "\" | docker login ").concat(this.options.registryHost, " -u ").concat(this.options.registryUser, " --password-stdin"));
-              imageId = "".concat(this.options.registryHost, "/").concat(this.options.registryProject, "/").concat(this.options.registryRepository);
-              _context.next = 12;
-              return buildImage({
-                filePath: this.options.imageFile,
-                imageId: imageId,
-                labels: {
-                  runId: "".concat(github.context.runId),
-                  runNumber: "".concat(github.context.runNumber)
-                }
-              });
-            case 12:
-              _context.next = 14;
-              return getPackageJsonVersion(path.join(process.cwd(), this.options.packagePath));
-            case 14:
-              packageVersion = _context.sent;
-              if (!packageVersion) {
-                _context.next = 22;
-                break;
-              }
-              imageUrl = buildImageURL(imageId, packageVersion);
-              _context.next = 19;
-              return tagImage(imageId, imageUrl);
-            case 19:
-              _context.next = 21;
-              return pushImage(imageUrl);
-            case 21:
-              removeImage(imageUrl);
-            case 22:
-              if (this.options.imageTag) {
-                imageUrl = buildImageURL(imageId, this.options.imageTag);
-                tagImage(imageId, imageUrl);
-                pushImage(imageUrl);
-                removeImage(imageUrl);
-              }
-              _context.next = 25;
-              return removeImage(imageId);
-            case 25:
-            case "end":
-              return _context.stop();
+function execute() {
+  return _execute.apply(this, arguments);
+}
+function _execute() {
+  _execute = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+    var options, octokit, hasChanged, imageId, imageUrl, packageVersion;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          options = buildOptions();
+          octokit = github.getOctokit(options.token);
+          _context.next = 4;
+          return hasPackageChanged(octokit, options);
+        case 4:
+          hasChanged = _context.sent;
+          if (hasChanged) {
+            _context.next = 8;
+            break;
           }
-        }, _callee, this);
-      }));
-      function execute() {
-        return _execute.apply(this, arguments);
+          core.info('Package path is not included.');
+          return _context.abrupt("return");
+        case 8:
+          child_process.execSync("echo \"".concat(options.registryPassword, "\" | docker login ").concat(options.registryHost, " -u ").concat(options.registryUser, " --password-stdin"));
+          imageId = "".concat(options.registryHost, "/").concat(options.registryProject, "/").concat(options.registryRepository);
+          _context.next = 12;
+          return buildImage({
+            filePath: options.imageFile,
+            imageId: imageId,
+            labels: {
+              runId: "".concat(github.context.runId),
+              runNumber: "".concat(github.context.runNumber)
+            }
+          });
+        case 12:
+          _context.next = 14;
+          return getPackageJsonVersion(path.join(process.cwd(), options.packagePath));
+        case 14:
+          packageVersion = _context.sent;
+          if (!packageVersion) {
+            _context.next = 22;
+            break;
+          }
+          imageUrl = buildImageURL(imageId, packageVersion);
+          _context.next = 19;
+          return tagImage(imageId, imageUrl);
+        case 19:
+          _context.next = 21;
+          return pushImage(imageUrl);
+        case 21:
+          removeImage(imageUrl);
+        case 22:
+          if (options.imageTag) {
+            imageUrl = buildImageURL(imageId, options.imageTag);
+            tagImage(imageId, imageUrl);
+            pushImage(imageUrl);
+            removeImage(imageUrl);
+          }
+          _context.next = 25;
+          return removeImage(imageId);
+        case 25:
+        case "end":
+          return _context.stop();
       }
-      return execute;
-    }()
-  }]);
-  return Runner;
-}();
+    }, _callee);
+  }));
+  return _execute.apply(this, arguments);
+}
 
 /*
  * Copyright (c) 2022.
@@ -88418,5 +88372,4 @@ var Runner = /*#__PURE__*/function () {
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
  */
-var runner = new Runner();
-Promise.resolve().then(runner.execute);
+Promise.resolve().then(execute);
