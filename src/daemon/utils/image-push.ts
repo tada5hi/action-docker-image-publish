@@ -9,9 +9,9 @@ import core from '@actions/core';
 import { executeDockerCommand } from './execute';
 
 export function pushImage(name: string) {
-    core.notice('Pushing image.');
+    core.notice(`Pushing image: ${name}`);
 
     executeDockerCommand(`push ${name}`);
 
-    core.info('Pushed image.');
+    core.notice('Pushed image');
 }

@@ -16,7 +16,7 @@ export type ImageBuildContext = {
 };
 
 export function buildImage(context: ImageBuildContext) {
-    core.notice('Building docker image.');
+    core.notice(`Building docker image: ${context.imageId}`);
 
     const options : [string, string][] = [
         ['file', context.fileName],
@@ -31,5 +31,5 @@ export function buildImage(context: ImageBuildContext) {
 
     executeDockerCommand(`build ${context.filePath}`, options);
 
-    core.notice('Built docker image.');
+    core.notice('Built docker image');
 }

@@ -88008,7 +88008,7 @@ function executeDockerCommand(command) {
  * view the LICENSE file that was distributed with this source code.
  */
 function buildImage(context) {
-  core.notice('Building docker image.');
+  core.notice("Building docker image: ".concat(context.imageId));
   var options = [['file', context.fileName], ['tag', context.imageId]];
   if (context.labels) {
     var keys = Object.keys(context.labels);
@@ -88017,7 +88017,7 @@ function buildImage(context) {
     }
   }
   executeDockerCommand("build ".concat(context.filePath), options);
-  core.notice('Built docker image.');
+  core.notice('Built docker image');
 }
 
 /*
@@ -88027,9 +88027,9 @@ function buildImage(context) {
  * view the LICENSE file that was distributed with this source code.
  */
 function pushImage(name) {
-  core.notice('Pushing image.');
+  core.notice("Pushing image: ".concat(name));
   executeDockerCommand("push ".concat(name));
-  core.info('Pushed image.');
+  core.notice('Pushed image');
 }
 
 /*
