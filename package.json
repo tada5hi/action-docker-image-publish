@@ -1,6 +1,6 @@
 {
     "name": "action-docker-js",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "description": "Build and publish docker images for node applications.",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
