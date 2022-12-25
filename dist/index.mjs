@@ -88007,7 +88007,7 @@ function executeDockerCommand(command) {
  */
 function buildImage(context) {
   core.notice('Building docker image.');
-  var options = [['file', 'Dockerfile'], ['tag', context.imageId]];
+  var options = [['file', context.fileName], ['tag', context.imageId]];
   if (context.labels) {
     var keys = Object.keys(context.labels);
     for (var i = 0; i < keys.length; i++) {
@@ -88116,7 +88116,8 @@ var PACKAGE_PATH_DEFAULT = '.';
  */
 function buildOptions() {
   var _toBoolean;
-  var imageFile = core.getInput('imagePath') || '.';
+  var dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
+  var dockerFilePath = core.getInput('dockerFilePath') || '.';
   var imageTag = core.getInput('imageTag') || undefined;
   var imageTagExtra = (_toBoolean = toBoolean(core.getInput('imageTagExtra'))) !== null && _toBoolean !== void 0 ? _toBoolean : false;
   var secret = core.getInput('token', {
@@ -88141,7 +88142,8 @@ function buildOptions() {
     trimWhitespace: true
   }) || github.context.repo.repo;
   return {
-    imageFile: imageFile,
+    dockerFileName: dockerFileName,
+    dockerFilePath: dockerFilePath,
     imageTag: imageTag,
     imageTagExtra: imageTagExtra,
     token: secret,
@@ -91100,11 +91102,11 @@ function _readJsonFile() {
   return _readJsonFile.apply(this, arguments);
 }
 
-function findLernaVersion(_x) {
-  return _findLernaVersion.apply(this, arguments);
+function findVersionByLernaConfig(_x) {
+  return _findVersionByLernaConfig.apply(this, arguments);
 }
-function _findLernaVersion() {
-  _findLernaVersion = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(directoryPath) {
+function _findVersionByLernaConfig() {
+  _findVersionByLernaConfig = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(directoryPath) {
     var file;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
@@ -91126,7 +91128,7 @@ function _findLernaVersion() {
       }
     }, _callee);
   }));
-  return _findLernaVersion.apply(this, arguments);
+  return _findVersionByLernaConfig.apply(this, arguments);
 }
 function readLernaConfig(directoryPath) {
   var filePath = path.join(directoryPath || process.cwd(), 'lerna.json');
@@ -91223,11 +91225,11 @@ function _hasPackageChanged() {
   return _hasPackageChanged.apply(this, arguments);
 }
 
-function findPackageJsonVersion(_x) {
-  return _findPackageJsonVersion.apply(this, arguments);
+function findVersionByPackageJson(_x) {
+  return _findVersionByPackageJson.apply(this, arguments);
 }
-function _findPackageJsonVersion() {
-  _findPackageJsonVersion = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(directoryPath) {
+function _findVersionByPackageJson() {
+  _findVersionByPackageJson = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(directoryPath) {
     var file;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
@@ -91249,7 +91251,7 @@ function _findPackageJsonVersion() {
       }
     }, _callee);
   }));
-  return _findPackageJsonVersion.apply(this, arguments);
+  return _findVersionByPackageJson.apply(this, arguments);
 }
 function readPackageJson(_x2) {
   return _readPackageJson.apply(this, arguments);
@@ -91297,7 +91299,8 @@ function _execute() {
           imageId = "".concat(options.registryHost, "/").concat(options.registryProject, "/").concat(options.registryRepository);
           _context.next = 12;
           return buildImage({
-            filePath: options.imageFile,
+            fileName: options.dockerFileName,
+            filePath: options.dockerFilePath,
             imageId: imageId,
             labels: {
               runId: "".concat(github.context.runId),
@@ -91306,7 +91309,7 @@ function _execute() {
           });
         case 12:
           _context.next = 14;
-          return findPackageJsonVersion(path.join(process.cwd(), options.packagePath));
+          return findVersionByPackageJson(path.join(process.cwd(), options.packagePath));
         case 14:
           packageVersion = _context.sent;
           if (packageVersion) {
@@ -91314,7 +91317,7 @@ function _execute() {
             break;
           }
           _context.next = 18;
-          return findLernaVersion();
+          return findVersionByLernaConfig();
         case 18:
           packageVersion = _context.sent;
         case 19:
@@ -91331,7 +91334,7 @@ function _execute() {
         case 25:
           removeImage(imageUrl);
         case 26:
-          if (options.imageTag) {
+          if ((!!packageVersion && options.imageTagExtra || !packageVersion) && options.imageTag) {
             imageUrl = buildImageURL(imageId, options.imageTag);
             tagImage(imageId, imageUrl);
             pushImage(imageUrl);
