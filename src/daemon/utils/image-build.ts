@@ -6,41 +6,29 @@
  */
 
 import core from '@actions/core';
-import { useDocker } from '../instance';
+import { executeDockerCommand } from './execute';
 
 export type ImageBuildContext = {
-    tag: string,
+    imageId: string,
     filePath: string,
-
     labels?: Record<string, string>
 };
 
-export async function buildImage(context: ImageBuildContext) {
-    const stream = await useDocker().buildImage(context.filePath, {
-        t: context.tag,
-        labels: context.labels || {},
-    });
-
+export function buildImage(context: ImageBuildContext) {
     core.notice('Building docker image.');
 
-    return new Promise<any>(((resolve, reject) => {
-        useDocker().modem.followProgress(stream, (error: Error, output: Record<string, any>[]) => {
-            if (error) {
-                core.error(error);
-                reject(error);
-                return;
-            }
+    const options : [string, string][] = [
+        ['file', 'Dockerfile'],
+        ['tag', context.imageId],
+    ];
+    if (context.labels) {
+        const keys = Object.keys(context.labels);
+        for (let i = 0; i < keys.length; i++) {
+            options.push(['label', `"${keys[i]}=${context.labels[keys[i]]}"`]);
+        }
+    }
 
-            const raw = output.pop();
-            if (typeof raw?.errorDetail?.message === 'string') {
-                core.error(raw.errorDetail.message);
-                reject(new Error(raw.errorDetail.message));
-                return;
-            }
+    executeDockerCommand(`build ${context.filePath}`, options);
 
-            core.info('Built docker image.');
-
-            resolve(output);
-        }, (e: any) => e);
-    }));
+    core.notice('Built docker image.');
 }

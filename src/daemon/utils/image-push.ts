@@ -6,34 +6,12 @@
  */
 
 import core from '@actions/core';
-import { AuthConfig, Image } from 'dockerode';
-import { useDocker } from '../instance';
+import { executeDockerCommand } from './execute';
 
-export async function pushImage(name: Image | string, authConfig: AuthConfig) {
-    const image = typeof name === 'string' ?
-        await useDocker().getImage(name) :
-        name;
-
-    const stream = await image.push({
-        authconfig: authConfig,
-    });
-
+export function pushImage(name: string) {
     core.notice('Pushing image.');
 
-    await new Promise((resolve, reject) => {
-        useDocker().modem.followProgress(
-            stream,
-            (err: Error, res: any[]) => {
-                if (err) {
-                    core.error(err);
+    executeDockerCommand(`push ${name}`);
 
-                    return reject(err);
-                }
-
-                core.info('Pushed image');
-
-                return resolve(res);
-            },
-        );
-    });
+    core.info('Pushed image.');
 }
