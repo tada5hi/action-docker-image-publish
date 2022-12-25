@@ -18,7 +18,9 @@ import {
 } from './daemon';
 import {
     buildOptions,
-    getPackageJsonVersion, hasPackageChanged,
+    findLernaVersion,
+    findPackageJsonVersion,
+    hasPackageChanged,
 } from './utils';
 
 export async function execute() {
@@ -26,7 +28,7 @@ export async function execute() {
     const octokit = github.getOctokit(options.token);
     const hasChanged = await hasPackageChanged(octokit, options);
     if (!hasChanged) {
-        core.info('Package path is not included.');
+        core.info('Package has not changed since last build.');
         return;
     }
 
@@ -47,7 +49,10 @@ export async function execute() {
 
     let imageUrl : string;
 
-    const packageVersion = await getPackageJsonVersion(path.join(process.cwd(), options.packagePath));
+    let packageVersion = await findPackageJsonVersion(path.join(process.cwd(), options.packagePath));
+    if (!packageVersion) {
+        packageVersion = await findLernaVersion();
+    }
     if (packageVersion) {
         imageUrl = buildImageURL(imageId, packageVersion);
 
@@ -68,5 +73,7 @@ export async function execute() {
         removeImage(imageUrl);
     }
 
-    await removeImage(imageId);
+    removeImage(imageId);
+
+    execSync(`docker logout ${options.registryHost}`);
 }

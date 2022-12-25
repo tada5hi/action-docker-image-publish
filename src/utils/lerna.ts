@@ -5,13 +5,13 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import path from 'path';
 import semver from 'semver';
+import path from 'path';
 import { hasOwnProperty, isObject } from 'smob';
 import { readJsonFile } from './json-file';
 
-export async function findPackageJsonVersion(directoryPath?: string) : Promise<string | undefined> {
-    const file = await readPackageJson(directoryPath);
+export async function findLernaVersion(directoryPath?: string) : Promise<string | undefined> {
+    const file = await readLernaConfig(directoryPath);
 
     if (
         isObject(file) &&
@@ -25,9 +25,9 @@ export async function findPackageJsonVersion(directoryPath?: string) : Promise<s
     return undefined;
 }
 
-export async function readPackageJson(
+export function readLernaConfig(
     directoryPath?: string,
 ) : Promise<Record<string, any>> {
-    const filePath = path.join(directoryPath || process.cwd(), 'package.json');
+    const filePath = path.join(directoryPath || process.cwd(), 'lerna.json');
     return readJsonFile(filePath);
 }
