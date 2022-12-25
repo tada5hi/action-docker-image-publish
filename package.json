@@ -8,7 +8,7 @@
         "dist/"
     ],
     "scripts": {
-        "build": "rimraf dist && ncc build src/index.ts -o dist",
+        "build": "rimraf dist && tsc",
         "commit": "npx git-cz",
         "lint": "eslint --ext .js,.ts ./src",
         "lint:fix": "npm run lint -- --fix",
@@ -51,7 +51,6 @@
         "@types/dockerode": "^3.3.14",
         "@types/jest": "^27.5.0",
         "@types/node": "^18.11.9",
-        "@vercel/ncc": "^0.36.0",
         "cross-env": "^7.0.3",
         "eslint": "^8.28.0",
         "husky": "^8.0.2",

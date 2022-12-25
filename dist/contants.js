@@ -6,8 +6,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const module_1 = require("./module");
-const runner = new module_1.Runner();
-Promise.resolve()
-    .then(runner.execute);
-//# sourceMappingURL=index.js.map
+exports.PACKAGE_PATH_DEFAULT = exports.REGISTRY_GITHUB = void 0;
+exports.REGISTRY_GITHUB = 'ghcr.io';
+exports.PACKAGE_PATH_DEFAULT = '.';
+//# sourceMappingURL=contants.js.map
