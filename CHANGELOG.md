@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Tada5hi/action-docker-release/compare/v1.1.0...v1.1.1) (2022-12-25)
+
+
+### Bug Fixes
+
+* enhance logging ([cc06215](https://github.com/Tada5hi/action-docker-release/commit/cc06215158388c19cc6dc097266210678ab29a37))
+
 # [1.1.0](https://github.com/Tada5hi/action-docker-js/compare/v1.0.2...v1.1.0) (2022-12-25)
 
 
