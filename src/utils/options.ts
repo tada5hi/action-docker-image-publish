@@ -9,14 +9,12 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { PACKAGE_PATH_DEFAULT, REGISTRY_GITHUB } from '../contants';
 import { Options } from '../type';
-import { toBoolean } from './boolean';
 
 export function buildOptions() : Options {
     const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
     const dockerFilePath = core.getInput('dockerFilePath') || '.';
 
-    const imageTag = core.getInput('imageTag') || undefined;
-    const imageTagExtra = toBoolean(core.getInput('imageTagExtra')) ?? false;
+    const imageTag = core.getInput('imageTag') || 'latest';
 
     const secret = core.getInput('token', { required: true });
     const packagePath = core.getInput('packagePath', { trimWhitespace: true }) || PACKAGE_PATH_DEFAULT;
@@ -32,7 +30,6 @@ export function buildOptions() : Options {
         dockerFilePath,
 
         imageTag,
-        imageTagExtra,
 
         token: secret,
         packagePath,

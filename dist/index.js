@@ -88084,29 +88084,6 @@ function buildImageURL(context, tag) {
  * view the LICENSE file that was distributed with this source code.
  */
 
-function toBoolean(input) {
-  if (typeof input === 'boolean') {
-    return input;
-  }
-  if (typeof input === 'string') {
-    input = input.toLowerCase();
-    if (input === 'true' || input === 't') {
-      return true;
-    }
-    if (input === 'false' || input === 'f') {
-      return false;
-    }
-  }
-  return undefined;
-}
-
-/*
- * Copyright (c) 2022.
- * Author Peter Placzek (tada5hi)
- * For the full copyright and license information,
- * view the LICENSE file that was distributed with this source code.
- */
-
 var REGISTRY_GITHUB = 'ghcr.io';
 var PACKAGE_PATH_DEFAULT = '.';
 
@@ -88117,11 +88094,9 @@ var PACKAGE_PATH_DEFAULT = '.';
  * view the LICENSE file that was distributed with this source code.
  */
 function buildOptions() {
-  var _toBoolean;
   var dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
   var dockerFilePath = core.getInput('dockerFilePath') || '.';
-  var imageTag = core.getInput('imageTag') || undefined;
-  var imageTagExtra = (_toBoolean = toBoolean(core.getInput('imageTagExtra'))) !== null && _toBoolean !== void 0 ? _toBoolean : false;
+  var imageTag = core.getInput('imageTag') || 'latest';
   var secret = core.getInput('token', {
     required: true
   });
@@ -88147,7 +88122,6 @@ function buildOptions() {
     dockerFileName: dockerFileName,
     dockerFilePath: dockerFilePath,
     imageTag: imageTag,
-    imageTagExtra: imageTagExtra,
     token: secret,
     packagePath: packagePath,
     registryHost: registryHost,
@@ -91275,6 +91249,39 @@ function _readPackageJson() {
   return _readPackageJson.apply(this, arguments);
 }
 
+function findVersionForPackage(_x, _x2) {
+  return _findVersionForPackage.apply(this, arguments);
+}
+function _findVersionForPackage() {
+  _findVersionForPackage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(packagePath, workingDirectoryPath) {
+    var packageVersion;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          workingDirectoryPath = workingDirectoryPath || process.cwd();
+          _context.next = 3;
+          return findVersionByPackageJson(path.join(workingDirectoryPath, packagePath));
+        case 3:
+          packageVersion = _context.sent;
+          if (packageVersion) {
+            _context.next = 8;
+            break;
+          }
+          _context.next = 7;
+          return findVersionByLernaConfig(workingDirectoryPath);
+        case 7:
+          packageVersion = _context.sent;
+        case 8:
+          return _context.abrupt("return", packageVersion);
+        case 9:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return _findVersionForPackage.apply(this, arguments);
+}
+
 function execute() {
   return _execute.apply(this, arguments);
 }
@@ -91311,40 +91318,34 @@ function _execute() {
           });
         case 12:
           _context.next = 14;
-          return findVersionByPackageJson(path.join(process.cwd(), options.packagePath));
+          return findVersionForPackage(options.packagePath, process.cwd());
         case 14:
           packageVersion = _context.sent;
-          if (packageVersion) {
-            _context.next = 19;
-            break;
-          }
-          _context.next = 18;
-          return findVersionByLernaConfig();
-        case 18:
-          packageVersion = _context.sent;
-        case 19:
           if (!packageVersion) {
-            _context.next = 26;
+            _context.next = 22;
             break;
           }
           imageUrl = buildImageURL(imageId, packageVersion);
-          _context.next = 23;
+          _context.next = 19;
           return tagImage(imageId, imageUrl);
-        case 23:
-          _context.next = 25;
+        case 19:
+          _context.next = 21;
           return pushImage(imageUrl);
-        case 25:
+        case 21:
           removeImage(imageUrl);
-        case 26:
-          if ((!!packageVersion && options.imageTagExtra || !packageVersion) && options.imageTag) {
-            imageUrl = buildImageURL(imageId, options.imageTag);
-            tagImage(imageId, imageUrl);
-            pushImage(imageUrl);
-            removeImage(imageUrl);
-          }
+        case 22:
+          // ----------------------------------------------------
+
+          imageUrl = buildImageURL(imageId, options.imageTag);
+          tagImage(imageId, imageUrl);
+          pushImage(imageUrl);
+          removeImage(imageUrl);
+
+          // ----------------------------------------------------
+
           removeImage(imageId);
           child_process.execSync("docker logout ".concat(options.registryHost));
-        case 29:
+        case 28:
         case "end":
           return _context.stop();
       }

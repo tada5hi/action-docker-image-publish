@@ -8,7 +8,6 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import { execSync } from 'child_process';
-import path from 'path';
 import {
     buildImage,
     buildImageURL,
@@ -18,8 +17,7 @@ import {
 } from './daemon';
 import {
     buildOptions,
-    findVersionByLernaConfig,
-    findVersionByPackageJson,
+    findVersionForPackage,
     hasPackageChanged,
 } from './utils';
 
@@ -50,10 +48,12 @@ export async function execute() {
 
     let imageUrl : string;
 
-    let packageVersion = await findVersionByPackageJson(path.join(process.cwd(), options.packagePath));
-    if (!packageVersion) {
-        packageVersion = await findVersionByLernaConfig();
-    }
+    // ----------------------------------------------------
+
+    const packageVersion = await findVersionForPackage(
+        options.packagePath,
+        process.cwd(),
+    );
     if (packageVersion) {
         imageUrl = buildImageURL(imageId, packageVersion);
 
@@ -64,20 +64,17 @@ export async function execute() {
         removeImage(imageUrl);
     }
 
-    if (
-        (
-            (!!packageVersion && options.imageTagExtra) || !packageVersion
-        ) &&
-        options.imageTag
-    ) {
-        imageUrl = buildImageURL(imageId, options.imageTag);
+    // ----------------------------------------------------
 
-        tagImage(imageId, imageUrl);
+    imageUrl = buildImageURL(imageId, options.imageTag);
 
-        pushImage(imageUrl);
+    tagImage(imageId, imageUrl);
 
-        removeImage(imageUrl);
-    }
+    pushImage(imageUrl);
+
+    removeImage(imageUrl);
+
+    // ----------------------------------------------------
 
     removeImage(imageId);
 

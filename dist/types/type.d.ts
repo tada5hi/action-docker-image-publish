@@ -26,15 +26,9 @@ export type Options = {
     /**
      * Publish by a specific tag.
      *
-     * Default: undefined
+     * Default: 'latest'
      */
-    imageTag?: string;
-    /**
-     * Publish tag in addition?
-     *
-     * Default: false
-     */
-    imageTagExtra: boolean;
+    imageTag: string;
     /**
      * Default: ghcr.io
      */

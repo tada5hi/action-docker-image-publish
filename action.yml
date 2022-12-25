@@ -11,9 +11,7 @@ inputs:
     packagePath:
         description: 'Relative path to the package'
     imageTag:
-        description: 'Custom image tag'
-    imageTagExtra:
-        description: 'Push imageTag and detected package version'
+        description: 'Tag for docker image'
     registryHost:
         description: 'Registry host'
     registryUser:
