@@ -9,7 +9,7 @@
         "lib": [
             "ESNext"
         ],
-        "module": "CommonJS",
+        "module": "ESNext",
         "moduleResolution": "Node",
         "newLine": "LF",
         "noImplicitAny": true,
@@ -19,7 +19,7 @@
         "outDir": "dist",
         "sourceMap": true,
         "strictNullChecks": false,
-        "target": "ES6"
+        "target": "ESNext"
     },
     "include": [
         "src/**/*.ts"

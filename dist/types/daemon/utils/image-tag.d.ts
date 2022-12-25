@@ -1,7 +1,1 @@
-import { Image } from 'dockerode';
-export type ImageTagContext = {
-    sourceImage: Image | string;
-    destinationImage: string;
-    destinationTag: string;
-};
-export declare function tagImage(context: ImageTagContext): Promise<Image>;
+export declare function tagImage(source: string, destination: string): void;

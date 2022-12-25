@@ -1,6 +1,6 @@
 export type ImageBuildContext = {
-    tag: string;
+    imageId: string;
     filePath: string;
     labels?: Record<string, string>;
 };
-export declare function buildImage(context: ImageBuildContext): Promise<any>;
+export declare function buildImage(context: ImageBuildContext): void;
