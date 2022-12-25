@@ -14,11 +14,18 @@ export type Options = {
     token: string,
 
     /**
+     * Dockerfile name
+     *
+     * default: Dockerfile
+     */
+    dockerFileName: string,
+
+    /**
      * Path to Dockerfile
      *
      * Default: .
      */
-    imageFile: string,
+    dockerFilePath: string,
 
     /**
      * Repository package path.

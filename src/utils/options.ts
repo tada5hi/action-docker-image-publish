@@ -12,7 +12,8 @@ import { Options } from '../type';
 import { toBoolean } from './boolean';
 
 export function buildOptions() : Options {
-    const imageFile = core.getInput('imagePath') || '.';
+    const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
+    const dockerFilePath = core.getInput('dockerFilePath') || '.';
 
     const imageTag = core.getInput('imageTag') || undefined;
     const imageTagExtra = toBoolean(core.getInput('imageTagExtra')) ?? false;
@@ -27,7 +28,9 @@ export function buildOptions() : Options {
     const registryRepository = core.getInput('registryRepository', { trimWhitespace: true }) || github.context.repo.repo;
 
     return {
-        imageFile,
+        dockerFileName,
+        dockerFilePath,
+
         imageTag,
         imageTagExtra,
 

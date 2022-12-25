@@ -10,6 +10,7 @@ import { executeDockerCommand } from './execute';
 
 export type ImageBuildContext = {
     imageId: string,
+    fileName: string,
     filePath: string,
     labels?: Record<string, string>
 };
@@ -18,7 +19,7 @@ export function buildImage(context: ImageBuildContext) {
     core.notice('Building docker image.');
 
     const options : [string, string][] = [
-        ['file', 'Dockerfile'],
+        ['file', context.fileName],
         ['tag', context.imageId],
     ];
     if (context.labels) {

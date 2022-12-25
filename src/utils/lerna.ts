@@ -10,7 +10,7 @@ import path from 'path';
 import { hasOwnProperty, isObject } from 'smob';
 import { readJsonFile } from './json-file';
 
-export async function findLernaVersion(directoryPath?: string) : Promise<string | undefined> {
+export async function findVersionByLernaConfig(directoryPath?: string) : Promise<string | undefined> {
     const file = await readLernaConfig(directoryPath);
 
     if (

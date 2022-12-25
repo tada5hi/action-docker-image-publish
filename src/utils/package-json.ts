@@ -10,7 +10,7 @@ import semver from 'semver';
 import { hasOwnProperty, isObject } from 'smob';
 import { readJsonFile } from './json-file';
 
-export async function findPackageJsonVersion(directoryPath?: string) : Promise<string | undefined> {
+export async function findVersionByPackageJson(directoryPath?: string) : Promise<string | undefined> {
     const file = await readPackageJson(directoryPath);
 
     if (

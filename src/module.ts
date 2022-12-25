@@ -18,8 +18,8 @@ import {
 } from './daemon';
 import {
     buildOptions,
-    findLernaVersion,
-    findPackageJsonVersion,
+    findVersionByLernaConfig,
+    findVersionByPackageJson,
     hasPackageChanged,
 } from './utils';
 
@@ -39,7 +39,8 @@ export async function execute() {
     const imageId = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`;
 
     await buildImage({
-        filePath: options.imageFile,
+        fileName: options.dockerFileName,
+        filePath: options.dockerFilePath,
         imageId,
         labels: {
             runId: `${github.context.runId}`,
@@ -49,9 +50,9 @@ export async function execute() {
 
     let imageUrl : string;
 
-    let packageVersion = await findPackageJsonVersion(path.join(process.cwd(), options.packagePath));
+    let packageVersion = await findVersionByPackageJson(path.join(process.cwd(), options.packagePath));
     if (!packageVersion) {
-        packageVersion = await findLernaVersion();
+        packageVersion = await findVersionByLernaConfig();
     }
     if (packageVersion) {
         imageUrl = buildImageURL(imageId, packageVersion);
@@ -63,7 +64,12 @@ export async function execute() {
         removeImage(imageUrl);
     }
 
-    if (options.imageTag) {
+    if (
+        (
+            (!!packageVersion && options.imageTagExtra) || !packageVersion
+        ) &&
+        options.imageTag
+    ) {
         imageUrl = buildImageURL(imageId, options.imageTag);
 
         tagImage(imageId, imageUrl);

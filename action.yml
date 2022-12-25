@@ -4,14 +4,16 @@ inputs:
     token:
         description: 'Access token'
         default: ${{ github.token }}
-    imageFile:
-        description: 'Path to the DockerFile'
+    dockerFileName:
+        description: 'File name of Dockerfile'
+    dockerFilePath:
+        description: 'Relative path to DockerFile'
     packagePath:
-        description: 'Path to the package'
+        description: 'Relative path to the package'
     imageTag:
         description: 'Custom image tag'
     imageTagExtra:
-        description: 'Push version of package.json file in addition to imageTag.'
+        description: 'Push imageTag and detected package version'
     registryHost:
         description: 'Registry host'
     registryUser:
