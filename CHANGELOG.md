@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/Tada5hi/action-docker-release/compare/v1.6.1...v1.6.2) (2022-12-26)
+
+
+### Bug Fixes
+
+* trim ref name for docker image ([f2c7861](https://github.com/Tada5hi/action-docker-release/commit/f2c7861d6453119a96115bdfd3f6fe5efd2a06d8))
+
 ## [1.6.1](https://github.com/Tada5hi/action-docker-release/compare/v1.6.0...v1.6.1) (2022-12-26)
 
 
