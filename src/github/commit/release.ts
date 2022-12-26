@@ -62,7 +62,11 @@ export async function findGitHubCommitOfLatestReleaseByPackage(
     }
 
     if (createdAt) {
-        const path = withoutLeadingSlash(ctx.options.path);
+        let { path } = this.options;
+        if (path.length > 0) {
+            path = withoutLeadingSlash(ctx.options.path);
+        }
+
         const { data: commits } = await useGitHubClient()
             .rest.repos.listCommits({
                 repo: ctx.repository.repo,
@@ -70,7 +74,7 @@ export async function findGitHubCommitOfLatestReleaseByPackage(
                 since: createdAt,
                 until: createdAt,
                 per_page: 1,
-                ...(path.length !== 0 ? { path } : {}),
+                ...(path.length > 0 ? { path } : {}),
             });
 
         if (commits.length > 0) {

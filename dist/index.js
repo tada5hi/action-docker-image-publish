@@ -92491,35 +92491,38 @@ function _findGitHubCommitOfLatestReleaseByPackage() {
           throw _context.t1;
         case 23:
           if (!createdAt) {
-            _context.next = 31;
+            _context.next = 32;
             break;
           }
-          path = withoutLeadingSlash(ctx.options.path);
-          _context.next = 27;
+          path = this.options.path;
+          if (path.length > 0) {
+            path = withoutLeadingSlash(ctx.options.path);
+          }
+          _context.next = 28;
           return useGitHubClient().rest.repos.listCommits(_objectSpread2({
             repo: ctx.repository.repo,
             owner: ctx.repository.owner,
             since: createdAt,
             until: createdAt,
             per_page: 1
-          }, path.length !== 0 ? {
+          }, path.length > 0 ? {
             path: path
           } : {}));
-        case 27:
+        case 28:
           _yield$useGitHubClien = _context.sent;
           commits = _yield$useGitHubClien.data;
           if (!(commits.length > 0)) {
-            _context.next = 31;
+            _context.next = 32;
             break;
           }
           return _context.abrupt("return", commits[0].sha);
-        case 31:
-          return _context.abrupt("return", undefined);
         case 32:
+          return _context.abrupt("return", undefined);
+        case 33:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[1, 18]]);
+    }, _callee, this, [[1, 18]]);
   }));
   return _findGitHubCommitOfLatestReleaseByPackage.apply(this, arguments);
 }
