@@ -15,8 +15,6 @@ export function buildOptions() : Options {
     const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
     const dockerFilePath = core.getInput('dockerFilePath') || '.';
 
-    const imageTag = core.getInput('imageTag') || 'latest';
-
     const token = core.getInput('token', { required: true });
 
     let path = core.getInput('path', { trimWhitespace: true });
@@ -24,31 +22,30 @@ export function buildOptions() : Options {
         path = withoutLeadingSlash(path);
     }
     const ignores = core.getInput('ignores').split(',');
+    const gitTagPrefix = core.getInput('gitTagPrefix');
 
     const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || REGISTRY_GITHUB;
     const registryUser = core.getInput('registryUser', { trimWhitespace: true }) || github.context.actor;
     const registryPassword = core.getInput('registryPassword', { trimWhitespace: true }) || token;
     const registryProject = core.getInput('registryProject', { trimWhitespace: true }) || github.context.repo.owner;
     const registryRepository = core.getInput('registryRepository', { trimWhitespace: true }) || github.context.repo.repo;
-
-    const tagPrefix = core.getInput('tagPrefix');
+    const registryTag = core.getInput('registryTag') || 'latest';
 
     return {
         dockerFileName,
         dockerFilePath,
 
-        registryTag: imageTag,
-
-        token,
-        path,
         ignores,
+        gitTagPrefix,
 
         registryHost,
         registryUser,
         registryPassword,
         registryProject,
         registryRepository,
+        registryTag,
 
-        gitTagPrefix: tagPrefix,
+        path,
+        token,
     };
 }

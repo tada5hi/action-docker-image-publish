@@ -44,7 +44,7 @@ with:
     registryRepository: ''
 
     # Registry image tag (e.g. latest)
-    # Default: latest
+    # Default: ''
     registryTag: ''
     
     # Token to access GitHub API
