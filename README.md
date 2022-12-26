@@ -11,7 +11,7 @@ one or many glob patterns.
 ## Usage
 
 ```yaml
-uses: tada5hi/action-docker-image-push@master
+uses: tada5hi/action-docker-image-publish@master
 with:
     # Name of Dockerfile
     # Default: Dockerfile
