@@ -5,6 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+import core from '@actions/core';
 import { findUpMultiple } from 'find-up';
 import path from 'path';
 import semver from 'semver';
@@ -13,8 +14,10 @@ import { VersionFile } from './type';
 
 export async function findVersionFile(directory: string) : Promise<VersionFile | undefined> {
     if (!path.isAbsolute(directory)) {
-        directory = path.join(process.cwd(), directory);
+        directory = path.resolve(process.cwd(), directory);
     }
+
+    core.notice('Inspecting directory for version files.');
 
     const files = await findUpMultiple(
         ['package.json', 'lerna.json'],
@@ -29,23 +32,21 @@ export async function findVersionFile(directory: string) : Promise<VersionFile |
             continue;
         }
 
-        const {
-            version,
-            private: privatePackage,
-            name,
-        } = await readJsonFile(files[i]);
+        const file = await readJsonFile(files[i]);
 
-        if (privatePackage) {
+        core.notice(`${fileName} has version ${file.version}`);
+
+        if (file.private) {
             continue;
         }
 
-        if (!semver.valid(version)) {
+        if (!semver.valid(file.version)) {
             continue;
         }
 
         return {
-            name,
-            version,
+            name: file.name,
+            version: file.version,
             path: files[i],
         };
     }

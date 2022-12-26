@@ -30,7 +30,7 @@ export async function checkGitHubCommitRangeForChanges(
         });
 
     if (comparison.files.length > 0) {
-        core.notice(`Inspecting ${comparison.files.length} commit files for changes.`);
+        core.notice(`Inspecting ${comparison.files.length} commit file(s) for changes.`);
 
         const path = withoutLeadingSlash(ctx.options.path);
         const { ignores } = ctx.options;

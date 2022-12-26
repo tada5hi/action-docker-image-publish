@@ -9,9 +9,11 @@ import fs from 'fs';
 import path from 'path';
 
 export async function readJsonFile(
-    directoryPath?: string,
+    filePath: string,
 ) : Promise<Record<string, any>> {
-    const filePath = path.join(directoryPath || process.cwd(), 'package.json');
+    if (!path.isAbsolute(filePath)) {
+        filePath = path.resolve(process.cwd(), filePath);
+    }
 
     try {
         await fs.promises.access(filePath, fs.constants.F_OK | fs.constants.R_OK);

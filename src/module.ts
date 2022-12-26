@@ -8,7 +8,6 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import { execSync } from 'child_process';
-import path from 'path';
 import {
     buildDockerImage,
     buildDockerImageURL,
@@ -19,7 +18,7 @@ import {
 import {
     checkGitHubCommitRangeForChanges,
     extendGitHubRepositoryEntity,
-    findGitHubCommitOfLatestRelease,
+    findGitHubCommitByLatestPublication,
     setupGitHubClient,
 } from './github';
 import {
@@ -31,7 +30,10 @@ export async function execute() {
     const options = buildOptions();
     setupGitHubClient(options.token);
 
-    const versionFile = await findVersionFile(path.join(process.cwd(), options.path));
+    const versionFile = await findVersionFile(options.path);
+    if (versionFile) {
+        core.notice(`Package version ${versionFile.version} detected.`);
+    }
 
     if (
         options.path.length > 0 ||
@@ -42,7 +44,7 @@ export async function execute() {
             owner: github.context.repo.owner,
         });
 
-        const commitSha = await findGitHubCommitOfLatestRelease({
+        const commitSha = await findGitHubCommitByLatestPublication({
             repository,
             options,
             versionFile,
@@ -100,13 +102,17 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    imageUrl = buildDockerImageURL(imageId, options.imageTag);
+    if (!versionFile || options.imageTag.length > 0) {
+        options.imageTag = options.imageTag || 'latest';
 
-    tagDockerImage(imageId, imageUrl);
+        imageUrl = buildDockerImageURL(imageId, options.imageTag);
 
-    pushDockerImage(imageUrl);
+        tagDockerImage(imageId, imageUrl);
 
-    removeDockerImage(imageUrl);
+        pushDockerImage(imageUrl);
+
+        removeDockerImage(imageUrl);
+    }
 
     // ----------------------------------------------------
 

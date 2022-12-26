@@ -1,1 +1,1 @@
-export declare function readJsonFile(directoryPath?: string): Promise<Record<string, any>>;
+export declare function readJsonFile(filePath: string): Promise<Record<string, any>>;

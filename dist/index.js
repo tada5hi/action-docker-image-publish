@@ -89316,12 +89316,14 @@ function readJsonFile(_x) {
   return _readJsonFile.apply(this, arguments);
 }
 function _readJsonFile() {
-  _readJsonFile = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(directoryPath) {
-    var filePath, rawFile;
+  _readJsonFile = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(filePath) {
+    var rawFile;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          filePath = path$2.join(directoryPath || process.cwd(), 'package.json');
+          if (!path$2.isAbsolute(filePath)) {
+            filePath = path$2.resolve(process.cwd(), filePath);
+          }
           _context.prev = 1;
           _context.next = 4;
           return fs$1.promises.access(filePath, fs$1.constants.F_OK | fs$1.constants.R_OK);
@@ -89464,7 +89466,7 @@ function _checkGitHubCommitRangeForChanges() {
             _context.next = 29;
             break;
           }
-          core.notice("Inspecting ".concat(comparison.files.length, " commit files for changes."));
+          core.notice("Inspecting ".concat(comparison.files.length, " commit file(s) for changes."));
           path = withoutLeadingSlash(ctx.options.path);
           ignores = ctx.options.ignores;
           if (path.length !== 0) {
@@ -89526,6 +89528,115 @@ function _checkGitHubCommitRangeForChanges() {
     }, _callee);
   }));
   return _checkGitHubCommitRangeForChanges.apply(this, arguments);
+}
+
+function findGitHubCommitByDate(_x, _x2, _x3) {
+  return _findGitHubCommitByDate.apply(this, arguments);
+}
+function _findGitHubCommitByDate() {
+  _findGitHubCommitByDate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(repository, date, path) {
+    var _yield$useGitHubClien, commits;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          if (path && path.length > 0) {
+            path = withoutLeadingSlash(path);
+          }
+          _context.next = 3;
+          return useGitHubClient().rest.repos.listCommits(_objectSpread2({
+            repo: repository.repo,
+            owner: repository.owner,
+            until: date,
+            per_page: 1
+          }, path && path.length > 0 ? {
+            path: path
+          } : {}));
+        case 3:
+          _yield$useGitHubClien = _context.sent;
+          commits = _yield$useGitHubClien.data;
+          if (!(commits.length > 0)) {
+            _context.next = 7;
+            break;
+          }
+          return _context.abrupt("return", commits[0].sha);
+        case 7:
+          return _context.abrupt("return", undefined);
+        case 8:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return _findGitHubCommitByDate.apply(this, arguments);
+}
+
+function t$3(r){return t$3="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(r){return typeof r}:function(r){return r&&"function"==typeof Symbol&&r.constructor===Symbol&&r!==Symbol.prototype?"symbol":typeof r},t$3(r)}function n(r,t,n){return t in r?Object.defineProperty(r,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):r[t]=n,r}function e(r){return function(r){if(Array.isArray(r))return o(r)}(r)||function(r){if("undefined"!=typeof Symbol&&null!=r[Symbol.iterator]||null!=r["@@iterator"])return Array.from(r)}(r)||function(r,t){if(!r)return;if("string"==typeof r)return o(r,t);var n=Object.prototype.toString.call(r).slice(8,-1);"Object"===n&&r.constructor&&(n=r.constructor.name);if("Map"===n||"Set"===n)return Array.from(r);if("Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return o(r,t)}(r)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function o(r,t){(null==t||t>r.length)&&(t=r.length);for(var n=0,e=new Array(t);n<t;n++)e[n]=r[n];return e}function i(r,t,n){return n?e(new Set(r.concat(t))):r.concat(t)}function c(r,t){return Object.prototype.hasOwnProperty.call(r,t)}function a(r){return r&&"object"===t$3(r)&&!Array.isArray(r)}function f(r){try{return JSON.stringify(r),!0}catch(r){return !1}}function y(r){return "__proto__"!==r&&"prototype"!==r&&"constructor"!==r}function s(r){var t,n;return (r=r||{}).array=null===(t=r.array)||void 0===t||t,r.arrayDistinct=null!==(n=r.arrayDistinct)&&void 0!==n&&n,r.priority=r.priority||"left",r}function p(r,t){for(var e=arguments.length,o=new Array(e>2?e-2:0),u=2;u<e;u++)o[u-2]=arguments[u];if(!o.length)return t;var l=o.shift();if(a(t)&&a(l))for(var s=Object.keys(l),b=0;b<s.length;b++){var O=s[b];if(y(O))if(c(t,O)){if(r.strategy){var g=r.strategy(t,O,l[O]);if(void 0!==g)continue}if(!f(l[O]))continue;if(a(t[O])&&a(l[O])){p(r,t[O],l[O]);continue}if(r.array&&Array.isArray(t[O])&&Array.isArray(l[O])){switch(r.priority){case"left":Object.assign(t,n({},O,i(t[O],l[O],r.arrayDistinct)));break;case"right":Object.assign(t,n({},O,i(l[O],t[O],r.arrayDistinct)));}continue}"right"===r.priority&&Object.assign(t,n({},O,l[O]));}else Object.assign(t,n({},O,l[O]));}return p.apply(void 0,[r,t].concat(o))}function b(r){var t=s(r);return function(r){for(var n=arguments.length,e=new Array(n>1?n-1:0),o=1;o<n;o++)e[o-1]=arguments[o];return p.apply(void 0,[t,r].concat(e))}}b();
+
+var GithubOwnerType;
+(function (GithubOwnerType) {
+  GithubOwnerType["USER"] = "user";
+  GithubOwnerType["ORGANISATION"] = "organisation";
+})(GithubOwnerType || (GithubOwnerType = {}));
+
+function findGitHubPackageLatestPublicationDate(_x) {
+  return _findGitHubPackageLatestPublicationDate.apply(this, arguments);
+}
+function _findGitHubPackageLatestPublicationDate() {
+  _findGitHubPackageLatestPublicationDate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(ctx) {
+    var client, date, _yield$client$rest$pa, data, _yield$client$rest$pa2, _data;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          client = useGitHubClient();
+          _context.prev = 1;
+          _context.t0 = ctx.repository.ownerType;
+          _context.next = _context.t0 === GithubOwnerType.ORGANISATION ? 5 : 11;
+          break;
+        case 5:
+          _context.next = 7;
+          return client.rest.packages.getPackageForOrganization({
+            package_type: 'container',
+            package_name: ctx.options.registryRepository,
+            org: ctx.repository.owner
+          });
+        case 7:
+          _yield$client$rest$pa = _context.sent;
+          data = _yield$client$rest$pa.data;
+          date = data.updated_at;
+          return _context.abrupt("break", 16);
+        case 11:
+          _context.next = 13;
+          return client.rest.packages.getPackageForUser({
+            package_type: 'container',
+            package_name: ctx.options.registryRepository,
+            username: ctx.repository.owner
+          });
+        case 13:
+          _yield$client$rest$pa2 = _context.sent;
+          _data = _yield$client$rest$pa2.data;
+          date = _data.updated_at;
+        case 16:
+          _context.next = 23;
+          break;
+        case 18:
+          _context.prev = 18;
+          _context.t1 = _context["catch"](1);
+          if (!(a(_context.t1) && _context.t1.status === 404)) {
+            _context.next = 22;
+            break;
+          }
+          return _context.abrupt("return", undefined);
+        case 22:
+          throw _context.t1;
+        case 23:
+          return _context.abrupt("return", date);
+        case 24:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee, null, [[1, 18]]);
+  }));
+  return _findGitHubPackageLatestPublicationDate.apply(this, arguments);
 }
 
 var reExports = {};
@@ -89785,7 +89896,7 @@ var identifiers$1 = {
 
 const debug = debug_1;
 const { MAX_LENGTH: MAX_LENGTH$1, MAX_SAFE_INTEGER } = constants$1;
-const { re: re$2, t: t$3 } = reExports;
+const { re: re$2, t: t$2 } = reExports;
 
 const parseOptions$1 = parseOptions_1;
 const { compareIdentifiers } = identifiers$1;
@@ -89817,7 +89928,7 @@ let SemVer$d = class SemVer {
     // don't run into trouble passing this.options around.
     this.includePrerelease = !!options.includePrerelease;
 
-    const m = version.trim().match(options.loose ? re$2[t$3.LOOSE] : re$2[t$3.FULL]);
+    const m = version.trim().match(options.loose ? re$2[t$2.LOOSE] : re$2[t$2.FULL]);
 
     if (!m) {
       throw new TypeError(`Invalid Version: ${version}`)
@@ -90072,7 +90183,7 @@ let SemVer$d = class SemVer {
 var semver$1 = SemVer$d;
 
 const { MAX_LENGTH } = constants$1;
-const { re: re$1, t: t$2 } = reExports;
+const { re: re$1, t: t$1 } = reExports;
 const SemVer$c = semver$1;
 
 const parseOptions = parseOptions_1;
@@ -90091,7 +90202,7 @@ const parse$6 = (version, options) => {
     return null
   }
 
-  const r = options.loose ? re$1[t$2.LOOSE] : re$1[t$2.FULL];
+  const r = options.loose ? re$1[t$1.LOOSE] : re$1[t$1.FULL];
   if (!r.test(version)) {
     return null
   }
@@ -90290,7 +90401,7 @@ var cmp_1 = cmp$1;
 
 const SemVer$5 = semver$1;
 const parse$1 = parse_1;
-const { re, t: t$1 } = reExports;
+const { re, t } = reExports;
 
 const coerce$1 = (version, options) => {
   if (version instanceof SemVer$5) {
@@ -90309,7 +90420,7 @@ const coerce$1 = (version, options) => {
 
   let match = null;
   if (!options.rtl) {
-    match = version.match(re[t$1.COERCE]);
+    match = version.match(re[t.COERCE]);
   } else {
     // Find the right-most coercible string that does not share
     // a terminus with a more left-ward coercible string.
@@ -90320,17 +90431,17 @@ const coerce$1 = (version, options) => {
     // Stop when we get a match that ends at the string end, since no
     // coercible string can be more right-ward without the same terminus.
     let next;
-    while ((next = re[t$1.COERCERTL].exec(version)) &&
+    while ((next = re[t.COERCERTL].exec(version)) &&
         (!match || match.index + match[0].length !== version.length)
     ) {
       if (!match ||
             next.index + next[0].length !== match.index + match[0].length) {
         match = next;
       }
-      re[t$1.COERCERTL].lastIndex = next.index + next[1].length + next[2].length;
+      re[t.COERCERTL].lastIndex = next.index + next[1].length + next[2].length;
     }
     // leave it in a clean state
-    re[t$1.COERCERTL].lastIndex = -1;
+    re[t.COERCERTL].lastIndex = -1;
   }
 
   if (match === null) {
@@ -92435,128 +92546,32 @@ var semver = {
   rcompareIdentifiers: identifiers.rcompareIdentifiers,
 };
 
-function t(r){return t="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(r){return typeof r}:function(r){return r&&"function"==typeof Symbol&&r.constructor===Symbol&&r!==Symbol.prototype?"symbol":typeof r},t(r)}function n(r,t,n){return t in r?Object.defineProperty(r,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):r[t]=n,r}function e(r){return function(r){if(Array.isArray(r))return o(r)}(r)||function(r){if("undefined"!=typeof Symbol&&null!=r[Symbol.iterator]||null!=r["@@iterator"])return Array.from(r)}(r)||function(r,t){if(!r)return;if("string"==typeof r)return o(r,t);var n=Object.prototype.toString.call(r).slice(8,-1);"Object"===n&&r.constructor&&(n=r.constructor.name);if("Map"===n||"Set"===n)return Array.from(r);if("Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return o(r,t)}(r)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function o(r,t){(null==t||t>r.length)&&(t=r.length);for(var n=0,e=new Array(t);n<t;n++)e[n]=r[n];return e}function i(r,t,n){return n?e(new Set(r.concat(t))):r.concat(t)}function c(r,t){return Object.prototype.hasOwnProperty.call(r,t)}function a(r){return r&&"object"===t(r)&&!Array.isArray(r)}function f(r){try{return JSON.stringify(r),!0}catch(r){return !1}}function y(r){return "__proto__"!==r&&"prototype"!==r&&"constructor"!==r}function s(r){var t,n;return (r=r||{}).array=null===(t=r.array)||void 0===t||t,r.arrayDistinct=null!==(n=r.arrayDistinct)&&void 0!==n&&n,r.priority=r.priority||"left",r}function p(r,t){for(var e=arguments.length,o=new Array(e>2?e-2:0),u=2;u<e;u++)o[u-2]=arguments[u];if(!o.length)return t;var l=o.shift();if(a(t)&&a(l))for(var s=Object.keys(l),b=0;b<s.length;b++){var O=s[b];if(y(O))if(c(t,O)){if(r.strategy){var g=r.strategy(t,O,l[O]);if(void 0!==g)continue}if(!f(l[O]))continue;if(a(t[O])&&a(l[O])){p(r,t[O],l[O]);continue}if(r.array&&Array.isArray(t[O])&&Array.isArray(l[O])){switch(r.priority){case"left":Object.assign(t,n({},O,i(t[O],l[O],r.arrayDistinct)));break;case"right":Object.assign(t,n({},O,i(l[O],t[O],r.arrayDistinct)));}continue}"right"===r.priority&&Object.assign(t,n({},O,l[O]));}else Object.assign(t,n({},O,l[O]));}return p.apply(void 0,[r,t].concat(o))}function b(r){var t=s(r);return function(r){for(var n=arguments.length,e=new Array(n>1?n-1:0),o=1;o<n;o++)e[o-1]=arguments[o];return p.apply(void 0,[t,r].concat(e))}}b();
-
-var GithubOwnerType;
-(function (GithubOwnerType) {
-  GithubOwnerType["USER"] = "user";
-  GithubOwnerType["ORGANISATION"] = "organisation";
-})(GithubOwnerType || (GithubOwnerType = {}));
-
-function findGitHubCommitOfLatestReleaseByPackage(_x) {
-  return _findGitHubCommitOfLatestReleaseByPackage.apply(this, arguments);
+function findGitHubCommitForLatestTag(_x, _x2) {
+  return _findGitHubCommitForLatestTag.apply(this, arguments);
 }
-function _findGitHubCommitOfLatestReleaseByPackage() {
-  _findGitHubCommitOfLatestReleaseByPackage = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(ctx) {
-    var client, createdAt, _yield$client$rest$pa, data, _yield$client$rest$pa2, _data, path, _yield$useGitHubClien, commits;
+function _findGitHubCommitForLatestTag() {
+  _findGitHubCommitForLatestTag = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(repository, versionFile) {
+    var client, _yield$client$rest$re, tags, commitSha, i, name;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           client = useGitHubClient();
-          _context.prev = 1;
-          _context.t0 = ctx.repository.ownerType;
-          _context.next = _context.t0 === GithubOwnerType.ORGANISATION ? 5 : 11;
-          break;
-        case 5:
-          _context.next = 7;
-          return client.rest.packages.getPackageForOrganization({
-            package_type: 'container',
-            package_name: ctx.options.registryRepository,
-            org: ctx.repository.owner
-          });
-        case 7:
-          _yield$client$rest$pa = _context.sent;
-          data = _yield$client$rest$pa.data;
-          createdAt = data.created_at;
-          return _context.abrupt("break", 16);
-        case 11:
-          _context.next = 13;
-          return client.rest.packages.getPackageForUser({
-            package_type: 'container',
-            package_name: ctx.options.registryRepository,
-            username: ctx.repository.owner
-          });
-        case 13:
-          _yield$client$rest$pa2 = _context.sent;
-          _data = _yield$client$rest$pa2.data;
-          createdAt = _data.created_at;
-        case 16:
-          _context.next = 23;
-          break;
-        case 18:
-          _context.prev = 18;
-          _context.t1 = _context["catch"](1);
-          if (!(a(_context.t1) && _context.t1.status === 404)) {
-            _context.next = 22;
-            break;
-          }
-          return _context.abrupt("return", undefined);
-        case 22:
-          throw _context.t1;
-        case 23:
-          if (!createdAt) {
-            _context.next = 32;
-            break;
-          }
-          path = ctx.options.path;
-          if (path.length > 0) {
-            path = withoutLeadingSlash(path);
-          }
-          _context.next = 28;
-          return useGitHubClient().rest.repos.listCommits(_objectSpread2({
-            repo: ctx.repository.repo,
-            owner: ctx.repository.owner,
-            until: createdAt,
-            per_page: 1
-          }, path.length > 0 ? {
-            path: path
-          } : {}));
-        case 28:
-          _yield$useGitHubClien = _context.sent;
-          commits = _yield$useGitHubClien.data;
-          if (!(commits.length > 0)) {
-            _context.next = 32;
-            break;
-          }
-          return _context.abrupt("return", commits[0].sha);
-        case 32:
-          return _context.abrupt("return", undefined);
-        case 33:
-        case "end":
-          return _context.stop();
-      }
-    }, _callee, null, [[1, 18]]);
-  }));
-  return _findGitHubCommitOfLatestReleaseByPackage.apply(this, arguments);
-}
-function findGitHubCommitOfLatestReleaseByTag(_x2) {
-  return _findGitHubCommitOfLatestReleaseByTag.apply(this, arguments);
-}
-function _findGitHubCommitOfLatestReleaseByTag() {
-  _findGitHubCommitOfLatestReleaseByTag = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(ctx) {
-    var client, _yield$client$rest$re, tags, commitSha, i, name;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
-        case 0:
-          client = useGitHubClient();
-          _context2.next = 3;
+          _context.next = 3;
           return client.rest.repos.listTags({
-            owner: ctx.repository.owner,
-            repo: ctx.repository.repo,
-            per_page: 30,
-            page: ctx.page
+            owner: repository.owner,
+            repo: repository.repo
           });
         case 3:
-          _yield$client$rest$re = _context2.sent;
+          _yield$client$rest$re = _context.sent;
           tags = _yield$client$rest$re.data;
           if (!(tags.length > 0)) {
-            _context2.next = 19;
+            _context.next = 19;
             break;
           }
           i = 0;
         case 7:
           if (!(i < tags.length)) {
-            _context2.next = 17;
+            _context.next = 17;
             break;
           }
           name = tags[i].name;
@@ -92564,66 +92579,69 @@ function _findGitHubCommitOfLatestReleaseByTag() {
             name = name.substring(1);
           }
           if (!semver.valid(name)) {
-            _context2.next = 13;
+            _context.next = 13;
             break;
           }
           commitSha = tags[i].commit.sha;
-          return _context2.abrupt("break", 17);
+          return _context.abrupt("break", 17);
         case 13:
-          if (ctx.versionFile && ctx.versionFile.name && tags[i].name.startsWith(ctx.versionFile.name)) {
+          if (versionFile && versionFile.name && tags[i].name.startsWith(versionFile.name)) {
             commitSha = tags[i].commit.sha;
           }
         case 14:
           i++;
-          _context2.next = 7;
+          _context.next = 7;
           break;
         case 17:
           if (!commitSha) {
-            _context2.next = 19;
+            _context.next = 19;
             break;
           }
-          return _context2.abrupt("return", commitSha);
+          return _context.abrupt("return", commitSha);
         case 19:
-          if (!(tags.length === 30 && ctx.page < 3)) {
-            _context2.next = 22;
-            break;
-          }
-          ctx.page++;
-          return _context2.abrupt("return", findGitHubCommitOfLatestReleaseByTag(ctx));
-        case 22:
-          return _context2.abrupt("return", undefined);
-        case 23:
+          return _context.abrupt("return", undefined);
+        case 20:
         case "end":
-          return _context2.stop();
+          return _context.stop();
       }
-    }, _callee2);
+    }, _callee);
   }));
-  return _findGitHubCommitOfLatestReleaseByTag.apply(this, arguments);
+  return _findGitHubCommitForLatestTag.apply(this, arguments);
 }
-function findGitHubCommitOfLatestRelease(_x3) {
-  return _findGitHubCommitOfLatestRelease.apply(this, arguments);
+
+function findGitHubCommitByLatestPublication(_x) {
+  return _findGitHubCommitByLatestPublication.apply(this, arguments);
 }
-function _findGitHubCommitOfLatestRelease() {
-  _findGitHubCommitOfLatestRelease = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(ctx) {
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
+function _findGitHubCommitByLatestPublication() {
+  _findGitHubCommitByLatestPublication = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(ctx) {
+    var date;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
         case 0:
           if (!(ctx.options.registryHost === REGISTRY_GITHUB)) {
-            _context3.next = 2;
+            _context.next = 7;
             break;
           }
-          return _context3.abrupt("return", findGitHubCommitOfLatestReleaseByPackage(ctx));
-        case 2:
-          return _context3.abrupt("return", findGitHubCommitOfLatestReleaseByTag(_objectSpread2(_objectSpread2({}, ctx), {}, {
-            page: 1
-          })));
+          _context.next = 3;
+          return findGitHubPackageLatestPublicationDate(ctx);
         case 3:
+          date = _context.sent;
+          if (!date) {
+            _context.next = 6;
+            break;
+          }
+          return _context.abrupt("return", findGitHubCommitByDate(ctx.repository, date, ctx.options.path));
+        case 6:
+          return _context.abrupt("return", undefined);
+        case 7:
+          return _context.abrupt("return", findGitHubCommitForLatestTag(ctx.repository, ctx.versionFile));
+        case 8:
         case "end":
-          return _context3.stop();
+          return _context.stop();
       }
-    }, _callee3);
+    }, _callee);
   }));
-  return _findGitHubCommitOfLatestRelease.apply(this, arguments);
+  return _findGitHubCommitByLatestPublication.apply(this, arguments);
 }
 
 function extendGitHubRepositoryEntity(_x) {
@@ -92934,64 +92952,63 @@ function findVersionFile(_x) {
 }
 function _findVersionFile() {
   _findVersionFile = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(directory) {
-    var files, i, fileName, ext, _yield$readJsonFile, version, privatePackage, name;
+    var files, i, fileName, ext, file;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           if (!path$2.isAbsolute(directory)) {
-            directory = path$2.join(process.cwd(), directory);
+            directory = path$2.resolve(process.cwd(), directory);
           }
-          _context.next = 3;
+          core.notice('Inspecting directory for version files.');
+          _context.next = 4;
           return findUpMultiple(['package.json', 'lerna.json'], {
             cwd: directory
           });
-        case 3:
+        case 4:
           files = _context.sent;
           i = 0;
-        case 5:
+        case 6:
           if (!(i < files.length)) {
-            _context.next = 24;
+            _context.next = 23;
             break;
           }
           fileName = path$2.basename(files[i]);
           ext = path$2.extname(fileName);
           if (!(ext !== '.json')) {
-            _context.next = 10;
+            _context.next = 11;
             break;
           }
-          return _context.abrupt("continue", 21);
-        case 10:
-          _context.next = 12;
+          return _context.abrupt("continue", 20);
+        case 11:
+          _context.next = 13;
           return readJsonFile(files[i]);
-        case 12:
-          _yield$readJsonFile = _context.sent;
-          version = _yield$readJsonFile.version;
-          privatePackage = _yield$readJsonFile["private"];
-          name = _yield$readJsonFile.name;
-          if (!privatePackage) {
-            _context.next = 18;
+        case 13:
+          file = _context.sent;
+          core.notice("".concat(fileName, " has version ").concat(file.version));
+          if (!file["private"]) {
+            _context.next = 17;
             break;
           }
-          return _context.abrupt("continue", 21);
-        case 18:
-          if (semver.valid(version)) {
-            _context.next = 20;
+          return _context.abrupt("continue", 20);
+        case 17:
+          if (semver.valid(file.version)) {
+            _context.next = 19;
             break;
           }
-          return _context.abrupt("continue", 21);
-        case 20:
+          return _context.abrupt("continue", 20);
+        case 19:
           return _context.abrupt("return", {
-            name: name,
-            version: version,
+            name: file.name,
+            version: file.version,
             path: files[i]
           });
-        case 21:
+        case 20:
           i++;
-          _context.next = 5;
+          _context.next = 6;
           break;
-        case 24:
+        case 23:
           return _context.abrupt("return", undefined);
-        case 25:
+        case 24:
         case "end":
           return _context.stop();
       }
@@ -93012,54 +93029,57 @@ function _execute() {
           options = buildOptions();
           setupGitHubClient(options.token);
           _context.next = 4;
-          return findVersionFile(path$2.join(process.cwd(), options.path));
+          return findVersionFile(options.path);
         case 4:
           versionFile = _context.sent;
+          if (versionFile) {
+            core.notice("Package version ".concat(versionFile.version, " detected."));
+          }
           if (!(options.path.length > 0 || options.ignores.length > 0)) {
-            _context.next = 23;
+            _context.next = 24;
             break;
           }
-          _context.next = 8;
+          _context.next = 9;
           return extendGitHubRepositoryEntity({
             repo: github.context.repo.repo,
             owner: github.context.repo.owner
           });
-        case 8:
+        case 9:
           repository = _context.sent;
-          _context.next = 11;
-          return findGitHubCommitOfLatestRelease({
+          _context.next = 12;
+          return findGitHubCommitByLatestPublication({
             repository: repository,
             options: options,
             versionFile: versionFile
           });
-        case 11:
+        case 12:
           commitSha = _context.sent;
           if (!commitSha) {
-            _context.next = 22;
+            _context.next = 23;
             break;
           }
           core.info('The package has been released before.');
-          _context.next = 16;
+          _context.next = 17;
           return checkGitHubCommitRangeForChanges({
             repository: repository,
             options: options,
             base: commitSha,
             head: github.context.sha
           });
-        case 16:
+        case 17:
           hasChanged = _context.sent;
           if (hasChanged) {
-            _context.next = 20;
+            _context.next = 21;
             break;
           }
           core.notice('The package src has not changed since the last release.');
           return _context.abrupt("return");
-        case 20:
-          _context.next = 23;
+        case 21:
+          _context.next = 24;
           break;
-        case 22:
-          core.info('The package has not been released before.');
         case 23:
+          core.info('The package has not been released before.');
+        case 24:
           // todo: check if current commit is most recent.
 
           child_process.execSync("echo \"".concat(options.registryPassword, "\" | docker login ").concat(options.registryHost, " -u ").concat(options.registryUser, " --password-stdin"));
@@ -93084,10 +93104,13 @@ function _execute() {
 
           // ----------------------------------------------------
 
-          imageUrl = buildDockerImageURL(imageId, options.imageTag);
-          tagDockerImage(imageId, imageUrl);
-          pushDockerImage(imageUrl);
-          removeDockerImage(imageUrl);
+          if (!versionFile || options.imageTag.length > 0) {
+            options.imageTag = options.imageTag || 'latest';
+            imageUrl = buildDockerImageURL(imageId, options.imageTag);
+            tagDockerImage(imageId, imageUrl);
+            pushDockerImage(imageUrl);
+            removeDockerImage(imageUrl);
+          }
 
           // ----------------------------------------------------
 
@@ -93095,7 +93118,7 @@ function _execute() {
             removeDockerImage(imageId);
           }
           child_process.execSync("docker logout ".concat(options.registryHost));
-        case 33:
+        case 31:
         case "end":
           return _context.stop();
       }
