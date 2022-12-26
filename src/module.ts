@@ -50,7 +50,7 @@ export async function execute() {
             versionFile,
         });
         if (commitSha) {
-            core.info('The package has been released before.');
+            core.info('The package content has been released before.');
 
             const hasChanged = await checkGitHubCommitRangeForChanges({
                 repository,
@@ -60,11 +60,11 @@ export async function execute() {
             });
 
             if (!hasChanged) {
-                core.notice('The package src has not changed since the last release.');
+                core.notice('The package content has not changed since the last release.');
                 return;
             }
         } else {
-            core.info('The package has not been released before.');
+            core.notice('The package content has not been released before.');
         }
     }
 

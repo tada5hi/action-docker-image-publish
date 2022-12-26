@@ -34,8 +34,6 @@ export async function findVersionFile(directory: string) : Promise<VersionFile |
 
         const file = await readJsonFile(files[i]);
 
-        core.notice(`${fileName} has version ${file.version}`);
-
         if (file.private) {
             continue;
         }
