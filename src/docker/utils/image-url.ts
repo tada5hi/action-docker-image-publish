@@ -15,9 +15,9 @@ export type ImageUrlBuildContext = {
     tag: string
 };
 
-export function buildImageURL(context: ImageUrlBuildContext) : string;
-export function buildImageURL(image: string, tag: string) : string;
-export function buildImageURL(context: ImageUrlBuildContext | string, tag?: string) : string {
+export function buildDockerImageURL(context: ImageUrlBuildContext) : string;
+export function buildDockerImageURL(image: string, tag: string) : string;
+export function buildDockerImageURL(context: ImageUrlBuildContext | string, tag?: string) : string {
     let base : string;
 
     if (typeof context === 'string') {

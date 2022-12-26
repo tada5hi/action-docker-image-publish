@@ -6,6 +6,7 @@
  */
 
 import core from '@actions/core';
+import path from 'path';
 import { executeDockerCommand } from './execute';
 
 export type ImageBuildContext = {
@@ -15,8 +16,10 @@ export type ImageBuildContext = {
     labels?: Record<string, string>
 };
 
-export function buildImage(context: ImageBuildContext) {
+export function buildDockerImage(context: ImageBuildContext) {
     core.notice(`Building image: ${context.imageId}`);
+
+    let command = 'build .';
 
     const options : [string, string][] = [
         ['file', context.fileName],
@@ -29,7 +32,25 @@ export function buildImage(context: ImageBuildContext) {
         }
     }
 
-    executeDockerCommand(`build ${context.filePath}`, options);
+    const parts : string[] = [];
+    for (let i = 0; i < options.length; i++) {
+        const [key, value] = options[i];
+
+        parts.push(`--${key} ${value}`);
+    }
+
+    if (parts.length > 0) {
+        command += ` ${parts.join(' ')}`;
+    }
+
+    let cwd = context.filePath || process.cwd();
+    if (!path.isAbsolute(cwd)) {
+        cwd = path.join(process.cwd(), cwd);
+    }
+
+    executeDockerCommand(command, {
+        cwd,
+    });
 
     core.notice('Built image');
 }

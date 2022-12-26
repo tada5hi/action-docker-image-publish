@@ -7,6 +7,6 @@
 
 import { executeDockerCommand } from './execute';
 
-export function removeImage(image: string) {
+export function removeDockerImage(image: string) {
     executeDockerCommand(`image rm --force ${image}`);
 }

@@ -8,7 +8,7 @@
 import core from '@actions/core';
 import { executeDockerCommand } from './execute';
 
-export function pushImage(name: string) {
+export function pushDockerImage(name: string) {
     core.notice(`Pushing image: ${name}`);
 
     executeDockerCommand(`push ${name}`);

@@ -6,31 +6,26 @@
  */
 
 import minimatch from 'minimatch';
-import { VersionFile } from '../version-file';
-import { Options } from '../type';
-import { findGitHubCommitOfLatestRelease } from './commit-release';
-import { cleanDoubleSlashes, withoutLeadingSlash } from '../utils';
-import { useGitHubClient } from './singleton';
-import { GithubRepositoryEntity } from './type';
+import { Options } from '../../type';
+import { cleanDoubleSlashes, withoutLeadingSlash } from '../../utils';
+import { useGitHubClient } from '../singleton';
+import { GithubRepository } from '../repository';
 
 type Context = {
-    repository: GithubRepositoryEntity,
+    repository: GithubRepository,
     options: Options,
-    VersionFile: VersionFile,
-    sha?: string
+    base: string,
+    head: string
 };
-export async function hasGItHubRepositoryChanged(ctx: Context) {
-    const commitSha = await findGitHubCommitOfLatestRelease(ctx);
-    if (!commitSha) {
-        return true;
-    }
-
+export async function checkGitHubCommitRangeForChanges(
+    ctx: Context,
+) {
     const { data: comparison } = await useGitHubClient()
         .rest.repos.compareCommits({
             repo: ctx.repository.repo,
             owner: ctx.repository.owner,
-            base: commitSha,
-            head: ctx.sha,
+            base: ctx.base,
+            head: ctx.head,
         });
 
     if (comparison.files.length > 0) {

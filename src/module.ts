@@ -10,15 +10,18 @@ import github from '@actions/github';
 import { execSync } from 'child_process';
 import path from 'path';
 import {
-    buildImage,
-    buildImageURL,
-    pushImage,
-    removeImage,
-    tagImage,
+    buildDockerImage,
+    buildDockerImageURL,
+    pushDockerImage,
+    removeDockerImage,
+    tagDockerImage,
 } from './docker';
-import { hasGItHubRepositoryChanged } from './github/repository-changed';
-import { extendGitHubRepositoryEntity } from './github/repository';
-import { setupGitHubClient } from './github/singleton';
+import {
+    checkGitHubCommitRangeForChanges,
+    extendGitHubRepositoryEntity,
+    findGitHubCommitOfLatestRelease,
+    setupGitHubClient,
+} from './github';
 import {
     buildOptions,
 } from './utils';
@@ -28,23 +31,32 @@ export async function execute() {
     const options = buildOptions();
     setupGitHubClient(options.token);
 
-    const metaFile = await findVersionFile(path.join(process.cwd(), options.path));
+    const versionFile = await findVersionFile(path.join(process.cwd(), options.path));
 
     const repository = await extendGitHubRepositoryEntity({
         repo: github.context.repo.repo,
         owner: github.context.repo.owner,
     });
 
-    const hasChanged = await hasGItHubRepositoryChanged({
+    const commitSha = await findGitHubCommitOfLatestRelease({
         repository,
         options,
-        VersionFile: metaFile,
-        sha: github.context.sha,
+        versionFile,
     });
+    if (commitSha) {
+        core.info('The package has been released before.');
 
-    if (!hasChanged) {
-        core.info('Path content has not changed since last build.');
-        return;
+        const hasChanged = await checkGitHubCommitRangeForChanges({
+            repository,
+            options,
+            base: commitSha,
+            head: github.context.sha,
+        });
+
+        if (!hasChanged) {
+            core.notice('The package src has not changed since the last release.');
+            return;
+        }
     }
 
     execSync(
@@ -53,7 +65,7 @@ export async function execute() {
 
     const imageId = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`;
 
-    buildImage({
+    buildDockerImage({
         fileName: options.dockerFileName,
         filePath: options.dockerFilePath,
         imageId,
@@ -67,30 +79,30 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    if (metaFile) {
-        imageUrl = buildImageURL(imageId, metaFile.version);
+    if (versionFile) {
+        imageUrl = buildDockerImageURL(imageId, versionFile.version);
 
-        tagImage(imageId, imageUrl);
+        tagDockerImage(imageId, imageUrl);
 
-        pushImage(imageUrl);
+        pushDockerImage(imageUrl);
 
-        removeImage(imageUrl);
+        removeDockerImage(imageUrl);
     }
 
     // ----------------------------------------------------
 
-    imageUrl = buildImageURL(imageId, options.imageTag);
+    imageUrl = buildDockerImageURL(imageId, options.imageTag);
 
-    tagImage(imageId, imageUrl);
+    tagDockerImage(imageId, imageUrl);
 
-    pushImage(imageUrl);
+    pushDockerImage(imageUrl);
 
-    removeImage(imageUrl);
+    removeDockerImage(imageUrl);
 
     // ----------------------------------------------------
 
     if (options.imageTag !== 'latest') {
-        removeImage(imageId);
+        removeDockerImage(imageId);
     }
 
     execSync(`docker logout ${options.registryHost}`);

@@ -1,17 +1,24 @@
+/*
+ * Copyright (c) 2022.
+ * Author Peter Placzek (tada5hi)
+ * For the full copyright and license information,
+ * view the LICENSE file that was distributed with this source code.
+ */
+
 import semver from 'semver';
 import { isObject } from 'smob';
-import { REGISTRY_GITHUB } from '../contants';
-import { Options } from '../type';
-import { withoutLeadingSlash } from '../utils';
-import { VersionFile } from '../version-file';
-import { GithubOwnerType } from './constants';
-import { useGitHubClient } from './singleton';
-import { GithubRepositoryEntity } from './type';
+import { REGISTRY_GITHUB } from '../../contants';
+import { Options } from '../../type';
+import { withoutLeadingSlash } from '../../utils';
+import { VersionFile } from '../../version-file';
+import { GithubOwnerType } from '../constants';
+import { useGitHubClient } from '../singleton';
+import { GithubRepository } from '../repository/type';
 
 type Context = {
     options: Options,
 
-    repository: GithubRepositoryEntity,
+    repository: GithubRepository,
 
     versionFile?: VersionFile
 };
