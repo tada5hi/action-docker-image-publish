@@ -5,8 +5,12 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+import github from '@actions/github';
+
 export type GithubRef = {
     type: 'branch' | 'tag' | 'pull',
 
     value: string
 };
+
+export type GitHubClient = ReturnType<typeof github.getOctokit>;

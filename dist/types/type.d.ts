@@ -1,4 +1,3 @@
-import github from '@actions/github';
 export type Options = {
     /**
      * Dockerfile name
@@ -65,4 +64,3 @@ export type Options = {
      */
     token: string;
 };
-export type GitHubClient = ReturnType<typeof github.getOctokit>;
