@@ -92631,8 +92631,8 @@ function _extendGitHubRepositoryEntity() {
         case 0:
           _context.next = 2;
           return useGitHubClient().rest.repos.get({
-            repo: this.repo,
-            owner: this.owner
+            repo: entity.repo,
+            owner: entity.owner
           });
         case 2:
           _yield$useGitHubClien = _context.sent;
@@ -92646,7 +92646,7 @@ function _extendGitHubRepositoryEntity() {
         case "end":
           return _context.stop();
       }
-    }, _callee, this);
+    }, _callee);
   }));
   return _extendGitHubRepositoryEntity.apply(this, arguments);
 }
@@ -93009,17 +93009,17 @@ function _execute() {
           return findVersionFile(path$2.join(process.cwd(), options.path));
         case 4:
           versionFile = _context.sent;
-          _context.next = 7;
-          return extendGitHubRepositoryEntity({
-            repo: github.context.repo.repo,
-            owner: github.context.repo.owner
-          });
-        case 7:
-          repository = _context.sent;
           if (!(options.path.length > 0 || options.ignores.length > 0)) {
             _context.next = 20;
             break;
           }
+          _context.next = 8;
+          return extendGitHubRepositoryEntity({
+            repo: github.context.repo.repo,
+            owner: github.context.repo.owner
+          });
+        case 8:
+          repository = _context.sent;
           _context.next = 11;
           return findGitHubCommitOfLatestRelease({
             repository: repository,

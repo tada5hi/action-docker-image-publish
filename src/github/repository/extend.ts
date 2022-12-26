@@ -14,8 +14,8 @@ export async function extendGitHubRepositoryEntity(
 ) : Promise<GithubRepository> {
     const { data } = await useGitHubClient()
         .rest.repos.get({
-            repo: this.repo,
-            owner: this.owner,
+            repo: entity.repo,
+            owner: entity.owner,
         });
 
     return {

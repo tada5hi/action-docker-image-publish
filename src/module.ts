@@ -33,15 +33,15 @@ export async function execute() {
 
     const versionFile = await findVersionFile(path.join(process.cwd(), options.path));
 
-    const repository = await extendGitHubRepositoryEntity({
-        repo: github.context.repo.repo,
-        owner: github.context.repo.owner,
-    });
-
     if (
         options.path.length > 0 ||
         options.ignores.length > 0
     ) {
+        const repository = await extendGitHubRepositoryEntity({
+            repo: github.context.repo.repo,
+            owner: github.context.repo.owner,
+        });
+
         const commitSha = await findGitHubCommitOfLatestRelease({
             repository,
             options,
