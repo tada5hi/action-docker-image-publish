@@ -92494,9 +92494,9 @@ function _findGitHubCommitOfLatestReleaseByPackage() {
             _context.next = 32;
             break;
           }
-          path = this.options.path;
+          path = ctx.options.path;
           if (path.length > 0) {
-            path = withoutLeadingSlash(ctx.options.path);
+            path = withoutLeadingSlash(path);
           }
           _context.next = 28;
           return useGitHubClient().rest.repos.listCommits(_objectSpread2({
@@ -92522,7 +92522,7 @@ function _findGitHubCommitOfLatestReleaseByPackage() {
         case "end":
           return _context.stop();
       }
-    }, _callee, this, [[1, 18]]);
+    }, _callee, null, [[1, 18]]);
   }));
   return _findGitHubCommitOfLatestReleaseByPackage.apply(this, arguments);
 }
