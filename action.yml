@@ -1,31 +1,42 @@
 name: 'DockerRelease'
-description: 'Build and push docker image for js application/package.'
+description: 'Build, tag and push docker images under certain conditions.'
 inputs:
-    token:
-        description: 'Access token'
-        default: ${{ github.token }}
     dockerFileName:
-        description: 'File name of Dockerfile'
+        description: 'Name of Dockerfile'
+        default: 'Dockerfile'
     dockerFilePath:
         description: 'Relative path to DockerFile'
+        default: ''
+    gitTagPrefix:
+        description: 'Prefix for matching git tags'
+        default: ''
+    ignores:
+        description: 'Glob pattern to ignore files & directories'
+        default: ''
     path:
         description: 'Relative path to check for changes'
-    ignores:
-        description: 'Glob pattern to ignore specific files & directories relative to the given directory.'
-    imageTag:
-        description: 'Tag for docker image'
+        default: ''
     registryHost:
         description: 'Registry host'
+        default: 'ghcr.io'
     registryUser:
         description: 'Registry user'
+        default: ''
     registryPassword:
         description: 'Registry password'
+        default: ${{ github.token }}
     registryProject:
         description: 'Registry project name (xxx/repository)'
+        default: ''
     registryRepository:
         description: 'Registry repository name (project/xxx)'
-    versionFile:
-        description: 'Enable version file detection'
+        default: ''
+    registryTag:
+        description: 'Registry image tag (e.g. latest)'
+        default: ''
+    token:
+        description: 'Token to access GitHub API'
+        default: ${{ github.token }}
 runs:
     using: 'node16'
     main: 'dist/index.js'

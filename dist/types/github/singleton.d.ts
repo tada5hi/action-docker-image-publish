@@ -1,3 +1,3 @@
-import { Octokit } from '../type';
-export declare function useGitHubClient(): Octokit;
-export declare function setupGitHubClient(secret: string): Octokit;
+import { GitHubClient } from '../type';
+export declare function useGitHubClient(): GitHubClient;
+export declare function setupGitHubClient(secret: string): GitHubClient;

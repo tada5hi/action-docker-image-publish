@@ -9,7 +9,6 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { REGISTRY_GITHUB } from '../contants';
 import { Options } from '../type';
-import { toBoolean } from './boolean';
 import { withoutLeadingSlash } from './url';
 
 export function buildOptions() : Options {
@@ -32,13 +31,13 @@ export function buildOptions() : Options {
     const registryProject = core.getInput('registryProject', { trimWhitespace: true }) || github.context.repo.owner;
     const registryRepository = core.getInput('registryRepository', { trimWhitespace: true }) || github.context.repo.repo;
 
-    const versionFile = toBoolean(core.getInput('versionFile')) ?? true;
+    const tagPrefix = core.getInput('tagPrefix');
 
     return {
         dockerFileName,
         dockerFilePath,
 
-        imageTag,
+        registryTag: imageTag,
 
         token,
         path,
@@ -50,6 +49,6 @@ export function buildOptions() : Options {
         registryProject,
         registryRepository,
 
-        versionFile,
+        gitTagPrefix: tagPrefix,
     };
 }

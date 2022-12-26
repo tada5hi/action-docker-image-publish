@@ -18,40 +18,39 @@ import {
 import {
     checkGitHubCommitRangeForChanges,
     extendGitHubRepositoryEntity,
-    findGitHubCommitByLatestPublication,
+    findGitHubCommitByLatestPublication, parseGitHubRef,
     setupGitHubClient,
 } from './github';
 import {
     buildOptions,
 } from './utils';
-import { VersionFile, findVersionFile } from './version-file';
 
 export async function execute() {
     const options = buildOptions();
     setupGitHubClient(options.token);
 
-    let versionFile : VersionFile | undefined;
-    if (options.versionFile) {
-        versionFile = await findVersionFile(options.path);
-    }
-    if (versionFile) {
-        core.notice(`Package version ${versionFile.version} detected.`);
+    const ref = parseGitHubRef(github.context.ref);
+    if (!ref) {
+        core.error('The GitHub ref could not be parsed.');
+        return;
     }
 
     if (
-        options.path.length > 0 ||
-        options.ignores.length > 0
+        ref.type === 'branch' &&
+        (
+            options.path.length > 0 ||
+            options.ignores.length > 0
+        )
     ) {
         const repository = await extendGitHubRepositoryEntity({
             repo: github.context.repo.repo,
             owner: github.context.repo.owner,
         });
 
-        const commitSha = await findGitHubCommitByLatestPublication({
+        const commitSha = await findGitHubCommitByLatestPublication(
             repository,
             options,
-            versionFile,
-        });
+        );
         if (commitSha) {
             core.notice('The package has been released before.');
 
@@ -93,8 +92,31 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    if (versionFile) {
-        imageUrl = buildDockerImageURL(imageId, versionFile.version);
+    // build docker image for git tag
+    if (ref.type === 'tag') {
+        if (
+            options.gitTagPrefix.length === 0 ||
+            ref.value.startsWith(options.gitTagPrefix)
+        ) {
+            imageUrl = buildDockerImageURL(imageId, ref.value);
+
+            tagDockerImage(imageId, imageUrl);
+
+            pushDockerImage(imageUrl);
+
+            removeDockerImage(imageUrl);
+        }
+    }
+
+    // ----------------------------------------------------
+
+    if (
+        ref.type !== 'tag' ||
+        options.registryTag.length > 0
+    ) {
+        options.registryTag = options.registryTag || 'latest';
+
+        imageUrl = buildDockerImageURL(imageId, options.registryTag);
 
         tagDockerImage(imageId, imageUrl);
 
@@ -105,21 +127,7 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    if (!versionFile || options.imageTag.length > 0) {
-        options.imageTag = options.imageTag || 'latest';
-
-        imageUrl = buildDockerImageURL(imageId, options.imageTag);
-
-        tagDockerImage(imageId, imageUrl);
-
-        pushDockerImage(imageUrl);
-
-        removeDockerImage(imageUrl);
-    }
-
-    // ----------------------------------------------------
-
-    if (options.imageTag !== 'latest') {
+    if (options.registryTag !== 'latest') {
         removeDockerImage(imageId);
     }
 

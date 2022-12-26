@@ -6,13 +6,12 @@
  */
 
 import semver from 'semver';
-import { VersionFile } from '../../version-file';
 import { GithubRepository } from '../repository';
 import { useGitHubClient } from '../singleton';
 
 export async function findGitHubCommitForLatestTag(
     repository: GithubRepository,
-    versionFile?: VersionFile,
+    tagPrefix?: string,
 ) : Promise<string | undefined> {
     const client = useGitHubClient();
     const { data: tags } = await client.rest.repos.listTags({
@@ -34,11 +33,15 @@ export async function findGitHubCommitForLatestTag(
             }
 
             if (
-                versionFile &&
-                versionFile.name &&
-                tags[i].name.startsWith(versionFile.name)
+                tagPrefix &&
+                tagPrefix.length > 0
             ) {
+                if (tags[i].name.startsWith(tagPrefix)) {
+                    commitSha = tags[i].commit.sha;
+                }
+            } else {
                 commitSha = tags[i].commit.sha;
+                break;
             }
         }
 

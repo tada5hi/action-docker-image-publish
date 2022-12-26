@@ -5,8 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export type VersionFile = {
-    name?: string,
-    version: string,
-    path?: string
+export type GithubRef = {
+    type: 'branch' | 'tag' | 'pull',
+
+    value: string
 };

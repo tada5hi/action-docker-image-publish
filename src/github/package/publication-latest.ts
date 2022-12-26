@@ -11,26 +11,21 @@ import { GithubOwnerType } from '../constants';
 import { GithubRepository } from '../repository';
 import { useGitHubClient } from '../singleton';
 
-type Context = {
-    repository: GithubRepository,
-
-    options: Options
-};
-
 export async function findGitHubPackageLatestPublicationDate(
-    ctx: Context,
+    repository: GithubRepository,
+    options: Options,
 ) {
     const client = useGitHubClient();
 
     let date : string | undefined;
 
     try {
-        switch (ctx.repository.ownerType) {
+        switch (repository.ownerType) {
             case GithubOwnerType.ORGANISATION: {
                 const { data } = await client.rest.packages.getPackageForOrganization({
                     package_type: 'container',
-                    package_name: ctx.options.registryRepository,
-                    org: ctx.repository.owner,
+                    package_name: options.registryRepository,
+                    org: repository.owner,
                 });
 
                 date = data.updated_at;
@@ -40,8 +35,8 @@ export async function findGitHubPackageLatestPublicationDate(
             default: {
                 const { data } = await client.rest.packages.getPackageForUser({
                     package_type: 'container',
-                    package_name: ctx.options.registryRepository,
-                    username: ctx.repository.owner,
+                    package_name: options.registryRepository,
+                    username: repository.owner,
                 });
 
                 date = data.updated_at;

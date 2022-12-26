@@ -7,36 +7,31 @@
 
 import { REGISTRY_GITHUB } from '../../contants';
 import { Options } from '../../type';
-import { VersionFile } from '../../version-file';
 import { findGitHubPackageLatestPublicationDate } from '../package';
 import { GithubRepository } from '../repository';
 import { findGitHubCommitByDate } from './date';
 import { findGitHubCommitForLatestTag } from './tag-latest';
 
-type Context = {
-    options: Options,
-
-    repository: GithubRepository,
-
-    versionFile?: VersionFile
-};
-
 export async function findGitHubCommitByLatestPublication(
-    ctx: Context,
+    repository: GithubRepository,
+    options: Options,
 ) : Promise<string | undefined> {
-    if (ctx.options.registryHost === REGISTRY_GITHUB) {
-        const date = await findGitHubPackageLatestPublicationDate(ctx);
+    if (options.registryHost === REGISTRY_GITHUB) {
+        const date = await findGitHubPackageLatestPublicationDate(
+            repository,
+            options,
+        );
 
         if (date) {
             return findGitHubCommitByDate(
-                ctx.repository,
+                repository,
                 date,
-                ctx.options.path,
+                options.path,
             );
         }
 
         return undefined;
     }
 
-    return findGitHubCommitForLatestTag(ctx.repository, ctx.versionFile);
+    return findGitHubCommitForLatestTag(repository, options.gitTagPrefix);
 }

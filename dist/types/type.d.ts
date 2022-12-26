@@ -1,10 +1,6 @@
 import github from '@actions/github';
 export type Options = {
     /**
-     * Action secret
-     */
-    token: string;
-    /**
      * Dockerfile name
      *
      * default: Dockerfile
@@ -17,21 +13,21 @@ export type Options = {
      */
     dockerFilePath: string;
     /**
-     * Directory to check for changes.
+     * Match for git tag with given prefix.
      *
-     * Default: .
+     * Default: ''
      */
-    path: string;
+    gitTagPrefix: string;
     /**
      * Glob pattern to ignore specific files & directories for changes.
      */
     ignores: string[];
     /**
-     * Publish by a specific tag.
+     * Directory to check for changes.
      *
-     * Default: 'latest'
+     * Default: .
      */
-    imageTag: string;
+    path: string;
     /**
      * Default: ghcr.io
      */
@@ -53,10 +49,14 @@ export type Options = {
      */
     registryRepository: string;
     /**
-     * Detect version by version file.
+     * Registry image tag (e.g. latest)
      *
-     * Default: true
+     * Default: ''
      */
-    versionFile: boolean;
+    registryTag: string;
+    /**
+     * Action secret
+     */
+    token: string;
 };
-export type Octokit = ReturnType<typeof github.getOctokit>;
+export type GitHubClient = ReturnType<typeof github.getOctokit>;

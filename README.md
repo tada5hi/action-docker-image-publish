@@ -1,4 +1,4 @@
-# DockerRelease
+# DockerRelease 🎍
 
 This repository contains a GitHub action, to
 `build`, `tag` and `push` docker images, under certain conditions.
@@ -8,23 +8,25 @@ This repository contains a GitHub action, to
 ```yaml
 uses: tada5hi/action-docker-release@master
 with:
-    # Default: ${{ github.token }}
-    token: ''
-
+    # Name of Dockerfile
     # Default: Dockerfile
     dockerFileName: ''
 
+    # Relative path to DockerFile
     # Default: ''
     dockerFilePath: ''
 
+    # Prefix for matching git tags
     # Default: ''
-    path: ''
+    gitTagPrefix: ''
 
+    # Glob pattern to ignore files & directories
     # Default: ''
     ignores: ''
 
-    # Default: latest
-    imageTag: ''
+    # Relative path to check for changes
+    # Default: ''
+    path: ''
 
     # Default: ghcr.io
     registryHost: ''
@@ -41,6 +43,11 @@ with:
     # Default: github.repo
     registryRepository: ''
 
-    # Default: true
-    versionFile: ''
+    # Registry image tag (e.g. latest)
+    # Default: latest
+    registryTag: ''
+    
+    # Token to access GitHub API
+    # Default: ${{ github.token }}
+    token: ''
 ```

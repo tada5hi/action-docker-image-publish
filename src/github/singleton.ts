@@ -1,10 +1,10 @@
 import core from '@actions/core';
 import github from '@actions/github';
-import { Octokit } from '../type';
+import { GitHubClient } from '../type';
 
-let instance : Octokit;
+let instance : GitHubClient;
 
-export function useGitHubClient() : Octokit {
+export function useGitHubClient() : GitHubClient {
     if (typeof instance !== 'undefined') {
         return instance;
     }
@@ -16,7 +16,7 @@ export function useGitHubClient() : Octokit {
     return instance;
 }
 
-export function setupGitHubClient(secret: string) : Octokit {
+export function setupGitHubClient(secret: string) : GitHubClient {
     instance = github.getOctokit(secret);
 
     return instance;
