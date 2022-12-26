@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/Tada5hi/action-docker-release/compare/v1.4.1...v1.5.0) (2022-12-26)
+
+
+### Features
+
+* parse git ref for better decision making ([b446fa6](https://github.com/Tada5hi/action-docker-release/commit/b446fa6bd167e56343a5784c5976effe41341ab6))
+
 ## [1.4.1](https://github.com/Tada5hi/action-docker-release/compare/v1.4.0...v1.4.1) (2022-12-26)
 
 
