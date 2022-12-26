@@ -16,3 +16,7 @@ export function withoutLeadingSlash(input = ''): string {
 export function withLeadingSlash(input = ''): string {
     return hasLeadingSlash(input) ? input : (`/${input}`);
 }
+
+export function cleanDoubleSlashes(input = ''): string {
+    return input.replace(/\/{2,}/g, '/');
+}

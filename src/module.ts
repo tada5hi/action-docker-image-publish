@@ -8,23 +8,40 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import { execSync } from 'child_process';
+import path from 'path';
 import {
     buildImage,
     buildImageURL,
     pushImage,
     removeImage,
     tagImage,
-} from './daemon';
+} from './docker';
+import { hasGItHubRepositoryChanged } from './github/repository-changed';
+import { extendGitHubRepositoryEntity } from './github/repository';
+import { setupGitHubClient } from './github/singleton';
 import {
     buildOptions,
-    findVersionForPackage,
-    hasPathContentChanged,
 } from './utils';
+import { findVersionFile } from './version-file';
 
 export async function execute() {
     const options = buildOptions();
-    const octokit = github.getOctokit(options.token);
-    const hasChanged = await hasPathContentChanged(octokit, options);
+    setupGitHubClient(options.token);
+
+    const metaFile = await findVersionFile(path.join(process.cwd(), options.path));
+
+    const repository = await extendGitHubRepositoryEntity({
+        repo: github.context.repo.repo,
+        owner: github.context.repo.owner,
+    });
+
+    const hasChanged = await hasGItHubRepositoryChanged({
+        repository,
+        options,
+        VersionFile: metaFile,
+        sha: github.context.sha,
+    });
+
     if (!hasChanged) {
         core.info('Path content has not changed since last build.');
         return;
@@ -50,12 +67,8 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    const packageVersion = await findVersionForPackage(
-        options.path,
-        process.cwd(),
-    );
-    if (packageVersion) {
-        imageUrl = buildImageURL(imageId, packageVersion);
+    if (metaFile) {
+        imageUrl = buildImageURL(imageId, metaFile.version);
 
         tagImage(imageId, imageUrl);
 
