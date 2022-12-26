@@ -77,7 +77,7 @@ export async function execute() {
         `echo "${options.registryPassword}" | docker login ${options.registryHost} -u ${options.registryUser} --password-stdin`,
     );
 
-    const imageId = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`;
+    const imageId = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`.toLowerCase();
 
     buildDockerImage({
         fileName: options.dockerFileName,
