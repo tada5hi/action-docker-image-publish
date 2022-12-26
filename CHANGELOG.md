@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/Tada5hi/action-docker-release/compare/v1.6.3...v1.6.4) (2022-12-26)
+
+
+### Bug Fixes
+
+* move type to other directory ([c6d5875](https://github.com/Tada5hi/action-docker-release/commit/c6d5875613132515a70638f6b254b824a8e5f50c))
+
 ## [1.6.3](https://github.com/Tada5hi/action-docker-release/compare/v1.6.2...v1.6.3) (2022-12-26)
 
 
