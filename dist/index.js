@@ -93016,35 +93016,41 @@ function _execute() {
           });
         case 7:
           repository = _context.sent;
-          _context.next = 10;
+          if (!(options.path.length > 0 || options.ignores.length > 0)) {
+            _context.next = 20;
+            break;
+          }
+          _context.next = 11;
           return findGitHubCommitOfLatestRelease({
             repository: repository,
             options: options,
             versionFile: versionFile
           });
-        case 10:
+        case 11:
           commitSha = _context.sent;
           if (!commitSha) {
-            _context.next = 19;
+            _context.next = 20;
             break;
           }
           core.info('The package has been released before.');
-          _context.next = 15;
+          _context.next = 16;
           return checkGitHubCommitRangeForChanges({
             repository: repository,
             options: options,
             base: commitSha,
             head: github.context.sha
           });
-        case 15:
+        case 16:
           hasChanged = _context.sent;
           if (hasChanged) {
-            _context.next = 19;
+            _context.next = 20;
             break;
           }
           core.notice('The package src has not changed since the last release.');
           return _context.abrupt("return");
-        case 19:
+        case 20:
+          // todo: check if current commit is most recent.
+
           child_process.execSync("echo \"".concat(options.registryPassword, "\" | docker login ").concat(options.registryHost, " -u ").concat(options.registryUser, " --password-stdin"));
           imageId = "".concat(options.registryHost, "/").concat(options.registryProject, "/").concat(options.registryRepository);
           buildDockerImage({
@@ -93078,7 +93084,7 @@ function _execute() {
             removeDockerImage(imageId);
           }
           child_process.execSync("docker logout ".concat(options.registryHost));
-        case 29:
+        case 30:
         case "end":
           return _context.stop();
       }

@@ -38,26 +38,33 @@ export async function execute() {
         owner: github.context.repo.owner,
     });
 
-    const commitSha = await findGitHubCommitOfLatestRelease({
-        repository,
-        options,
-        versionFile,
-    });
-    if (commitSha) {
-        core.info('The package has been released before.');
-
-        const hasChanged = await checkGitHubCommitRangeForChanges({
+    if (
+        options.path.length > 0 ||
+        options.ignores.length > 0
+    ) {
+        const commitSha = await findGitHubCommitOfLatestRelease({
             repository,
             options,
-            base: commitSha,
-            head: github.context.sha,
+            versionFile,
         });
+        if (commitSha) {
+            core.info('The package has been released before.');
 
-        if (!hasChanged) {
-            core.notice('The package src has not changed since the last release.');
-            return;
+            const hasChanged = await checkGitHubCommitRangeForChanges({
+                repository,
+                options,
+                base: commitSha,
+                head: github.context.sha,
+            });
+
+            if (!hasChanged) {
+                core.notice('The package src has not changed since the last release.');
+                return;
+            }
         }
     }
+
+    // todo: check if current commit is most recent.
 
     execSync(
         `echo "${options.registryPassword}" | docker login ${options.registryHost} -u ${options.registryUser} --password-stdin`,
