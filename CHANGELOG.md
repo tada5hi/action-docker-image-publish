@@ -1,3 +1,19 @@
+# [1.3.0](https://github.com/Tada5hi/action-docker-release/compare/v1.2.0...v1.3.0) (2022-12-26)
+
+
+### Bug Fixes
+
+* better commit detection for related package release ([ac6d43c](https://github.com/Tada5hi/action-docker-release/commit/ac6d43c6c4a68ffb63dabbaeb57010270c435687))
+* ctx options ref ([896c145](https://github.com/Tada5hi/action-docker-release/commit/896c14555d341596e35c735ec1366faac14145d1))
+* extending github repository ([7e0c8fd](https://github.com/Tada5hi/action-docker-release/commit/7e0c8fda8dbd3f20241ad85d7b82d05157eb8395))
+* git tree path normalization ([3479c51](https://github.com/Tada5hi/action-docker-release/commit/3479c516dcf3b9d6f58e856d909b6b1c77ac7b71))
+* prevent to set a slash for empty string ([5d49278](https://github.com/Tada5hi/action-docker-release/commit/5d492780ac894206c07c96ba9bc6dac547871fe3))
+
+
+### Features
+
+* only check for changes if path or ignores option is set ([802d06d](https://github.com/Tada5hi/action-docker-release/commit/802d06dc0576b810689239495a4bbf73b82cb217))
+
 # [1.2.0](https://github.com/Tada5hi/action-docker-release/compare/v1.1.2...v1.2.0) (2022-12-25)
 
 
