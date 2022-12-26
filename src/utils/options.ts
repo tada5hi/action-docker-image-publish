@@ -7,8 +7,9 @@
 
 import core from '@actions/core';
 import github from '@actions/github';
-import { PACKAGE_PATH_DEFAULT, REGISTRY_GITHUB } from '../contants';
+import { REGISTRY_GITHUB } from '../contants';
 import { Options } from '../type';
+import { withoutLeadingSlash } from './url';
 
 export function buildOptions() : Options {
     const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
@@ -17,7 +18,8 @@ export function buildOptions() : Options {
     const imageTag = core.getInput('imageTag') || 'latest';
 
     const token = core.getInput('token', { required: true });
-    const path = core.getInput('path', { trimWhitespace: true }) || PACKAGE_PATH_DEFAULT;
+
+    const path = withoutLeadingSlash(core.getInput('path', { trimWhitespace: true }));
     const ignores = core.getInput('ignores').split(',');
 
     const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || REGISTRY_GITHUB;

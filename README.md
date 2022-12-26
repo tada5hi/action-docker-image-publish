@@ -14,10 +14,10 @@ with:
     # Default: Dockerfile
     dockerFileName: ''
 
-    # Default: .
+    # Default: ''
     dockerFilePath: ''
 
-    # Default: .
+    # Default: ''
     path: ''
 
     # Default: ''

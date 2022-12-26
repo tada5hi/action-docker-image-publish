@@ -8,26 +8,55 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import { execSync } from 'child_process';
+import path from 'path';
 import {
-    buildImage,
-    buildImageURL,
-    pushImage,
-    removeImage,
-    tagImage,
-} from './daemon';
+    buildDockerImage,
+    buildDockerImageURL,
+    pushDockerImage,
+    removeDockerImage,
+    tagDockerImage,
+} from './docker';
+import {
+    checkGitHubCommitRangeForChanges,
+    extendGitHubRepositoryEntity,
+    findGitHubCommitOfLatestRelease,
+    setupGitHubClient,
+} from './github';
 import {
     buildOptions,
-    findVersionForPackage,
-    hasPathContentChanged,
 } from './utils';
+import { findVersionFile } from './version-file';
 
 export async function execute() {
     const options = buildOptions();
-    const octokit = github.getOctokit(options.token);
-    const hasChanged = await hasPathContentChanged(octokit, options);
-    if (!hasChanged) {
-        core.info('Path content has not changed since last build.');
-        return;
+    setupGitHubClient(options.token);
+
+    const versionFile = await findVersionFile(path.join(process.cwd(), options.path));
+
+    const repository = await extendGitHubRepositoryEntity({
+        repo: github.context.repo.repo,
+        owner: github.context.repo.owner,
+    });
+
+    const commitSha = await findGitHubCommitOfLatestRelease({
+        repository,
+        options,
+        versionFile,
+    });
+    if (commitSha) {
+        core.info('The package has been released before.');
+
+        const hasChanged = await checkGitHubCommitRangeForChanges({
+            repository,
+            options,
+            base: commitSha,
+            head: github.context.sha,
+        });
+
+        if (!hasChanged) {
+            core.notice('The package src has not changed since the last release.');
+            return;
+        }
     }
 
     execSync(
@@ -36,7 +65,7 @@ export async function execute() {
 
     const imageId = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`;
 
-    buildImage({
+    buildDockerImage({
         fileName: options.dockerFileName,
         filePath: options.dockerFilePath,
         imageId,
@@ -50,34 +79,30 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    const packageVersion = await findVersionForPackage(
-        options.path,
-        process.cwd(),
-    );
-    if (packageVersion) {
-        imageUrl = buildImageURL(imageId, packageVersion);
+    if (versionFile) {
+        imageUrl = buildDockerImageURL(imageId, versionFile.version);
 
-        tagImage(imageId, imageUrl);
+        tagDockerImage(imageId, imageUrl);
 
-        pushImage(imageUrl);
+        pushDockerImage(imageUrl);
 
-        removeImage(imageUrl);
+        removeDockerImage(imageUrl);
     }
 
     // ----------------------------------------------------
 
-    imageUrl = buildImageURL(imageId, options.imageTag);
+    imageUrl = buildDockerImageURL(imageId, options.imageTag);
 
-    tagImage(imageId, imageUrl);
+    tagDockerImage(imageId, imageUrl);
 
-    pushImage(imageUrl);
+    pushDockerImage(imageUrl);
 
-    removeImage(imageUrl);
+    removeDockerImage(imageUrl);
 
     // ----------------------------------------------------
 
     if (options.imageTag !== 'latest') {
-        removeImage(imageId);
+        removeDockerImage(imageId);
     }
 
     execSync(`docker logout ${options.registryHost}`);

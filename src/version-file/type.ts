@@ -5,4 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-export const REGISTRY_GITHUB = 'ghcr.io';
+export type VersionFile = {
+    name?: string,
+    version: string,
+    path?: string
+};
