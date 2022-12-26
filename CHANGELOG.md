@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/Tada5hi/action-docker-release/compare/v1.6.0...v1.6.1) (2022-12-26)
+
+
+### Bug Fixes
+
+* ignores option building ([9b9fd67](https://github.com/Tada5hi/action-docker-release/commit/9b9fd673aa5222d0ca19d16515e813ac449b8e24))
+
 # [1.6.0](https://github.com/Tada5hi/action-docker-release/compare/v1.5.1...v1.6.0) (2022-12-26)
 
 
