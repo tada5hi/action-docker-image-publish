@@ -53,7 +53,7 @@ export async function execute() {
             versionFile,
         });
         if (commitSha) {
-            core.info('The package content has been released before.');
+            core.notice('The package has been released before.');
 
             const hasChanged = await checkGitHubCommitRangeForChanges({
                 repository,
