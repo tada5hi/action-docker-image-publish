@@ -1,3 +1,11 @@
+## [1.4.1](https://github.com/Tada5hi/action-docker-release/compare/v1.4.0...v1.4.1) (2022-12-26)
+
+
+### Bug Fixes
+
+* add precondition for commit range check ([7a839ff](https://github.com/Tada5hi/action-docker-release/commit/7a839ffe3efde3479fd9196703e94e65552c32bb))
+* transform repository name to lower case ([c380d0d](https://github.com/Tada5hi/action-docker-release/commit/c380d0d2e445abea615fbed9d79ea560d0cf4da3))
+
 # [1.4.0](https://github.com/Tada5hi/action-docker-release/compare/v1.3.0...v1.4.0) (2022-12-26)
 
 
