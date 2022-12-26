@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/Tada5hi/action-docker-release/compare/v1.6.2...v1.6.3) (2022-12-26)
+
+
+### Bug Fixes
+
+* enhance ref-name trimming for monorepo tags ([bf783e4](https://github.com/Tada5hi/action-docker-release/commit/bf783e4f0ea6eaa986b45007940a1d8bf59c54ec))
+
 ## [1.6.2](https://github.com/Tada5hi/action-docker-release/compare/v1.6.1...v1.6.2) (2022-12-26)
 
 
