@@ -61,6 +61,8 @@ export async function execute() {
                 core.notice('The package src has not changed since the last release.');
                 return;
             }
+        } else {
+            core.info('The package has not been released before.');
         }
     }
 

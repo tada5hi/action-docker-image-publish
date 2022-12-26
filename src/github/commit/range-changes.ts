@@ -5,6 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+import core from '@actions/core';
 import minimatch from 'minimatch';
 import { Options } from '../../type';
 import { cleanDoubleSlashes, withoutLeadingSlash } from '../../utils';
@@ -29,8 +30,10 @@ export async function checkGitHubCommitRangeForChanges(
         });
 
     if (comparison.files.length > 0) {
+        core.notice(`Inspecting ${comparison.files.length} commit files for changes.`);
+
         const path = withoutLeadingSlash(ctx.options.path);
-        const { ignores } = this.options;
+        const { ignores } = ctx.options;
         if (path.length !== 0) {
             for (let i = 0; i < ignores.length; i++) {
                 ignores[i] = cleanDoubleSlashes(`${path}/${ignores[i]}`);

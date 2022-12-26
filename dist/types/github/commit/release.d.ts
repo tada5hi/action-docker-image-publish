@@ -1,6 +1,6 @@
 import { Options } from '../../type';
 import { VersionFile } from '../../version-file';
-import { GithubRepository } from '../repository/type';
+import { GithubRepository } from '../repository';
 type Context = {
     options: Options;
     repository: GithubRepository;

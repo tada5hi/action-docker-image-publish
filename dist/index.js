@@ -89461,68 +89461,69 @@ function _checkGitHubCommitRangeForChanges() {
           _yield$useGitHubClien = _context.sent;
           comparison = _yield$useGitHubClien.data;
           if (!(comparison.files.length > 0)) {
-            _context.next = 28;
+            _context.next = 29;
             break;
           }
+          core.notice("Inspecting ".concat(comparison.files.length, " commit files for changes."));
           path = withoutLeadingSlash(ctx.options.path);
-          ignores = this.options.ignores;
+          ignores = ctx.options.ignores;
           if (path.length !== 0) {
             for (i = 0; i < ignores.length; i++) {
               ignores[i] = cleanDoubleSlashes("".concat(path, "/").concat(ignores[i]));
             }
           }
           _i = 0;
-        case 9:
+        case 10:
           if (!(_i < comparison.files.length)) {
-            _context.next = 28;
+            _context.next = 29;
             break;
           }
           if (!(path.length > 0 && !comparison.files[_i].filename.startsWith(path))) {
-            _context.next = 12;
+            _context.next = 13;
             break;
           }
-          return _context.abrupt("continue", 25);
-        case 12:
+          return _context.abrupt("continue", 26);
+        case 13:
           if (!(ignores.length === 0)) {
-            _context.next = 14;
+            _context.next = 15;
             break;
           }
           return _context.abrupt("return", true);
-        case 14:
+        case 15:
           isIgnored = false;
           j = 0;
-        case 16:
+        case 17:
           if (!(j < ignores.length)) {
-            _context.next = 23;
+            _context.next = 24;
             break;
           }
           if (!minimatch$1(comparison.files[j].filename, ignores[j])) {
-            _context.next = 20;
+            _context.next = 21;
             break;
           }
           isIgnored = true;
-          return _context.abrupt("break", 23);
-        case 20:
+          return _context.abrupt("break", 24);
+        case 21:
           j++;
-          _context.next = 16;
+          _context.next = 17;
           break;
-        case 23:
+        case 24:
           if (isIgnored) {
-            _context.next = 25;
+            _context.next = 26;
             break;
           }
           return _context.abrupt("return", true);
-        case 25:
+        case 26:
           _i++;
-          _context.next = 9;
+          _context.next = 10;
           break;
-        case 28:
-          return _context.abrupt("return", false);
         case 29:
+          return _context.abrupt("return", false);
+        case 30:
         case "end":
           return _context.stop();
       }
-    }, _callee, this);
+    }, _callee);
   }));
   return _checkGitHubCommitRangeForChanges.apply(this, arguments);
 }
@@ -92505,7 +92506,6 @@ function _findGitHubCommitOfLatestReleaseByPackage() {
           return useGitHubClient().rest.repos.listCommits(_objectSpread2({
             repo: ctx.repository.repo,
             owner: ctx.repository.owner,
-            since: createdAt,
             until: createdAt,
             per_page: 1
           }, path.length > 0 ? {
@@ -93016,7 +93016,7 @@ function _execute() {
         case 4:
           versionFile = _context.sent;
           if (!(options.path.length > 0 || options.ignores.length > 0)) {
-            _context.next = 20;
+            _context.next = 23;
             break;
           }
           _context.next = 8;
@@ -93035,7 +93035,7 @@ function _execute() {
         case 11:
           commitSha = _context.sent;
           if (!commitSha) {
-            _context.next = 20;
+            _context.next = 22;
             break;
           }
           core.info('The package has been released before.');
@@ -93055,6 +93055,11 @@ function _execute() {
           core.notice('The package src has not changed since the last release.');
           return _context.abrupt("return");
         case 20:
+          _context.next = 23;
+          break;
+        case 22:
+          core.info('The package has not been released before.');
+        case 23:
           // todo: check if current commit is most recent.
 
           child_process.execSync("echo \"".concat(options.registryPassword, "\" | docker login ").concat(options.registryHost, " -u ").concat(options.registryUser, " --password-stdin"));
@@ -93090,7 +93095,7 @@ function _execute() {
             removeDockerImage(imageId);
           }
           child_process.execSync("docker logout ".concat(options.registryHost));
-        case 30:
+        case 33:
         case "end":
           return _context.stop();
       }

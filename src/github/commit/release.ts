@@ -13,7 +13,7 @@ import { withoutLeadingSlash } from '../../utils';
 import { VersionFile } from '../../version-file';
 import { GithubOwnerType } from '../constants';
 import { useGitHubClient } from '../singleton';
-import { GithubRepository } from '../repository/type';
+import { GithubRepository } from '../repository';
 
 type Context = {
     options: Options,
@@ -71,7 +71,6 @@ export async function findGitHubCommitOfLatestReleaseByPackage(
             .rest.repos.listCommits({
                 repo: ctx.repository.repo,
                 owner: ctx.repository.owner,
-                since: createdAt,
                 until: createdAt,
                 per_page: 1,
                 ...(path.length > 0 ? { path } : {}),
