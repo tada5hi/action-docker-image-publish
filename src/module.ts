@@ -22,7 +22,7 @@ import {
     setupGitHubClient,
 } from './github';
 import {
-    buildOptions,
+    buildOptions, trimRefName,
 } from './utils';
 
 export async function execute() {
@@ -101,7 +101,10 @@ export async function execute() {
             options.gitTagPrefix.length === 0 ||
             ref.value.startsWith(options.gitTagPrefix)
         ) {
-            imageUrl = buildDockerImageURL(imageId, ref.value);
+            imageUrl = buildDockerImageURL(
+                imageId,
+                trimRefName(ref.value, options.gitTagPrefix),
+            );
 
             tagDockerImage(imageId, imageUrl);
 
