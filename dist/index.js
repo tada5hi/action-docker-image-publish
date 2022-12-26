@@ -89391,9 +89391,12 @@ function buildOptions() {
   var token = core.getInput('token', {
     required: true
   });
-  var path = withoutLeadingSlash(core.getInput('path', {
+  var path = core.getInput('path', {
     trimWhitespace: true
-  }));
+  });
+  if (path.length > 0) {
+    path = withoutLeadingSlash(path);
+  }
   var ignores = core.getInput('ignores').split(',');
   var registryHost = core.getInput('registryHost', {
     trimWhitespace: true

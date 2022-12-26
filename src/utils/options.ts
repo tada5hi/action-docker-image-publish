@@ -19,7 +19,10 @@ export function buildOptions() : Options {
 
     const token = core.getInput('token', { required: true });
 
-    const path = withoutLeadingSlash(core.getInput('path', { trimWhitespace: true }));
+    let path = core.getInput('path', { trimWhitespace: true });
+    if (path.length > 0) {
+        path = withoutLeadingSlash(path);
+    }
     const ignores = core.getInput('ignores').split(',');
 
     const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || REGISTRY_GITHUB;
