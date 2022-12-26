@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/Tada5hi/action-docker-release/compare/v1.5.1...v1.6.0) (2022-12-26)
+
+
+### Features
+
+* better control for git tag trigger ([2d80473](https://github.com/Tada5hi/action-docker-release/commit/2d8047392b5a113607678212a8777c592975352a))
+
 ## [1.5.1](https://github.com/Tada5hi/action-docker-release/compare/v1.5.0...v1.5.1) (2022-12-26)
 
 
