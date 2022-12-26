@@ -1,4 +1,4 @@
-name: 'DockerRelease'
+name: 'DockerImagePublish'
 description: 'Build, tag and push docker images under certain conditions.'
 inputs:
     dockerFileName:

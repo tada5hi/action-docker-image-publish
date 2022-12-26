@@ -1,17 +1,17 @@
-# DockerRelease 🎍
+# action-docker-image-publish 🎍
 
 This repository contains a GitHub action, to
 **build**, **tag** and **push** docker images, under certain conditions.
 
 The `path` option e.g. can be used to restrict the detection for changes to a
 specific directory.
-To ignore some files under that `path` use the `ignores` option, to define
+To ignore some files under that path use the `ignores` option, to define
 one or many glob patterns.
 
 ## Usage
 
 ```yaml
-uses: tada5hi/action-docker-release@master
+uses: tada5hi/action-docker-image-push@master
 with:
     # Name of Dockerfile
     # Default: Dockerfile
