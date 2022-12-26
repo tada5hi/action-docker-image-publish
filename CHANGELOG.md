@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/Tada5hi/action-docker-release/compare/v1.5.0...v1.5.1) (2022-12-26)
+
+
+### Bug Fixes
+
+* github input parsing ([5713c12](https://github.com/Tada5hi/action-docker-release/commit/5713c12b8f573ed422781796fc1d1d6b52045e01))
+
 # [1.5.0](https://github.com/Tada5hi/action-docker-release/compare/v1.4.1...v1.5.0) (2022-12-26)
 
 
