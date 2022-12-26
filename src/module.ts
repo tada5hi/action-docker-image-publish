@@ -24,13 +24,16 @@ import {
 import {
     buildOptions,
 } from './utils';
-import { findVersionFile } from './version-file';
+import { VersionFile, findVersionFile } from './version-file';
 
 export async function execute() {
     const options = buildOptions();
     setupGitHubClient(options.token);
 
-    const versionFile = await findVersionFile(options.path);
+    let versionFile : VersionFile | undefined;
+    if (options.versionFile) {
+        versionFile = await findVersionFile(options.path);
+    }
     if (versionFile) {
         core.notice(`Package version ${versionFile.version} detected.`);
     }

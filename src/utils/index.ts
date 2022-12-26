@@ -5,6 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+export * from './boolean';
 export * from './json-file';
 export * from './options';
 export * from './url';

@@ -1,4 +1,4 @@
-name: 'DockerJs'
+name: 'DockerRelease'
 description: 'Build and push docker image for js application/package.'
 inputs:
     token:
@@ -24,6 +24,8 @@ inputs:
         description: 'Registry project name (xxx/repository)'
     registryRepository:
         description: 'Registry repository name (project/xxx)'
+    versionFile:
+        description: 'Enable version file detection'
 runs:
     using: 'node16'
     main: 'dist/index.js'

@@ -40,4 +40,7 @@ with:
 
     # Default: github.repo
     registryRepository: ''
+
+    # Default: true
+    versionFile: ''
 ```

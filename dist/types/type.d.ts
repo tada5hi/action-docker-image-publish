@@ -52,5 +52,11 @@ export type Options = {
      * Default: github.repository.owner.repo
      */
     registryRepository: string;
+    /**
+     * Detect version by version file.
+     *
+     * Default: true
+     */
+    versionFile: boolean;
 };
 export type Octokit = ReturnType<typeof github.getOctokit>;
