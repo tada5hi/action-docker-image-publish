@@ -21,6 +21,22 @@ type Context = {
 export async function checkGitHubCommitRangeForChanges(
     ctx: Context,
 ) {
+    if (ctx.base === ctx.head) {
+        return false;
+    }
+
+    let { path } = ctx.options;
+    if (path.length > 0) {
+        path = withoutLeadingSlash(path);
+    }
+
+    if (
+        path.length === 0 &&
+        ctx.options.ignores.length === 0
+    ) {
+        return true;
+    }
+
     const { data: comparison } = await useGitHubClient()
         .rest.repos.compareCommits({
             repo: ctx.repository.repo,
@@ -32,7 +48,6 @@ export async function checkGitHubCommitRangeForChanges(
     if (comparison.files.length > 0) {
         core.notice(`Inspecting ${comparison.files.length} commit file(s) for changes.`);
 
-        const path = withoutLeadingSlash(ctx.options.path);
         const { ignores } = ctx.options;
         if (path.length !== 0) {
             for (let i = 0; i < ignores.length; i++) {
