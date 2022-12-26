@@ -7,6 +7,8 @@ inputs:
     dockerFilePath:
         description: 'Relative path to DockerFile'
         default: ''
+    gitTag:
+        description: 'Whether to create an image tag for a git tag.'
     gitTagPrefix:
         description: 'Prefix for matching git tags'
         default: ''

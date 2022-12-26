@@ -23,6 +23,13 @@ export type Options = {
     dockerFilePath: string,
 
     /**
+     * Whether to create an image tag for a git tag.
+     *
+     * Default: true
+     */
+    gitTag: boolean,
+
+    /**
      * Match for git tag with given prefix.
      *
      * Default: ''

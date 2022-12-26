@@ -9,6 +9,7 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { REGISTRY_GITHUB } from '../contants';
 import { Options } from '../type';
+import { toBoolean } from './boolean';
 import { withoutLeadingSlash } from './url';
 
 export function buildOptions() : Options {
@@ -22,6 +23,8 @@ export function buildOptions() : Options {
         path = withoutLeadingSlash(path);
     }
     const ignores = core.getInput('ignores').split(',');
+
+    const gitTag = toBoolean(core.getInput('gitTag')) ?? true;
     const gitTagPrefix = core.getInput('gitTagPrefix');
 
     const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || REGISTRY_GITHUB;
@@ -36,6 +39,8 @@ export function buildOptions() : Options {
         dockerFilePath,
 
         ignores,
+
+        gitTag,
         gitTagPrefix,
 
         registryHost,

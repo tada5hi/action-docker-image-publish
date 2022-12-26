@@ -93,7 +93,10 @@ export async function execute() {
     // ----------------------------------------------------
 
     // build docker image for git tag
-    if (ref.type === 'tag') {
+    if (
+        options.gitTag &&
+        ref.type === 'tag'
+    ) {
         if (
             options.gitTagPrefix.length === 0 ||
             ref.value.startsWith(options.gitTagPrefix)
@@ -112,6 +115,7 @@ export async function execute() {
 
     if (
         ref.type !== 'tag' ||
+        !options.gitTag ||
         options.registryTag.length > 0
     ) {
         options.registryTag = options.registryTag || 'latest';

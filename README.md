@@ -15,6 +15,10 @@ with:
     # Relative path to DockerFile
     # Default: ''
     dockerFilePath: ''
+    
+    # Whether to create an image tag for a git tag
+    # Default: true
+    gitTag: true
 
     # Prefix for matching git tags
     # Default: ''
