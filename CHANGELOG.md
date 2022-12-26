@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/Tada5hi/action-docker-release/compare/v1.3.0...v1.4.0) (2022-12-26)
+
+
+### Features
+
+* allow disabling version file ([3f137e8](https://github.com/Tada5hi/action-docker-release/commit/3f137e8279dba7ec899eb0b185e46956ac659477))
+
 # [1.3.0](https://github.com/Tada5hi/action-docker-release/compare/v1.2.0...v1.3.0) (2022-12-26)
 
 
