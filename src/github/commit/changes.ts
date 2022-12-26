@@ -49,10 +49,15 @@ export async function checkGitHubCommitRangeForChanges(
         core.notice(`Inspecting ${comparison.files.length} commit file(s) for changes.`);
 
         const { ignores } = ctx.options;
-        if (path.length !== 0) {
-            for (let i = 0; i < ignores.length; i++) {
+        for (let i = 0; i < ignores.length; i++) {
+            if (
+                path.length > 0 &&
+                !ignores[i].startsWith(path)
+            ) {
                 ignores[i] = cleanDoubleSlashes(`${path}/${ignores[i]}`);
             }
+
+            ignores[i] = withoutLeadingSlash(ignores[i]);
         }
 
         for (let i = 0; i < comparison.files.length; i++) {
