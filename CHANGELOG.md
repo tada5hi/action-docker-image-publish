@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/Tada5hi/action-docker-release/compare/v1.6.4...v1.6.5) (2023-01-04)
+
+
+### Bug Fixes
+
+* **deps:** bump json5 from 1.0.1 to 1.0.2 ([b4194e3](https://github.com/Tada5hi/action-docker-release/commit/b4194e3edc4fad0c2b41cba6ea2730e2a31206ec))
+
 ## [1.6.4](https://github.com/Tada5hi/action-docker-release/compare/v1.6.3...v1.6.4) (2022-12-26)
 
 
