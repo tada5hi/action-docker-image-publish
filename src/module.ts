@@ -93,6 +93,7 @@ export async function execute() {
         });
     }
 
+    const imageIdRemote = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`.toLowerCase();
     let imageUrl : string;
 
     // ----------------------------------------------------
@@ -107,7 +108,7 @@ export async function execute() {
             ref.value.startsWith(options.gitTagPrefix)
         ) {
             imageUrl = buildDockerImageURL(
-                imageId,
+                imageIdRemote,
                 trimRefName(ref.value, options.gitTagPrefix),
             );
 
@@ -128,7 +129,7 @@ export async function execute() {
     ) {
         options.registryTag = options.registryTag || 'latest';
 
-        imageUrl = buildDockerImageURL(imageId, options.registryTag);
+        imageUrl = buildDockerImageURL(imageIdRemote, options.registryTag);
 
         tagDockerImage(imageId, imageUrl);
 
