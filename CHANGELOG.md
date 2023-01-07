@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/Tada5hi/action-docker-release/compare/v1.6.5...v1.7.0) (2023-01-07)
+
+
+### Features
+
+* add cache support ([6fd29a9](https://github.com/Tada5hi/action-docker-release/commit/6fd29a982bfb531f71878e2e0b6603e8de7621e0))
+
 ## [1.6.5](https://github.com/Tada5hi/action-docker-release/compare/v1.6.4...v1.6.5) (2023-01-04)
 
 
