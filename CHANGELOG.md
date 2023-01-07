@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/Tada5hi/action-docker-release/compare/v1.7.0...v1.7.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* docker image-id building ([3138b41](https://github.com/Tada5hi/action-docker-release/commit/3138b41411bb0c40609fc1cef13d2fba450272f4))
+
 # [1.7.0](https://github.com/Tada5hi/action-docker-release/compare/v1.6.5...v1.7.0) (2023-01-07)
 
 
