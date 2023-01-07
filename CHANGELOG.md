@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/Tada5hi/action-docker-release/compare/v1.7.1...v1.7.2) (2023-01-07)
+
+
+### Bug Fixes
+
+* add missing option in action.yml ([b27ab9b](https://github.com/Tada5hi/action-docker-release/commit/b27ab9b95aadd68bfb9976236656b4fc62cbecbd))
+
 ## [1.7.1](https://github.com/Tada5hi/action-docker-release/compare/v1.7.0...v1.7.1) (2023-01-07)
 
 
