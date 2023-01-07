@@ -8,9 +8,10 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import { execSync } from 'child_process';
+import md5 from 'md5';
 import {
     buildDockerImage,
-    buildDockerImageURL,
+    buildDockerImageURL, checkDockerImage,
     pushDockerImage,
     removeDockerImage,
     tagDockerImage,
@@ -35,7 +36,11 @@ export async function execute() {
         return;
     }
 
+    const imageId = md5(github.context.ref);
+    const imageExists = checkDockerImage(imageId);
+
     if (
+        !imageExists &&
         ref.type === 'branch' &&
         (
             options.path.length > 0 ||
@@ -76,17 +81,17 @@ export async function execute() {
         `echo "${options.registryPassword}" | docker login ${options.registryHost} -u ${options.registryUser} --password-stdin`,
     );
 
-    const imageId = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`.toLowerCase();
-
-    buildDockerImage({
-        fileName: options.dockerFileName,
-        filePath: options.dockerFilePath,
-        imageId,
-        labels: {
-            runId: `${github.context.runId}`,
-            runNumber: `${github.context.runNumber}`,
-        },
-    });
+    if (!imageExists) {
+        buildDockerImage({
+            fileName: options.dockerFileName,
+            filePath: options.dockerFilePath,
+            imageId,
+            labels: {
+                runId: `${github.context.runId}`,
+                runNumber: `${github.context.runNumber}`,
+            },
+        });
+    }
 
     let imageUrl : string;
 
@@ -134,7 +139,7 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    if (options.registryTag !== 'latest') {
+    if (!options.cache) {
         removeDockerImage(imageId);
     }
 

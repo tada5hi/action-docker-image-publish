@@ -13,6 +13,7 @@ import { toBoolean } from './boolean';
 import { withoutLeadingSlash } from './url';
 
 export function buildOptions() : Options {
+    const cache = toBoolean(core.getInput('cache')) ?? false;
     const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
     const dockerFilePath = core.getInput('dockerFilePath') || '.';
 
@@ -35,6 +36,8 @@ export function buildOptions() : Options {
     const registryTag = core.getInput('registryTag') || 'latest';
 
     return {
+        cache,
+
         dockerFileName,
         dockerFilePath,
 

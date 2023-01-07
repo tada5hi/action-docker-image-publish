@@ -1,4 +1,5 @@
 export * from './image-build';
+export * from './image-exists';
 export * from './image-push';
 export * from './image-remove';
 export * from './image-tag';

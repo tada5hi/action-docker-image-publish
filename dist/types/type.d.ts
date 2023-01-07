@@ -1,5 +1,11 @@
 export type Options = {
     /**
+     * Cache docker image
+     *
+     * Default: false
+     */
+    cache: boolean;
+    /**
      * Dockerfile name
      *
      * default: Dockerfile
