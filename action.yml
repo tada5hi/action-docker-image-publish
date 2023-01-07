@@ -1,6 +1,8 @@
 name: 'DockerImagePublish'
 description: 'Build, tag and push docker images under certain conditions.'
 inputs:
+    cache:
+        description: 'Cache the build image'
     dockerFileName:
         description: 'Name of Dockerfile'
         default: 'Dockerfile'
