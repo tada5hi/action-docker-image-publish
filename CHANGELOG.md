@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/Tada5hi/action-docker-release/compare/v1.8.0...v1.9.0) (2023-10-24)
+
+
+### Features
+
+* implement get multiline input ([7e9d483](https://github.com/Tada5hi/action-docker-release/commit/7e9d48323b498855c2573b7f00258cf76ad5ac56))
+
 # [1.8.0](https://github.com/Tada5hi/action-docker-release/compare/v1.7.2...v1.8.0) (2023-10-24)
 
 
