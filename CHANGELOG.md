@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/Tada5hi/action-docker-release/compare/v1.7.2...v1.8.0) (2023-10-24)
+
+
+### Features
+
+* allow multiple tags & update dependencies ([1b0b6b9](https://github.com/Tada5hi/action-docker-release/commit/1b0b6b9237a0fd79e8076e1558521e99f9130169))
+
 ## [1.7.2](https://github.com/Tada5hi/action-docker-release/compare/v1.7.1...v1.7.2) (2023-01-07)
 
 
