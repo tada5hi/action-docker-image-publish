@@ -33,9 +33,13 @@ export function buildOptions() : Options {
     const registryPassword = core.getInput('registryPassword', { trimWhitespace: true }) || token;
     const registryProject = core.getInput('registryProject', { trimWhitespace: true }) || github.context.repo.owner;
     const registryRepository = core.getInput('registryRepository', { trimWhitespace: true }) || github.context.repo.repo;
-    const registryTag = core.getMultilineInput('registryTag');
-    if (registryTag.length === 0) {
-        registryTag.push('latest');
+    const registryTags = core.getInput('registryTag')
+        .split('\n')
+        .map((input) => input.trim())
+        .filter((x) => x !== '');
+
+    if (registryTags.length === 0) {
+        registryTags.push('latest');
     }
 
     return {
@@ -54,7 +58,7 @@ export function buildOptions() : Options {
         registryPassword,
         registryProject,
         registryRepository,
-        registryTag,
+        registryTags,
 
         path,
         token,

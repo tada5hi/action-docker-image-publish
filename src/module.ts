@@ -19,7 +19,8 @@ import {
 import {
     checkGitHubCommitRangeForChanges,
     extendGitHubRepositoryEntity,
-    findGitHubCommitByLatestPublication, parseGitHubRef,
+    findGitHubCommitByLatestPublication,
+    parseGitHubRef,
     setupGitHubClient,
 } from './github';
 import {
@@ -112,6 +113,8 @@ export async function execute() {
                 trimRefName(ref.value, options.gitTagPrefix),
             );
 
+            core.info(`Create tag: ${imageUrl}`);
+
             tagDockerImage(imageId, imageUrl);
 
             pushDockerImage(imageUrl);
@@ -125,10 +128,12 @@ export async function execute() {
     if (
         ref.type !== 'tag' ||
         !options.gitTag ||
-        options.registryTag.length > 0
+        options.registryTags.length > 0
     ) {
-        for (let i = 0; i < options.registryTag.length; i++) {
-            imageUrl = buildDockerImageURL(imageIdRemote, options.registryTag[i]);
+        for (let i = 0; i < options.registryTags.length; i++) {
+            imageUrl = buildDockerImageURL(imageIdRemote, options.registryTags[i]);
+
+            core.info(`Create tag: ${imageUrl}`);
 
             tagDockerImage(imageId, imageUrl);
 

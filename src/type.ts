@@ -82,7 +82,7 @@ export type Options = {
      *
      * Default: ['latest']
      */
-    registryTag: string[],
+    registryTags: string[],
 
     /**
      * Action secret
