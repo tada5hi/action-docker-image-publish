@@ -8,7 +8,7 @@
 import core from '@actions/core';
 import github from '@actions/github';
 import { REGISTRY_GITHUB } from '../contants';
-import { Options } from '../type';
+import type { Options } from '../type';
 import { toBoolean } from './boolean';
 import { withoutLeadingSlash } from './url';
 

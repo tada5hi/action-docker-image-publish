@@ -7,10 +7,10 @@
 
 import core from '@actions/core';
 import minimatch from 'minimatch';
-import { Options } from '../../type';
+import type { Options } from '../../type';
 import { cleanDoubleSlashes, withoutLeadingSlash } from '../../utils';
 import { useGitHubClient } from '../singleton';
-import { GithubRepository } from '../repository';
+import type { GithubRepository } from '../repository';
 
 type Context = {
     repository: GithubRepository,

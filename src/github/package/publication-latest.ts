@@ -6,9 +6,9 @@
  */
 
 import { isObject } from 'smob';
-import { Options } from '../../type';
+import type { Options } from '../../type';
 import { GithubOwnerType } from '../constants';
-import { GithubRepository } from '../repository';
+import type { GithubRepository } from '../repository';
 import { useGitHubClient } from '../singleton';
 
 export async function findGitHubPackageLatestPublicationDate(

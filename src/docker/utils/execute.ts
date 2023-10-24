@@ -1,4 +1,5 @@
-import { ExecSyncOptions, execSync } from 'child_process';
+import type { ExecSyncOptions } from 'child_process';
+import { execSync } from 'child_process';
 
 export function executeDockerCommand(
     command: string,

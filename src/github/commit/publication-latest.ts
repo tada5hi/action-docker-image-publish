@@ -6,9 +6,9 @@
  */
 
 import { REGISTRY_GITHUB } from '../../contants';
-import { Options } from '../../type';
+import type { Options } from '../../type';
 import { findGitHubPackageLatestPublicationDate } from '../package';
-import { GithubRepository } from '../repository';
+import type { GithubRepository } from '../repository';
 import { findGitHubCommitByDate } from './date';
 import { findGitHubCommitForLatestTag } from './tag-latest';
 

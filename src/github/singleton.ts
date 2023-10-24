@@ -1,6 +1,6 @@
 import core from '@actions/core';
 import github from '@actions/github';
-import { GitHubClient } from './type';
+import type { GitHubClient } from './type';
 
 let instance : GitHubClient;
 

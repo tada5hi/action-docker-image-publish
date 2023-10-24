@@ -1,4 +1,4 @@
-import { GithubOwnerType } from '../constants';
+import type { GithubOwnerType } from '../constants';
 export type GithubRepository = {
     owner: string;
     ownerType: `${GithubOwnerType}`;

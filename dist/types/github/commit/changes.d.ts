@@ -1,5 +1,5 @@
-import { Options } from '../../type';
-import { GithubRepository } from '../repository';
+import type { Options } from '../../type';
+import type { GithubRepository } from '../repository';
 type Context = {
     repository: GithubRepository;
     options: Options;

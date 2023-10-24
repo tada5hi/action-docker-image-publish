@@ -6,7 +6,7 @@
  */
 
 import { withoutLeadingSlash } from '../../utils';
-import { GithubRepository } from '../repository';
+import type { GithubRepository } from '../repository';
 import { useGitHubClient } from '../singleton';
 
 export async function findGitHubCommitByDate(

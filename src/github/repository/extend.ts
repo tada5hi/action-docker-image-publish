@@ -7,7 +7,7 @@
 
 import { GithubOwnerType } from '../constants';
 import { useGitHubClient } from '../singleton';
-import { GithubRepository, GithubRepositoryMinimal } from './type';
+import type { GithubRepository, GithubRepositoryMinimal } from './type';
 
 export async function extendGitHubRepositoryEntity(
     entity: GithubRepositoryMinimal,
