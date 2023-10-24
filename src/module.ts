@@ -127,15 +127,15 @@ export async function execute() {
         !options.gitTag ||
         options.registryTag.length > 0
     ) {
-        options.registryTag = options.registryTag || 'latest';
+        for (let i = 0; i < options.registryTag.length; i++) {
+            imageUrl = buildDockerImageURL(imageIdRemote, options.registryTag[i]);
 
-        imageUrl = buildDockerImageURL(imageIdRemote, options.registryTag);
+            tagDockerImage(imageId, imageUrl);
 
-        tagDockerImage(imageId, imageUrl);
+            pushDockerImage(imageUrl);
 
-        pushDockerImage(imageUrl);
-
-        removeDockerImage(imageUrl);
+            removeDockerImage(imageUrl);
+        }
     }
 
     // ----------------------------------------------------

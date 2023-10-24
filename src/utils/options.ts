@@ -33,7 +33,10 @@ export function buildOptions() : Options {
     const registryPassword = core.getInput('registryPassword', { trimWhitespace: true }) || token;
     const registryProject = core.getInput('registryProject', { trimWhitespace: true }) || github.context.repo.owner;
     const registryRepository = core.getInput('registryRepository', { trimWhitespace: true }) || github.context.repo.repo;
-    const registryTag = core.getInput('registryTag') || 'latest';
+    const registryTag = core.getMultilineInput('registryTag');
+    if (registryTag.length === 0) {
+        registryTag.push('latest');
+    }
 
     return {
         cache,

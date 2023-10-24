@@ -80,9 +80,9 @@ export type Options = {
     /**
      * Registry image tag (e.g. latest)
      *
-     * Default: ''
+     * Default: ['latest']
      */
-    registryTag: string,
+    registryTag: string[],
 
     /**
      * Action secret

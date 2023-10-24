@@ -7,7 +7,7 @@
 
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import babel from '@rollup/plugin-babel';
+import swc from '@rollup/plugin-swc';
 import json from '@rollup/plugin-json';
 import terser from "@rollup/plugin-terser";
 import pkg from './package.json' assert {type: 'json'};
@@ -34,13 +34,7 @@ export default [
             json(),
 
             // Compile TypeScript/JavaScript files
-            babel({
-                extensions,
-                babelHelpers: 'bundled',
-                include: [
-                    'src/**/*'
-                ],
-            }),
+            swc(),
 
             terser()
         ],
