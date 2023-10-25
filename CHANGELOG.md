@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/Tada5hi/action-docker-release/compare/v1.9.0...v2.0.0) (2023-10-25)
+
+
+### Features
+
+* simplified action & use async instead of sync process execution ([1f6ec0e](https://github.com/Tada5hi/action-docker-release/commit/1f6ec0e45683e120427d553ad9bf6faa8262c8bf))
+
+
+### BREAKING CHANGES
+
+* options & execution changed
+
 # [1.9.0](https://github.com/Tada5hi/action-docker-release/compare/v1.8.0...v1.9.0) (2023-10-24)
 
 
