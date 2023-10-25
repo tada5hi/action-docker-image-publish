@@ -30,7 +30,7 @@ export async function execute() {
 
     const ref = parseGitHubRef(github.context.ref);
     if (!ref) {
-        core.error('The GitHub ref could not be parsed.');
+        core.error('The git ref could not be parsed.');
         return;
     }
 
@@ -65,7 +65,7 @@ export async function execute() {
         options.gitTag &&
         ref.type === 'tag'
     ) {
-        core.info('Creating docker tags for git tags.');
+        core.info('Creating tags...');
 
         if (
             options.gitTagPrefix.length === 0 ||
@@ -83,7 +83,7 @@ export async function execute() {
             await removeDockerImage(imageUrl);
         }
 
-        core.info('Created docker tags for git tags.');
+        core.info('Created tags.');
     }
 
     // ----------------------------------------------------
@@ -93,7 +93,7 @@ export async function execute() {
         !options.gitTag ||
         options.registryTags.length > 0
     ) {
-        core.info('Creating docker tags for git tags.');
+        core.info('Creating tags...');
 
         for (let i = 0; i < options.registryTags.length; i++) {
             imageUrl = buildDockerImageURL(imageIdRemote, options.registryTags[i]);
@@ -105,7 +105,7 @@ export async function execute() {
             await removeDockerImage(imageUrl);
         }
 
-        core.info('Created docker tags for git tags.');
+        core.info('Created tags.');
     }
 
     // ----------------------------------------------------
