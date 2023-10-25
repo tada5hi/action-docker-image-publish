@@ -1,3 +1,11 @@
+## [2.0.2](https://github.com/Tada5hi/action-docker-release/compare/v2.0.1...v2.0.2) (2023-10-25)
+
+
+### Bug Fixes
+
+* add missign await for image check ([e4147ff](https://github.com/Tada5hi/action-docker-release/commit/e4147ff6c829ae36fd7462265ae8b64a2dafe3d6))
+* enhance log message format ([d55885d](https://github.com/Tada5hi/action-docker-release/commit/d55885daff61978fb0f4cba7186372a048ad5482))
+
 ## [2.0.1](https://github.com/Tada5hi/action-docker-release/compare/v2.0.0...v2.0.1) (2023-10-25)
 
 
