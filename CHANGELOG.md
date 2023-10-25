@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/Tada5hi/action-docker-release/compare/v2.0.0...v2.0.1) (2023-10-25)
+
+
+### Bug Fixes
+
+* node version range in action.yml ([3b0ebb3](https://github.com/Tada5hi/action-docker-release/commit/3b0ebb378b7c0401c396b3618bf51d85474ea3ba))
+
 # [2.0.0](https://github.com/Tada5hi/action-docker-release/compare/v1.9.0...v2.0.0) (2023-10-25)
 
 

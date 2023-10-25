@@ -1,6 +1,6 @@
 {
     "name": "action-docker-image-publish",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Release (build, tag & push) docker images.",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
