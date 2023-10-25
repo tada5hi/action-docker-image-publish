@@ -11,7 +11,8 @@ import { execSync } from 'node:child_process';
 import md5 from 'md5';
 import {
     buildDockerImage,
-    buildDockerImageURL, checkDockerImage,
+    buildDockerImageURL,
+    checkDockerImage,
     pushDockerImage,
     removeDockerImage,
     tagDockerImage,
@@ -34,7 +35,7 @@ export async function execute() {
     }
 
     const imageId = md5(github.context.ref);
-    const imageExists = checkDockerImage(imageId);
+    const imageExists = await checkDockerImage(imageId);
 
     execSync(
         `echo "${options.registryPassword}" | docker login ${options.registryHost} -u ${options.registryUser} --password-stdin`,
