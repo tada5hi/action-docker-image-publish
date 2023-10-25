@@ -1,1 +1,1 @@
-export declare function removeDockerImage(image: string): void;
+export declare function removeDockerImage(image: string): Promise<void>;

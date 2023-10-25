@@ -7,7 +7,7 @@
 
 import core from '@actions/core';
 import github from '@actions/github';
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
 import md5 from 'md5';
 import {
     buildDockerImage,
@@ -17,19 +17,15 @@ import {
     tagDockerImage,
 } from './docker';
 import {
-    checkGitHubCommitRangeForChanges,
-    extendGitHubRepositoryEntity,
-    findGitHubCommitByLatestPublication,
+    buildOptions,
     parseGitHubRef,
-    setupGitHubClient,
-} from './github';
-import {
-    buildOptions, trimRefName,
+    trimRefName,
 } from './utils';
 
 export async function execute() {
+    core.info('Booting...');
+
     const options = buildOptions();
-    setupGitHubClient(options.token);
 
     const ref = parseGitHubRef(github.context.ref);
     if (!ref) {
@@ -40,50 +36,14 @@ export async function execute() {
     const imageId = md5(github.context.ref);
     const imageExists = checkDockerImage(imageId);
 
-    if (
-        !imageExists &&
-        ref.type === 'branch' &&
-        (
-            options.path.length > 0 ||
-            options.ignores.length > 0
-        )
-    ) {
-        const repository = await extendGitHubRepositoryEntity({
-            repo: github.context.repo.repo,
-            owner: github.context.repo.owner,
-        });
-
-        const commitSha = await findGitHubCommitByLatestPublication(
-            repository,
-            options,
-        );
-        if (commitSha) {
-            core.notice('The package has been released before.');
-
-            const hasChanged = await checkGitHubCommitRangeForChanges({
-                repository,
-                options,
-                base: commitSha,
-                head: github.context.sha,
-            });
-
-            if (!hasChanged) {
-                core.notice('The package content has not changed since the last release.');
-                return;
-            }
-        } else {
-            core.notice('The package content has not been released before.');
-        }
-    }
-
-    // todo: check if current commit is most recent.
-
     execSync(
         `echo "${options.registryPassword}" | docker login ${options.registryHost} -u ${options.registryUser} --password-stdin`,
     );
 
     if (!imageExists) {
-        buildDockerImage({
+        core.info('Image does not exist.');
+
+        await buildDockerImage({
             fileName: options.dockerFileName,
             filePath: options.dockerFilePath,
             imageId,
@@ -104,6 +64,8 @@ export async function execute() {
         options.gitTag &&
         ref.type === 'tag'
     ) {
+        core.info('Creating docker tags for git tags.');
+
         if (
             options.gitTagPrefix.length === 0 ||
             ref.value.startsWith(options.gitTagPrefix)
@@ -113,14 +75,14 @@ export async function execute() {
                 trimRefName(ref.value, options.gitTagPrefix),
             );
 
-            core.info(`Create tag: ${imageUrl}`);
+            await tagDockerImage(imageId, imageUrl);
 
-            tagDockerImage(imageId, imageUrl);
+            await pushDockerImage(imageUrl);
 
-            pushDockerImage(imageUrl);
-
-            removeDockerImage(imageUrl);
+            await removeDockerImage(imageUrl);
         }
+
+        core.info('Created docker tags for git tags.');
     }
 
     // ----------------------------------------------------
@@ -130,24 +92,28 @@ export async function execute() {
         !options.gitTag ||
         options.registryTags.length > 0
     ) {
+        core.info('Creating docker tags for git tags.');
+
         for (let i = 0; i < options.registryTags.length; i++) {
             imageUrl = buildDockerImageURL(imageIdRemote, options.registryTags[i]);
 
-            core.info(`Create tag: ${imageUrl}`);
+            await tagDockerImage(imageId, imageUrl);
 
-            tagDockerImage(imageId, imageUrl);
+            await pushDockerImage(imageUrl);
 
-            pushDockerImage(imageUrl);
-
-            removeDockerImage(imageUrl);
+            await removeDockerImage(imageUrl);
         }
+
+        core.info('Created docker tags for git tags.');
     }
 
     // ----------------------------------------------------
 
     if (!options.cache) {
-        removeDockerImage(imageId);
+        await removeDockerImage(imageId);
     }
 
     execSync(`docker logout ${options.registryHost}`);
+
+    core.info('Finished.');
 }

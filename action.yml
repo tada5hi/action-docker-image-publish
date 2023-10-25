@@ -14,12 +14,6 @@ inputs:
     gitTagPrefix:
         description: 'Prefix for matching git tags'
         default: ''
-    ignores:
-        description: 'Glob pattern to ignore files & directories'
-        default: ''
-    path:
-        description: 'Relative path to check for changes'
-        default: ''
     registryHost:
         description: 'Registry host'
         default: 'ghcr.io'
@@ -42,5 +36,5 @@ inputs:
         description: 'Token to access GitHub API'
         default: ${{ github.token }}
 runs:
-    using: 'node16'
+    using: 'node18'
     main: 'dist/index.js'

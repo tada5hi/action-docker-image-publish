@@ -30,16 +30,6 @@ export type Options = {
      */
     gitTagPrefix: string;
     /**
-     * Glob pattern to ignore specific files & directories for changes.
-     */
-    ignores: string[];
-    /**
-     * Directory to check for changes.
-     *
-     * Default: .
-     */
-    path: string;
-    /**
      * Default: ghcr.io
      */
     registryHost: string;
@@ -69,4 +59,8 @@ export type Options = {
      * Action secret
      */
     token: string;
+};
+export type GithubRef = {
+    type: 'branch' | 'tag' | 'pull';
+    value: string;
 };

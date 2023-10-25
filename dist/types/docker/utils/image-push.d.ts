@@ -1,1 +1,1 @@
-export declare function pushDockerImage(name: string): void;
+export declare function pushDockerImage(name: string): Promise<void>;

@@ -1,1 +1,1 @@
-export declare function tagDockerImage(source: string, destination: string): void;
+export declare function tagDockerImage(source: string, destination: string): Promise<void>;

@@ -4,4 +4,4 @@ export type ImageBuildContext = {
     filePath: string;
     labels?: Record<string, string>;
 };
-export declare function buildDockerImage(context: ImageBuildContext): void;
+export declare function buildDockerImage(context: ImageBuildContext): Promise<void>;

@@ -8,10 +8,10 @@
 import core from '@actions/core';
 import { executeDockerCommand } from './execute';
 
-export function tagDockerImage(source: string, destination: string) {
+export async function tagDockerImage(source: string, destination: string) {
     core.notice(`Tagging image ${source} with ${destination}`);
 
-    executeDockerCommand(
+    await executeDockerCommand(
         `tag ${source} ${destination}`,
     );
 

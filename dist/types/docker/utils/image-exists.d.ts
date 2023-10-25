@@ -1,1 +1,1 @@
-export declare function checkDockerImage(image: string): boolean;
+export declare function checkDockerImage(image: string): Promise<boolean>;

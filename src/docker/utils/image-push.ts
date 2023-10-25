@@ -8,10 +8,10 @@
 import core from '@actions/core';
 import { executeDockerCommand } from './execute';
 
-export function pushDockerImage(name: string) {
+export async function pushDockerImage(name: string) {
     core.notice(`Pushing image: ${name}`);
 
-    executeDockerCommand(`push ${name}`);
+    await executeDockerCommand(`push ${name}`);
 
     core.notice('Pushed image');
 }

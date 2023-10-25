@@ -10,7 +10,6 @@ import github from '@actions/github';
 import { REGISTRY_GITHUB } from '../contants';
 import type { Options } from '../type';
 import { toBoolean } from './boolean';
-import { withoutLeadingSlash } from './url';
 
 export function buildOptions() : Options {
     const cache = toBoolean(core.getInput('cache')) ?? false;
@@ -18,12 +17,6 @@ export function buildOptions() : Options {
     const dockerFilePath = core.getInput('dockerFilePath') || '.';
 
     const token = core.getInput('token', { required: true });
-
-    let path = core.getInput('path', { trimWhitespace: true });
-    if (path.length > 0) {
-        path = withoutLeadingSlash(path);
-    }
-    const ignores = core.getInput('ignores').split(',');
 
     const gitTag = toBoolean(core.getInput('gitTag')) ?? true;
     const gitTagPrefix = core.getInput('gitTagPrefix');
@@ -48,8 +41,6 @@ export function buildOptions() : Options {
         dockerFileName,
         dockerFilePath,
 
-        ignores,
-
         gitTag,
         gitTagPrefix,
 
@@ -60,7 +51,6 @@ export function buildOptions() : Options {
         registryRepository,
         registryTags,
 
-        path,
         token,
     };
 }

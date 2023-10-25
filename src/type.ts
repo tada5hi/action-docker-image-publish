@@ -12,6 +12,7 @@ export type Options = {
      * Default: false
      */
     cache: boolean,
+
     /**
      * Dockerfile name
      *
@@ -39,18 +40,6 @@ export type Options = {
      * Default: ''
      */
     gitTagPrefix: string
-
-    /**
-     * Glob pattern to ignore specific files & directories for changes.
-     */
-    ignores: string[],
-
-    /**
-     * Directory to check for changes.
-     *
-     * Default: .
-     */
-    path: string,
 
     /**
      * Default: ghcr.io
@@ -88,4 +77,10 @@ export type Options = {
      * Action secret
      */
     token: string,
+};
+
+export type GithubRef = {
+    type: 'branch' | 'tag' | 'pull',
+
+    value: string
 };

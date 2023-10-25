@@ -29,14 +29,6 @@ with:
     # Default: ''
     gitTagPrefix: ''
 
-    # Glob pattern to ignore files & directories
-    # Default: ''
-    ignores: ''
-
-    # Relative path to check for changes
-    # Default: ''
-    path: ''
-
     # Default: ghcr.io
     registryHost: ''
     

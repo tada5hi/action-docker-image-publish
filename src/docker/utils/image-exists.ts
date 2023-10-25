@@ -7,8 +7,8 @@
 
 import { executeDockerCommand } from './execute';
 
-export function checkDockerImage(image: string) : boolean {
-    const output = executeDockerCommand(`images -q ${image}`);
+export async function checkDockerImage(image: string) : Promise<boolean> {
+    const output = await executeDockerCommand(`images -q ${image}`);
 
     return output.length > 0;
 }

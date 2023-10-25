@@ -5,7 +5,13 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
+import core from '@actions/core';
 import { execute } from './module';
 
 Promise.resolve()
-    .then(execute);
+    .then(execute)
+    .catch((err) => {
+        if (err instanceof Error) {
+            core.setFailed(err.message);
+        }
+    });

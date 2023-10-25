@@ -16,7 +16,7 @@ export type ImageBuildContext = {
     labels?: Record<string, string>
 };
 
-export function buildDockerImage(context: ImageBuildContext) {
+export async function buildDockerImage(context: ImageBuildContext) {
     core.notice(`Building image: ${context.imageId}`);
 
     let command = 'build .';
@@ -48,7 +48,7 @@ export function buildDockerImage(context: ImageBuildContext) {
         cwd = path.join(process.cwd(), cwd);
     }
 
-    executeDockerCommand(command, {
+    await executeDockerCommand(command, {
         cwd,
     });
 
