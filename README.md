@@ -7,7 +7,7 @@ under certain conditions.
 ## Usage
 
 ```yaml
-uses: tada5hi/action-docker-image-publish@v2
+uses: tada5hi/action-docker-image-publish@v3
 with:
     # Name of Dockerfile
     # Default: Dockerfile
