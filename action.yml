@@ -4,9 +4,11 @@ inputs:
     dockerFileName:
         description: 'Name of Dockerfile'
         default: 'Dockerfile'
+        required: true
     dockerFilePath:
         description: 'Relative path to DockerFile'
         default: '.'
+        required: true
     gitTag:
         description: 'Whether to create an image tag for a git tag.'
         default: 'true'
