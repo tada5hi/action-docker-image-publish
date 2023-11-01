@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/Tada5hi/action-docker-release/compare/v2.1.0...v2.1.1) (2023-11-01)
+
+
+### Bug Fixes
+
+* dockerfile command ([afe86a4](https://github.com/Tada5hi/action-docker-release/commit/afe86a46842055b1d0eacd1f42f0947fe007f410))
+
 # [2.1.0](https://github.com/Tada5hi/action-docker-release/compare/v2.0.2...v2.1.0) (2023-11-01)
 
 
