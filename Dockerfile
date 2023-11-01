@@ -10,4 +10,4 @@ RUN rm -rf ./node-modules
 RUN npm ci
 RUN npm run build
 
-CMD ["node", "dist/index.js"]
+CMD ["npm", "run", "start"]
