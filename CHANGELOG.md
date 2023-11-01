@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/Tada5hi/action-docker-release/compare/v2.0.2...v2.1.0) (2023-11-01)
+
+
+### Features
+
+* execute action in docker container ([b1e2160](https://github.com/Tada5hi/action-docker-release/commit/b1e2160b4082a77da3911413c53fc140c25dc265))
+
 ## [2.0.2](https://github.com/Tada5hi/action-docker-release/compare/v2.0.1...v2.0.2) (2023-10-25)
 
 
