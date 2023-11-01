@@ -63,9 +63,21 @@ jobs:
                 run: |
                     npm run lint
 
+    docker:
+        name: Docker
+        if: github.ref_name == 'master'
+        needs: [ build ]
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Action
+                uses: ./
+
     release:
         name: Release
-        needs: [build, lint]
+        needs: [ docker ]
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -84,15 +96,3 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
                 run: npx semantic-release
-
-    docker:
-        name: Docker
-        if: github.ref_name == 'master'
-        needs: [ build, release ]
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v4
-
-            -   name: Action
-                uses: ./
