@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/Tada5hi/action-docker-release/compare/v3.0.0...v3.0.1) (2023-11-01)
+
+
+### Bug Fixes
+
+* remove unused dependencies + merge release-config plugins ([5021d81](https://github.com/Tada5hi/action-docker-release/commit/5021d8182c13b4aaaf829d2f370dd06adcf9362a))
+
 ## [2.1.1](https://github.com/Tada5hi/action-docker-release/compare/v2.1.0...v2.1.1) (2023-11-01)
 
 
