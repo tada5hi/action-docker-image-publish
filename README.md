@@ -6,7 +6,7 @@ This repository contains a GitHub action, to
 ## Usage
 
 ```yaml
-uses: tada5hi/action-docker-image-publish@master
+uses: tada5hi/action-docker-image-publish@v2
 with:
     # Name of Dockerfile
     # Default: Dockerfile
