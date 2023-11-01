@@ -91,4 +91,4 @@ jobs:
         needs: [ build, release ]
         runs-on: ubuntu-latest
         steps:
-            - uses: tada5hi/action-docker-image-publish@master
+            - uses: ./

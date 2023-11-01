@@ -10,4 +10,6 @@ RUN rm -rf ./node-modules
 RUN npm ci
 RUN npm run build
 
-CMD ["npm", "run", "start"]
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
