@@ -49,6 +49,6 @@ export function buildOptions() : Options {
         registryPassword,
         registryProject,
         registryRepository,
-        registryTags
+        registryTags,
     };
 }
