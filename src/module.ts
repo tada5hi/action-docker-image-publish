@@ -19,6 +19,7 @@ import {
 } from './docker';
 import {
     buildOptions,
+    cleanDoubleSlashes,
     parseGitHubRef,
     trimRefName,
 } from './utils';
@@ -55,7 +56,7 @@ export async function execute() {
         });
     }
 
-    const imageIdRemote = `${options.registryHost}/${options.registryProject}/${options.registryRepository}`.toLowerCase();
+    const imageIdRemote = cleanDoubleSlashes(`${options.registryHost}/${options.registryRepository}`).toLowerCase();
     let imageUrl : string;
 
     // ----------------------------------------------------
@@ -110,8 +111,10 @@ export async function execute() {
 
     // ----------------------------------------------------
 
-    if (!options.cache) {
+    if (options.cleanup) {
+        core.info('Deleting built image...');
         await removeDockerImage(imageId);
+        core.info('Deleted built image.');
     }
 
     execSync(`docker logout ${options.registryHost}`);

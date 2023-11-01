@@ -7,13 +7,6 @@
 
 export type Options = {
     /**
-     * Cache docker image
-     *
-     * Default: false
-     */
-    cache: boolean,
-
-    /**
      * Dockerfile name
      *
      * default: Dockerfile
@@ -57,12 +50,7 @@ export type Options = {
     registryPassword: string,
 
     /**
-     * Default: github.repository.owner.name
-     */
-    registryProject: string,
-
-    /**
-     * Default: github.repository.owner.repo
+     * Default: github.repository
      */
     registryRepository: string,
 
@@ -71,7 +59,14 @@ export type Options = {
      *
      * Default: ['latest']
      */
-    registryTags: string[]
+    registryTags: string[],
+
+    /**
+     * Delete the built image at the end
+     *
+     * Default: true
+     */
+    cleanup: boolean,
 };
 
 export type GithubRef = {

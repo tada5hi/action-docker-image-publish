@@ -1,7 +1,8 @@
 # action-docker-image-publish 🎍
 
 This repository contains a GitHub action, to
-**build**, **tag** and **push** docker images, under certain conditions.
+**build**, **tag** and **push** docker images, 
+under certain conditions.
 
 ## Usage
 
@@ -10,36 +11,38 @@ uses: tada5hi/action-docker-image-publish@v2
 with:
     # Name of Dockerfile
     # Default: Dockerfile
-    dockerFileName: ''
+    dockerFileName: 'Dockerfile'
 
     # Relative path to DockerFile
-    # Default: ''
-    dockerFilePath: ''
+    # Default: '.'
+    dockerFilePath: '.'
     
     # Whether to create an image tag for a git tag
     # Default: true
-    gitTag: true
+    gitTag: 'true'
 
     # Prefix for matching git tags
     # Default: ''
     gitTagPrefix: ''
 
     # Default: ghcr.io
-    registryHost: ''
+    registryHost: 'ghcr.io'
     
     # Default: github.actor
-    registryUser: ''
+    registryUser: ${{ github.actor }}
     
     # Default: ${{ github.token }}
-    registryPassword: ''
+    registryPassword: ${{ github.token }}
 
-    # Default: github.{user,org}
-    registryProject: ''
-
-    # Default: github.repo
-    registryRepository: ''
+    # Registry repository full name (e.g. project/repository)
+    # Default: github.repository
+    registryRepository: ${{ github.repository }}
 
     # Registry image tag (e.g. latest)
     # Default: 'latest'
-    registryTag: ''
+    registryTag: 'latest'
+
+    # Delete the built image at the end
+    # Default: 'true'
+    cleanup: 'true'
 ```

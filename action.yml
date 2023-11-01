@@ -1,40 +1,38 @@
 name: 'DockerImagePublish'
 description: 'Build, tag and push docker images under certain conditions.'
 inputs:
-    cache:
-        description: 'Cache the build image'
     dockerFileName:
         description: 'Name of Dockerfile'
         default: 'Dockerfile'
     dockerFilePath:
         description: 'Relative path to DockerFile'
-        default: ''
+        default: '.'
     gitTag:
         description: 'Whether to create an image tag for a git tag.'
+        default: 'true'
     gitTagPrefix:
         description: 'Prefix for matching git tags'
         default: ''
     registryHost:
         description: 'Registry host'
         default: 'ghcr.io'
+        required: true
     registryUser:
         description: 'Registry user'
-        default: ''
+        default: ${{ github.actor }}
     registryPassword:
         description: 'Registry password'
         default: ${{ github.token }}
-    registryProject:
-        description: 'Registry project name (xxx/repository)'
-        default: ''
     registryRepository:
-        description: 'Registry repository name (project/xxx)'
-        default: ''
+        description: 'Registry repository full name (e.g. project/repository)'
+        default: ${{ github.repository }}
+        required: true
     registryTag:
         description: 'Registry image tag (e.g. latest)'
         default: ''
-    token:
-        description: 'Token to access GitHub API'
-        default: ${{ github.token }}
+    cleanup:
+        description: 'Delete the built image at the end'
+        default: 'true'
 runs:
     using: 'docker'
     image: 'Dockerfile'

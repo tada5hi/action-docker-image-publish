@@ -6,26 +6,21 @@
  */
 
 import core from '@actions/core';
-import github from '@actions/github';
-import { REGISTRY_GITHUB } from '../contants';
 import type { Options } from '../type';
 import { toBoolean } from './boolean';
 
 export function buildOptions() : Options {
-    const cache = toBoolean(core.getInput('cache')) ?? false;
+    const cleanup = toBoolean(core.getInput('cleanup')) ?? true;
     const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
     const dockerFilePath = core.getInput('dockerFilePath') || '.';
-
-    const token = core.getInput('token');
 
     const gitTag = toBoolean(core.getInput('gitTag')) ?? true;
     const gitTagPrefix = core.getInput('gitTagPrefix');
 
-    const registryHost = core.getInput('registryHost', { trimWhitespace: true }) || REGISTRY_GITHUB;
-    const registryUser = core.getInput('registryUser', { trimWhitespace: true }) || github.context.actor;
-    const registryPassword = core.getInput('registryPassword', { trimWhitespace: true }) || token;
-    const registryProject = core.getInput('registryProject', { trimWhitespace: true }) || github.context.repo.owner;
-    const registryRepository = core.getInput('registryRepository', { trimWhitespace: true }) || github.context.repo.repo;
+    const registryHost = core.getInput('registryHost', { trimWhitespace: true });
+    const registryUser = core.getInput('registryUser', { trimWhitespace: true });
+    const registryPassword = core.getInput('registryPassword', { trimWhitespace: true });
+    const registryRepository = core.getInput('registryRepository', { trimWhitespace: true });
     const registryTags = core.getInput('registryTag')
         .split('\n')
         .map((input) => input.trim())
@@ -36,7 +31,7 @@ export function buildOptions() : Options {
     }
 
     return {
-        cache,
+        cleanup,
 
         dockerFileName,
         dockerFilePath,
@@ -47,7 +42,6 @@ export function buildOptions() : Options {
         registryHost,
         registryUser,
         registryPassword,
-        registryProject,
         registryRepository,
         registryTags,
     };
