@@ -42,8 +42,4 @@ with:
     # Registry image tag (e.g. latest)
     # Default: 'latest'
     registryTag: ''
-    
-    # Token to access GitHub API
-    # Default: ${{ github.token }}
-    token: ''
 ```

@@ -36,5 +36,5 @@ inputs:
         description: 'Token to access GitHub API'
         default: ${{ github.token }}
 runs:
-    using: 'node20'
-    main: 'dist/index.js'
+    using: 'docker'
+    image: 'Dockerfile'

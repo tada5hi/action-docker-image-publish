@@ -29,39 +29,23 @@ jobs:
               uses: ./.github/actions/install
               with:
                   node-version: ${{ env.PRIMARY_NODE_VERSION }}
-    dist:
-        name: Check dist directory
+    build:
+        name: Build Package
+        needs: [install]
         runs-on: ubuntu-latest
-        needs: [build]
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v4
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Install
+              uses: ./.github/actions/install
+              with:
+                  node-version: ${{ env.PRIMARY_NODE_VERSION }}
+            - name: Build
+              uses: ./.github/actions/build
 
-            -   name: Install
-                uses: ./.github/actions/install
-                with:
-                    node-version: ${{ env.PRIMARY_NODE_VERSION }}
-
-            -   name: Rebuild the dist/ directory
-                run: npm run build
-
-            -   name: Compare the expected and actual dist/ directories
-                run: |
-                    if [ "$(git diff --ignore-space-at-eol dist/ | wc -l)" -gt "0" ]; then
-                      echo "Detected uncommitted changes after build.  See status below:"
-                      git diff
-                      exit 1
-                    fi
-                id: diff
-
-            -   uses: actions/upload-artifact@v3
-                if: ${{ failure() && steps.diff.conclusion == 'failure' }}
-                with:
-                    name: dist
-                    path: dist/
     lint:
         name: lint Package
-        needs: [build, dist]
+        needs: [build]
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -79,23 +63,9 @@ jobs:
                 run: |
                     npm run lint
 
-    build:
-        name: Build Package
-        needs: [install]
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-            - name: Install
-              uses: ./.github/actions/install
-              with:
-                  node-version: ${{ env.PRIMARY_NODE_VERSION }}
-            - name: Build
-              uses: ./.github/actions/build
-
     release:
         name: Release
-        needs: [dist, lint]
+        needs: [build]
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
@@ -114,3 +84,11 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
                 run: npx semantic-release
+
+    docker:
+        name: Docker
+        if: github.ref_name == 'master'
+        needs: [ build, release ]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: tada5hi/action-docker-image-publish@master

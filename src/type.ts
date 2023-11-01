@@ -71,12 +71,7 @@ export type Options = {
      *
      * Default: ['latest']
      */
-    registryTags: string[],
-
-    /**
-     * Action secret
-     */
-    token: string,
+    registryTags: string[]
 };
 
 export type GithubRef = {

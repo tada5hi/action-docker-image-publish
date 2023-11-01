@@ -16,7 +16,7 @@ export function buildOptions() : Options {
     const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
     const dockerFilePath = core.getInput('dockerFilePath') || '.';
 
-    const token = core.getInput('token', { required: true });
+    const token = core.getInput('token');
 
     const gitTag = toBoolean(core.getInput('gitTag')) ?? true;
     const gitTagPrefix = core.getInput('gitTagPrefix');
@@ -49,8 +49,6 @@ export function buildOptions() : Options {
         registryPassword,
         registryProject,
         registryRepository,
-        registryTags,
-
-        token,
+        registryTags
     };
 }
