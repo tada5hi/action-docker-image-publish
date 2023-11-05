@@ -14,8 +14,8 @@ with:
     dockerFileName: 'Dockerfile'
 
     # Relative path to DockerFile
-    # Default: '.'
-    dockerFilePath: '.'
+    # Default: ''
+    dockerFilePath: ''
     
     # Whether to create an image tag for a git tag
     # Default: true

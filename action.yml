@@ -7,7 +7,7 @@ inputs:
         required: true
     dockerFilePath:
         description: 'Relative path to DockerFile'
-        default: '.'
+        default: ''
         required: true
     gitTag:
         description: 'Whether to create an image tag for a git tag.'
@@ -35,6 +35,10 @@ inputs:
     cleanup:
         description: 'Delete the built image at the end'
         default: 'true'
+    token:
+        description: 'Token to access GitHub API'
+        default: ${{ github.token }}
+
 runs:
     using: 'docker'
     image: 'Dockerfile'

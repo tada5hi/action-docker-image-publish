@@ -6,13 +6,13 @@
  */
 
 import core from '@actions/core';
-import path from 'path';
+import path from 'node:path';
 import { executeDockerCommand } from './execute';
 
 export type ImageBuildContext = {
     imageId: string,
     fileName: string,
-    filePath: string,
+    cwd: string,
     labels?: Record<string, string>
 };
 
@@ -43,7 +43,7 @@ export async function buildDockerImage(context: ImageBuildContext) {
         command += ` ${parts.join(' ')}`;
     }
 
-    let cwd = context.filePath || process.cwd();
+    let cwd = context.cwd || process.cwd();
     if (!path.isAbsolute(cwd)) {
         cwd = path.join(process.cwd(), cwd);
     }

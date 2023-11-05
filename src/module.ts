@@ -9,6 +9,7 @@ import core from '@actions/core';
 import github from '@actions/github';
 import { execSync } from 'node:child_process';
 import md5 from 'md5';
+import path from 'path';
 import {
     buildDockerImage,
     buildDockerImageURL,
@@ -23,6 +24,7 @@ import {
     parseGitHubRef,
     trimRefName,
 } from './utils';
+import { clone } from './utils/clone';
 
 export async function execute() {
     core.info('Booting...');
@@ -35,6 +37,18 @@ export async function execute() {
         return;
     }
 
+    const root = process.cwd();
+    const directory = '.output';
+
+    core.info('Cloning github repository...');
+
+    clone({
+        ref,
+        directory,
+        root,
+        token: options.token,
+    });
+
     const imageId = md5(github.context.ref);
     const imageExists = await checkDockerImage(imageId);
 
@@ -43,11 +57,16 @@ export async function execute() {
     );
 
     if (!imageExists) {
+        let cwd = path.join(root, directory);
+        if (options.dockerFilePath.length > 0) {
+            cwd = path.join(cwd, options.dockerFilePath);
+        }
+
         core.info('Image does not exist.');
 
         await buildDockerImage({
             fileName: options.dockerFileName,
-            filePath: options.dockerFilePath,
+            cwd,
             imageId,
             labels: {
                 runId: `${github.context.runId}`,
@@ -56,7 +75,10 @@ export async function execute() {
         });
     }
 
-    const imageIdRemote = cleanDoubleSlashes(`${options.registryHost}/${options.registryRepository}`).toLowerCase();
+    const imageIdRemote = cleanDoubleSlashes(
+        `${options.registryHost}/${options.registryRepository}`,
+    ).toLowerCase();
+
     let imageUrl : string;
 
     // ----------------------------------------------------

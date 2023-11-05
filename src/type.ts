@@ -16,7 +16,7 @@ export type Options = {
     /**
      * Path to Dockerfile
      *
-     * Default: .
+     * Default: ""
      */
     dockerFilePath: string,
 
@@ -67,6 +67,11 @@ export type Options = {
      * Default: true
      */
     cleanup: boolean,
+
+    /**
+     * GitHub access token
+     */
+    token: string
 };
 
 export type GithubRef = {

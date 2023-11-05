@@ -12,7 +12,9 @@ import { toBoolean } from './boolean';
 export function buildOptions() : Options {
     const cleanup = toBoolean(core.getInput('cleanup')) ?? true;
     const dockerFileName = core.getInput('dockerFileName') || 'Dockerfile';
-    const dockerFilePath = core.getInput('dockerFilePath') || '.';
+    const dockerFilePath = core.getInput('dockerFilePath') || '';
+
+    const token = core.getInput('token', { required: true });
 
     const gitTag = toBoolean(core.getInput('gitTag')) ?? true;
     const gitTagPrefix = core.getInput('gitTagPrefix');
@@ -44,5 +46,7 @@ export function buildOptions() : Options {
         registryPassword,
         registryRepository,
         registryTags,
+
+        token,
     };
 }
