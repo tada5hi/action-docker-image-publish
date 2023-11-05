@@ -25,7 +25,7 @@ export function clone(ctx: CloneContext) {
         parts.push(`--branch ${ctx.ref.value}`);
     }
 
-    parts.push(`https://${ctx.token}@github.com/${context.repo.repo}/${context.repo.owner}`);
+    parts.push(`https://${ctx.token}@github.com/${context.repo.owner}/${context.repo.repo}`);
     parts.push(ctx.directory);
 
     execSync(parts.join(' '), {
