@@ -1,6 +1,7 @@
 FROM node:18-alpine
 
 RUN apk add docker
+RUN apk add git
 
 RUN mkdir -p /usr/src/app
 
