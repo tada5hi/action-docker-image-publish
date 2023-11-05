@@ -1,3 +1,16 @@
+# [3.1.0](https://github.com/Tada5hi/action-docker-release/compare/v3.0.1...v3.1.0) (2023-11-05)
+
+
+### Bug Fixes
+
+* clone github address ([49574ab](https://github.com/Tada5hi/action-docker-release/commit/49574ab5f5e629c99ab0aa7eb2c93cdb3b2379f6))
+* install git in container ([79987f8](https://github.com/Tada5hi/action-docker-release/commit/79987f84aa5c70280ab43c0d93f85d0736a092f9))
+
+
+### Features
+
+* clone repo in output directory ([6286c63](https://github.com/Tada5hi/action-docker-release/commit/6286c6378934f2b019e7988f9f77b537dd850937))
+
 ## [3.0.1](https://github.com/Tada5hi/action-docker-release/compare/v3.0.0...v3.0.1) (2023-11-01)
 
 
