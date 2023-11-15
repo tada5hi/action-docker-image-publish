@@ -13,6 +13,7 @@ type CloneContext = {
     root: string,
     directory: string,
     ref: GithubRef,
+    user: string,
     password: string
 };
 
@@ -55,7 +56,7 @@ export function clone(ctx: CloneContext) {
         parts.push(`--branch ${ctx.ref.value}`);
     }
 
-    parts.push(`https://${escapePassword(ctx.password)}@github.com/${context.repo.owner}/${context.repo.repo}`);
+    parts.push(`https://${ctx.user}:${escapePassword(ctx.password)}@github.com/${context.repo.owner}/${context.repo.repo}`);
     parts.push(ctx.directory);
 
     execSync(parts.join(' '), {

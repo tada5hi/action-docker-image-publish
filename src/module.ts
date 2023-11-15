@@ -46,7 +46,8 @@ export async function execute() {
         ref,
         directory,
         root,
-        password: options.token,
+        user: options.gitUser,
+        password: options.gitPassword,
     });
 
     const imageId = md5(github.context.ref);

@@ -15,6 +15,12 @@ inputs:
     gitTagPrefix:
         description: 'Prefix for matching git tags'
         default: ''
+    gitUser:
+        description: 'Git user'
+        default: ${{ github.actor }}
+    gitPassword:
+        description: 'Git password'
+        default: ${{ github.token }}
     registryHost:
         description: 'Registry host'
         default: 'ghcr.io'

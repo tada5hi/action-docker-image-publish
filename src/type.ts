@@ -32,7 +32,21 @@ export type Options = {
      *
      * Default: ''
      */
-    gitTagPrefix: string
+    gitTagPrefix: string,
+
+    /**
+     * Git user
+     *
+     * Default: github.actor
+     */
+    gitUser: string,
+
+    /**
+     * Git password
+     *
+     * Default: github.password
+     */
+    gitPassword: string,
 
     /**
      * Default: ghcr.io

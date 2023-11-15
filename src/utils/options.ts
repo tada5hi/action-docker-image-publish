@@ -18,6 +18,8 @@ export function buildOptions() : Options {
 
     const gitTag = toBoolean(core.getInput('gitTag')) ?? true;
     const gitTagPrefix = core.getInput('gitTagPrefix');
+    const gitUser = core.getInput('gitUser', { required: true });
+    const gitPassword = core.getInput('gitPassword', { required: true });
 
     const registryHost = core.getInput('registryHost', { trimWhitespace: true });
     const registryUser = core.getInput('registryUser', { trimWhitespace: true });
@@ -40,6 +42,8 @@ export function buildOptions() : Options {
 
         gitTag,
         gitTagPrefix,
+        gitUser,
+        gitPassword,
 
         registryHost,
         registryUser,
