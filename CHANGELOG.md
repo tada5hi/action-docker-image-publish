@@ -1,3 +1,11 @@
+# [3.2.0](https://github.com/Tada5hi/action-docker-release/compare/v3.1.0...v3.2.0) (2023-11-15)
+
+
+### Features
+
+* escape git token/password ([4c17479](https://github.com/Tada5hi/action-docker-release/commit/4c17479b4a7f6f03eab831aefb3e30f766492997))
+* specifiy git user & password for cloning repository ([4ac64f1](https://github.com/Tada5hi/action-docker-release/commit/4ac64f1d737cd98dd53ae3e1d0cee0c3153f7c78))
+
 # [3.1.0](https://github.com/Tada5hi/action-docker-release/compare/v3.0.1...v3.1.0) (2023-11-05)
 
 
