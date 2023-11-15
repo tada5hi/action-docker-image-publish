@@ -13,8 +13,38 @@ type CloneContext = {
     root: string,
     directory: string,
     ref: GithubRef,
-    token: string
+    password: string
 };
+
+const characterMap : Record<string, string> = {
+    '!': '%21',
+    '#': '%23',
+    $: '%24',
+    '&': '%26',
+    '\'': '%27',
+    '(': '%28',
+    ')': '%29',
+    '*': '%2A',
+    '+': '%2B',
+    ',': '%2C',
+    '/': '%2F',
+    ':': '%3A',
+    ';': '%3B',
+    '=': '%3D',
+    '?': '%3F',
+    '@': '%40',
+    '[': '%5B',
+    ']': '%5D',
+};
+
+function escapePassword(token: string) {
+    let output = '';
+    for (let i = 0; i < token.length; i++) {
+        output += characterMap[token[i]] || token[i];
+    }
+
+    return output;
+}
 export function clone(ctx: CloneContext) {
     const parts : string[] = [
         'git',
@@ -25,7 +55,7 @@ export function clone(ctx: CloneContext) {
         parts.push(`--branch ${ctx.ref.value}`);
     }
 
-    parts.push(`https://${ctx.token}@github.com/${context.repo.owner}/${context.repo.repo}`);
+    parts.push(`https://${escapePassword(ctx.password)}@github.com/${context.repo.owner}/${context.repo.repo}`);
     parts.push(ctx.directory);
 
     execSync(parts.join(' '), {
