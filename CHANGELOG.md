@@ -1,3 +1,20 @@
+# [3.3.0](https://github.com/tada5hi/action-docker-image-publish/compare/v3.2.0...v3.3.0) (2025-03-06)
+
+
+### Bug Fixes
+
+* add missing semver types dependency ([7ecbe04](https://github.com/tada5hi/action-docker-image-publish/commit/7ecbe0449c4067d369facec552bb7c4dc25b8148))
+* **deps:** bump the minorandpatch group with 14 updates ([#128](https://github.com/tada5hi/action-docker-image-publish/issues/128)) ([910925a](https://github.com/tada5hi/action-docker-image-publish/commit/910925accfad5eb9b3b2acb41ba11e54313c7d82))
+* **deps:** dump @tada5hi/semantic-release ([293a35e](https://github.com/tada5hi/action-docker-image-publish/commit/293a35ef4b230c542d3c421343fd1db8fc4cd23a))
+* package.json repository url for semantic release ([de762de](https://github.com/tada5hi/action-docker-image-publish/commit/de762def8ef93fb9353a3cf7917d76732474d89c))
+* replace 'assert' with 'with' keywoard ([7ca5424](https://github.com/tada5hi/action-docker-image-publish/commit/7ca5424e8b46d328890ea3190184abca95b9d976))
+* repository name in package.json ([d2f0b37](https://github.com/tada5hi/action-docker-image-publish/commit/d2f0b3770310eafce67bbf083e1cd8f1ccfe8041))
+
+
+### Features
+
+* dump node version in Dockerfile ([54e7acb](https://github.com/tada5hi/action-docker-image-publish/commit/54e7acbc74d901bb456ed7aa7fbee137697cb1dc))
+
 # [3.2.0](https://github.com/Tada5hi/action-docker-release/compare/v3.1.0...v3.2.0) (2023-11-15)
 
 
