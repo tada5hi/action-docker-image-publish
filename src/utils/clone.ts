@@ -7,7 +7,7 @@
 
 import { context } from '@actions/github';
 import { execSync } from 'node:child_process';
-import type { GithubRef } from '../type';
+import type { GithubRef } from '../types';
 
 type CloneContext = {
     root: string,

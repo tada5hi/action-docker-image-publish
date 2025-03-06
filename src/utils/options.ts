@@ -6,7 +6,7 @@
  */
 
 import core from '@actions/core';
-import type { Options } from '../type';
+import type { Options } from '../types';
 import { toBoolean } from './boolean';
 
 export function buildOptions() : Options {

@@ -5,7 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import type { GithubRef } from '../type';
+import type { GithubRef } from '../types';
 
 export function parseGitHubRef(ref: string) : GithubRef | undefined {
     const parts = ref.split('/');

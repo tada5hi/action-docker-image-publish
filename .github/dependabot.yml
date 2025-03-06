@@ -34,6 +34,8 @@ updates:
                   - "major"
           minorAndPatch:
               applies-to: version-updates
+              exclude-patterns:
+                  - "eslint"
               update-types:
                   - "patch"
                   - "minor"
