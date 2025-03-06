@@ -36,12 +36,12 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tada5hi/action-docker-release.git"
+        "url": "git+https://github.com/tada5hi/action-docker-image-publish.git"
     },
     "bugs": {
-        "url": "https://github.com/tada5hi/action-docker-release/issues"
+        "url": "https://github.com/tada5hi/action-docker-image-publish/issues"
     },
-    "homepage": "https://github.com/tada5hi/action-docker-release#readme",
+    "homepage": "https://github.com/tada5hi/action-docker-image-publish#readme",
     "devDependencies": {
         "@rollup/plugin-commonjs": "^28.0.2",
         "@rollup/plugin-json": "^6.1.0",
