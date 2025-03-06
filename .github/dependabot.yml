@@ -3,6 +3,7 @@ updates:
     # Maintain dependencies for GitHub Actions
     - package-ecosystem: "github-actions"
       directory: "/"
+      target-branch: "develop"
       schedule:
           interval: "daily"
 
@@ -12,7 +13,28 @@ updates:
       schedule:
           interval: "daily"
       versioning-strategy: "increase"
+      target-branch: "develop"
+      open-pull-requests-limit: 20
       commit-message:
           prefix: "fix"
           prefix-development: "build"
           include: "scope"
+      groups:
+          majorProd:
+              applies-to: version-updates
+              dependency-type: production
+              update-types:
+                  - "major"
+          majorDev:
+              applies-to: version-updates
+              dependency-type: development
+              exclude-patterns:
+                  - "eslint"
+              update-types:
+                  - "major"
+          minorAndPatch:
+              applies-to: version-updates
+              update-types:
+                  - "patch"
+                  - "minor"
+
