@@ -13,7 +13,7 @@ updates:
       schedule:
           interval: "daily"
       versioning-strategy: "increase"
-      target-branch: "develop"
+      target-branch: "master"
       open-pull-requests-limit: 20
       commit-message:
           prefix: "fix"
@@ -34,8 +34,6 @@ updates:
                   - "major"
           minorAndPatch:
               applies-to: version-updates
-              exclude-patterns:
-                  - "eslint"
               update-types:
                   - "patch"
                   - "minor"
