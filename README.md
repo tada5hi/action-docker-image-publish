@@ -45,4 +45,9 @@ with:
     # Delete the built image at the end
     # Default: 'true'
     cleanup: 'true'
+
+    # Provide additional build args
+    # Default: ''
+    buildArgs: |
+        foo=bar
 ```

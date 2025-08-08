@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022.
+ * Copyright (c) 2022-2025.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
@@ -34,6 +34,10 @@ export function buildOptions() : Options {
         registryTags.push('latest');
     }
 
+    const buildArgs = core.getInput('buildArgs')
+        .split(/\r?\n/)
+        .filter(Boolean);
+
     return {
         cleanup,
 
@@ -52,5 +56,7 @@ export function buildOptions() : Options {
         registryTags,
 
         token,
+
+        buildArgs,
     };
 }

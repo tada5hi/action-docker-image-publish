@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2022.
+ * Copyright (c) 2022-2025.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
@@ -13,7 +13,8 @@ export type ImageBuildContext = {
     imageId: string,
     fileName: string,
     cwd: string,
-    labels?: Record<string, string>
+    labels?: Record<string, string>,
+    buildArgs?: Record<string, string> | string[]
 };
 
 export async function buildDockerImage(context: ImageBuildContext) {
@@ -21,20 +22,34 @@ export async function buildDockerImage(context: ImageBuildContext) {
 
     let command = 'build .';
 
-    const options : [string, string][] = [
+    const commandArgs : [string, string][] = [
         ['file', context.fileName],
         ['tag', context.imageId],
     ];
+
     if (context.labels) {
         const keys = Object.keys(context.labels);
         for (let i = 0; i < keys.length; i++) {
-            options.push(['label', `"${keys[i]}=${context.labels[keys[i]]}"`]);
+            commandArgs.push(['label', `"${keys[i]}=${context.labels[keys[i]]}"`]);
+        }
+    }
+
+    if (context.buildArgs) {
+        if (Array.isArray(context.buildArgs)) {
+            for (let i = 0; i < context.buildArgs.length; i++) {
+                commandArgs.push(['build-arg', `${context.buildArgs[i]}`]);
+            }
+        } else {
+            const keys = Object.keys(context.buildArgs);
+            for (let i = 0; i < keys.length; i++) {
+                commandArgs.push(['build-arg', `${keys[i]}=${context.buildArgs[keys[i]]}`]);
+            }
         }
     }
 
     const parts : string[] = [];
-    for (let i = 0; i < options.length; i++) {
-        const [key, value] = options[i];
+    for (let i = 0; i < commandArgs.length; i++) {
+        const [key, value] = commandArgs[i];
 
         parts.push(`--${key} ${value}`);
     }

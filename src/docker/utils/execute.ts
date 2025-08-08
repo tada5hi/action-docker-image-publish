@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025.
+ * Author Peter Placzek (tada5hi)
+ * For the full copyright and license information,
+ * view the LICENSE file that was distributed with this source code.
+ */
+
 import core from '@actions/core';
 import type { ExecSyncOptions } from 'child_process';
 import { exec } from 'node:child_process';
