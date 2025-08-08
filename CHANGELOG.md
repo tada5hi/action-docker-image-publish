@@ -36,6 +36,13 @@
 
 * clone repo in output directory ([6286c63](https://github.com/Tada5hi/action-docker-release/commit/6286c6378934f2b019e7988f9f77b537dd850937))
 
+## [3.4.0](https://github.com/tada5hi/action-docker-image-publish/compare/v3.3.0...v3.4.0) (2025-08-08)
+
+
+### Features
+
+* allow passing build args ([339928b](https://github.com/tada5hi/action-docker-image-publish/commit/339928b92ba307b919f10ed4cdf2eb920131dea5))
+
 ## [3.0.1](https://github.com/Tada5hi/action-docker-release/compare/v3.0.0...v3.0.1) (2023-11-01)
 
 
