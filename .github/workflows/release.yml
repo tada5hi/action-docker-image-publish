@@ -75,6 +75,7 @@ jobs:
                     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             -   name: Docker
+                if: steps.release.outputs.releases_created == 'true'
                 uses: ./
 
 
