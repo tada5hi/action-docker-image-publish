@@ -1,6 +1,6 @@
 {
     "name": "action-docker-image-publish",
-    "version": "3.4.0",
+    "version": "4.0.0",
     "type": "module",
     "description": "Release (build, tag & push) docker images.",
     "main": "dist/index.mjs",
