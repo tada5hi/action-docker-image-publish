@@ -144,7 +144,7 @@ Commits follow **[Conventional Commits](https://www.conventionalcommits.org)**, 
 Automated by `.github/workflows/release.yml` on every push to `master`:
 
 1. **release-please** opens or updates a release PR that bumps the version, updates `CHANGELOG.md`, and syncs `.release-please-manifest.json`.
-2. Merging it creates the git tag and GitHub release, and the workflow force-moves the floating `vN` and `vN.M` tags so `uses: tada5hi/dimp@v3` keeps working.
+2. Merging it creates the git tag and GitHub release, and the workflow force-moves the floating `vN` and `vN.M` tags so `uses: tada5hi/craneship@v3` keeps working.
 3. On that same run, install → build → **publish to npm** via `tada5hi/monoship@v2`.
 
 Releases are never cut by hand.

@@ -5,7 +5,7 @@ Single npm package, no workspaces and no monorepo tooling. One source tree produ
 ## Directory Layout
 
 ```
-dimp/
+craneship/
 ├── src/
 │   ├── index.ts                     # Library barrel, the public API surface
 │   ├── cli.ts                       # CLI entry (#!/usr/bin/env node, citty runMain)
@@ -120,7 +120,7 @@ There is intentionally **no** `@actions/core` or `@actions/github` dependency. T
 {
     "main": "dist/index.mjs",
     "types": "dist/index.d.mts",
-    "bin": { "dimp": "dist/cli.mjs" },
+    "bin": { "craneship": "dist/cli.mjs" },
     "exports": {
         "./package.json": "./package.json",
         ".": {

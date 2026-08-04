@@ -1,5 +1,5 @@
 {
-    "name": "dimp",
+    "name": "craneship",
     "version": "4.0.0",
     "type": "module",
     "description": "Build, tag and push docker images, with the tags derived from the git ref.",
@@ -13,7 +13,7 @@
         }
     },
     "bin": {
-        "dimp": "dist/cli.mjs"
+        "craneship": "dist/cli.mjs"
     },
     "files": [
         "dist"
@@ -57,12 +57,12 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tada5hi/dimp.git"
+        "url": "git+https://github.com/tada5hi/craneship.git"
     },
     "bugs": {
-        "url": "https://github.com/tada5hi/dimp/issues"
+        "url": "https://github.com/tada5hi/craneship/issues"
     },
-    "homepage": "https://github.com/tada5hi/dimp#readme",
+    "homepage": "https://github.com/tada5hi/craneship#readme",
     "devDependencies": {
         "@tada5hi/commitlint-config": "^1.3.1",
         "@tada5hi/eslint-config": "^2.3.1",

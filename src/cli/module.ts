@@ -20,7 +20,7 @@ import { PUBLISH_COMMAND_ARGS } from './args.ts';
 export function createCLIEntryPointCommand() {
     return defineCommand({
         meta: {
-            name: 'dimp',
+            name: 'craneship',
             description: 'Build, tag and push docker images, with the tags derived from the git ref.',
         },
         args: PUBLISH_COMMAND_ARGS,

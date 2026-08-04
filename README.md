@@ -1,8 +1,8 @@
 <p align="center">
-    <img src=".github/assets/logo.svg" alt="dimp" width="120" height="120">
+    <img src=".github/assets/logo.svg" alt="craneship" width="120" height="120">
 </p>
 
-<h1 align="center">dimp</h1>
+<h1 align="center">craneship</h1>
 
 <p align="center">
     <b>Build, tag and push docker images, with the tags derived from the git ref.</b><br>
@@ -11,8 +11,8 @@
 </p>
 
 <p align="center">
-    <a href="https://npmjs.com/package/dimp"><img src="https://badge.fury.io/js/dimp.svg" alt="npm version"></a>
-    <a href="https://github.com/tada5hi/dimp/actions/workflows/main.yml"><img src="https://github.com/tada5hi/dimp/workflows/CI/badge.svg" alt="CI"></a>
+    <a href="https://npmjs.com/package/craneship"><img src="https://badge.fury.io/js/craneship.svg" alt="npm version"></a>
+    <a href="https://github.com/tada5hi/craneship/actions/workflows/main.yml"><img src="https://github.com/tada5hi/craneship/workflows/CI/badge.svg" alt="CI"></a>
     <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white" alt="Conventional Commits"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
 </p>
@@ -33,8 +33,8 @@
 
 > **Renamed in v4.** This project was `action-docker-image-publish` up to v3. GitHub redirects the old
 > repository path, so `uses: tada5hi/action-docker-image-publish@v3` keeps working, but new workflows
-> should use `tada5hi/dimp`. On npm the old package name stays frozen at 3.4.0; v4 and later are
-> published as [`dimp`](https://npmjs.com/package/dimp).
+> should use `tada5hi/craneship`. On npm the old package name stays frozen at 3.4.0; v4 and later are
+> published as [`craneship`](https://npmjs.com/package/craneship).
 
 ## How it works
 
@@ -53,7 +53,7 @@ resulting reference. A ref which has already been built during the same job is n
 ```yaml
 -   uses: actions/checkout@v4
 
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         registryTag: 'latest'
 ```
@@ -65,7 +65,7 @@ The action builds the **checked out workspace**, so `actions/checkout` has to ru
 workflow cannot check out, set `clone: 'true'` and the repository is cloned at the ref instead:
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         clone: 'true'
 ```
@@ -94,7 +94,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v4
-            -   uses: tada5hi/dimp@v4
+            -   uses: tada5hi/craneship@v4
 ```
 
 Nothing else is needed: `registryHost` defaults to `ghcr.io`, the credentials default to
@@ -112,7 +112,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v4
-            -   uses: tada5hi/dimp@v4
+            -   uses: tada5hi/craneship@v4
                 with:
                     registryTag: 'latest'
 ```
@@ -123,7 +123,7 @@ For `refs/tags/v1.2.3` this pushes **both** `:1.2.3` (derived from the tag) and 
 ### Publish several tags at once
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         registryTag: |
             latest
@@ -140,7 +140,7 @@ Tags like `some-package@v1.2.3` are matched with `gitTagPrefix`, and the prefix 
 resulting image tag:
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         gitTagPrefix: 'some-package'
         dockerFilePath: 'packages/some-package'
@@ -153,7 +153,7 @@ with `gitTagPrefix` is skipped, so each package's workflow only reacts to its ow
 ### A Dockerfile somewhere other than the root
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         dockerFilePath: 'services/api'
         dockerFileName: 'Dockerfile.production'
@@ -165,7 +165,7 @@ with `gitTagPrefix` is skipped, so each package's workflow only reacts to its ow
 ### Build args
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         buildArgs: |
             NODE_VERSION=24
@@ -178,7 +178,7 @@ shell, so spaces and metacharacters need no quoting.
 ### Publish to Docker Hub instead of GHCR
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         registryHost: 'docker.io'
         registryUser: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -191,7 +191,7 @@ shell, so spaces and metacharacters need no quoting.
 A `registryTag` starting with `sha` is attached as a digest rather than a tag:
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         registryTag: 'sha256:${{ github.sha }}'
 ```
@@ -201,7 +201,7 @@ A `registryTag` starting with `sha` is attached as a digest rather than a tag:
 ### Ignore git tags entirely
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         gitTag: 'false'
         registryTag: 'edge'
@@ -212,7 +212,7 @@ With `gitTag: 'false'` a tag ref no longer contributes an image tag, so only `re
 ### Keep the built image for later steps
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         cleanup: 'false'
 
@@ -227,7 +227,7 @@ Only relevant together with `clone: 'true'`, since the credentials are used for 
 nothing else:
 
 ```yaml
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         clone: 'true'
         gitUser: ${{ github.actor }}
@@ -245,7 +245,7 @@ tokens containing `@`, `:` or `/` work.
     with:
         node-version: 22
 
--   uses: tada5hi/dimp@v4
+-   uses: tada5hi/craneship@v4
     with:
         node-version: ''
 ```
@@ -295,7 +295,7 @@ A `registryTag` starting with `sha` is attached as a digest (`image@sha256:...`)
 The same logic is available as a CLI, so it can run outside GitHub Actions:
 
 ```bash
-npx dimp \
+npx craneship \
     --clone \
     --ref refs/tags/v1.2.3 \
     --repository tada5hi/some-repo \
@@ -313,7 +313,7 @@ Boolean flags are negated with `--no-` (e.g. `--no-cleanup`, `--no-gitTag`).
 `--clone` is usually what you want outside a workflow: without it the CLI builds the current working
 directory, with it the repository is cloned at `--ref` into `.output` and built from there.
 
-Run `dimp --help` for the full list.
+Run `craneship --help` for the full list.
 
 ## Programmatic API
 
@@ -327,7 +327,7 @@ import {
     ConsolaLogger,
     NodeCommandRunner,
     publish,
-} from 'dimp';
+} from 'craneship';
 
 const runner = new NodeCommandRunner();
 

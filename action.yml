@@ -1,4 +1,4 @@
-name: 'dimp'
+name: 'craneship'
 description: 'Build, tag and push docker images, with the tags derived from the git ref.'
 
 inputs:

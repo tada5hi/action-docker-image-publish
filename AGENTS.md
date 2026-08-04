@@ -1,6 +1,6 @@
 <!-- NOTE: Keep this file and all corresponding files in the .agents directory updated as the project evolves. When making architectural changes, adding new patterns, or discovering important conventions, update the relevant sections. -->
 
-# dimp: Agent Guide
+# craneship: Agent Guide
 
 A GitHub Action **and** CLI which builds a docker image from a repository at a given git ref, then tags and pushes it under every tag that ref implies (`refs/tags/v1.2.3` → `1.2.3`, monorepo tags like `some-package@v1.2.3` → `1.2.3`, plus any explicit `registryTag`).
 
@@ -36,7 +36,7 @@ node dist/cli.mjs --help
 | Library          | `src/index.ts`  | `dist/index.mjs` | `publish()` plus every port and adapter     |
 | CLI (`bin`)      | `src/cli.ts`    | `dist/cli.mjs`   | What `action.yml` executes                  |
 
-There is no `Dockerfile`. The action used to be a Docker action; it is now composite, and the container image it used to publish was dropped along with it. Use `npx dimp` to run this outside a workflow.
+There is no `Dockerfile`. The action used to be a Docker action; it is now composite, and the container image it used to publish was dropped along with it. Use `npx craneship` to run this outside a workflow.
 
 ## Detailed Guides
 
