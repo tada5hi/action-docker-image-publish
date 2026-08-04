@@ -1,5 +1,5 @@
-name: 'DockerImagePublish'
-description: 'Build, tag and push docker images under certain conditions.'
+name: 'dimp'
+description: 'Build, tag and push docker images, with the tags derived from the git ref.'
 
 inputs:
     dockerFileName:

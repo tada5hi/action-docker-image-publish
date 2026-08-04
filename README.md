@@ -1,8 +1,8 @@
 <p align="center">
-    <img src=".github/assets/logo.svg" alt="action-docker-image-publish" width="120" height="120">
+    <img src=".github/assets/logo.svg" alt="dimp" width="120" height="120">
 </p>
 
-<h1 align="center">action-docker-image-publish</h1>
+<h1 align="center">dimp</h1>
 
 <p align="center">
     <b>Build, tag and push docker images, with the tags derived from the git ref.</b><br>
@@ -11,7 +11,8 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/tada5hi/action-docker-image-publish/actions/workflows/main.yml"><img src="https://github.com/tada5hi/action-docker-image-publish/workflows/CI/badge.svg" alt="CI"></a>
+    <a href="https://npmjs.com/package/dimp"><img src="https://badge.fury.io/js/dimp.svg" alt="npm version"></a>
+    <a href="https://github.com/tada5hi/dimp/actions/workflows/main.yml"><img src="https://github.com/tada5hi/dimp/workflows/CI/badge.svg" alt="CI"></a>
     <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white" alt="Conventional Commits"></a>
     <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
 </p>
@@ -30,6 +31,11 @@
 
 ---
 
+> **Renamed in v4.** This project was `action-docker-image-publish` up to v3. GitHub redirects the old
+> repository path, so `uses: tada5hi/action-docker-image-publish@v3` keeps working, but new workflows
+> should use `tada5hi/dimp`. On npm the old package name stays frozen at 3.4.0; v4 and later are
+> published as [`dimp`](https://npmjs.com/package/dimp).
+
 ## How it works
 
 The action derives the image tags from the git ref it is run for, so a workflow does not have to
@@ -45,7 +51,7 @@ resulting reference. A ref which has already been built during the same job is n
 ## Usage
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         registryTag: 'latest'
 ```
@@ -80,7 +86,7 @@ jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
-            -   uses: tada5hi/action-docker-image-publish@v4
+            -   uses: tada5hi/dimp@v4
 ```
 
 Nothing else is needed: `registryHost` defaults to `ghcr.io`, the credentials default to
@@ -97,7 +103,7 @@ jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
-            -   uses: tada5hi/action-docker-image-publish@v4
+            -   uses: tada5hi/dimp@v4
                 with:
                     registryTag: 'latest'
 ```
@@ -108,7 +114,7 @@ For `refs/tags/v1.2.3` this pushes **both** `:1.2.3` (derived from the tag) and 
 ### Publish several tags at once
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         registryTag: |
             latest
@@ -125,7 +131,7 @@ Tags like `some-package@v1.2.3` are matched with `gitTagPrefix`, and the prefix 
 resulting image tag:
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         gitTagPrefix: 'some-package'
         dockerFilePath: 'packages/some-package'
@@ -138,7 +144,7 @@ with `gitTagPrefix` is skipped, so each package's workflow only reacts to its ow
 ### A Dockerfile somewhere other than the root
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         dockerFilePath: 'services/api'
         dockerFileName: 'Dockerfile.production'
@@ -150,7 +156,7 @@ with `gitTagPrefix` is skipped, so each package's workflow only reacts to its ow
 ### Build args
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         buildArgs: |
             NODE_VERSION=24
@@ -163,7 +169,7 @@ shell, so spaces and metacharacters need no quoting.
 ### Publish to Docker Hub instead of GHCR
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         registryHost: 'docker.io'
         registryUser: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -176,7 +182,7 @@ shell, so spaces and metacharacters need no quoting.
 A `registryTag` starting with `sha` is attached as a digest rather than a tag:
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         registryTag: 'sha256:${{ github.sha }}'
 ```
@@ -186,7 +192,7 @@ A `registryTag` starting with `sha` is attached as a digest rather than a tag:
 ### Ignore git tags entirely
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         gitTag: 'false'
         registryTag: 'edge'
@@ -197,7 +203,7 @@ With `gitTag: 'false'` a tag ref no longer contributes an image tag, so only `re
 ### Keep the built image for later steps
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         cleanup: 'false'
 
@@ -209,7 +215,7 @@ By default the locally built image is removed once every tag has been pushed.
 ### Clone a private repository
 
 ```yaml
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         gitUser: ${{ github.actor }}
         gitPassword: ${{ secrets.SOME_PAT }}
@@ -226,7 +232,7 @@ tokens containing `@`, `:` or `/` work.
     with:
         node-version: 22
 
--   uses: tada5hi/action-docker-image-publish@v4
+-   uses: tada5hi/dimp@v4
     with:
         node-version: ''
 ```
@@ -275,7 +281,7 @@ A `registryTag` starting with `sha` is attached as a digest (`image@sha256:...`)
 The same logic is available as a CLI, so it can run outside GitHub Actions:
 
 ```bash
-npx action-docker-image-publish \
+npx dimp \
     --ref refs/tags/v1.2.3 \
     --repository tada5hi/some-repo \
     --registryHost ghcr.io \
@@ -289,7 +295,7 @@ Every flag defaults to the corresponding `GITHUB_*` environment variable (`GITHU
 `GITHUB_REPOSITORY`, `GITHUB_ACTOR`, `GITHUB_TOKEN`, …), so inside a workflow no flags are required.
 Boolean flags are negated with `--no-` (e.g. `--no-cleanup`, `--no-gitTag`).
 
-Run `action-docker-image-publish --help` for the full list.
+Run `dimp --help` for the full list.
 
 ## Programmatic API
 
@@ -303,7 +309,7 @@ import {
     ConsolaLogger,
     NodeCommandRunner,
     publish,
-} from 'action-docker-image-publish';
+} from 'dimp';
 
 const runner = new NodeCommandRunner();
 

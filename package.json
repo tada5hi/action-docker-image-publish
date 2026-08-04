@@ -1,8 +1,8 @@
 {
-    "name": "action-docker-image-publish",
+    "name": "dimp",
     "version": "3.4.0",
     "type": "module",
-    "description": "Release (build, tag & push) docker images.",
+    "description": "Build, tag and push docker images, with the tags derived from the git ref.",
     "main": "dist/index.mjs",
     "types": "dist/index.d.mts",
     "exports": {
@@ -13,7 +13,7 @@
         }
     },
     "bin": {
-        "action-docker-image-publish": "dist/cli.mjs"
+        "dimp": "dist/cli.mjs"
     },
     "files": [
         "dist"
@@ -39,24 +39,30 @@
     "license": "MIT",
     "keywords": [
         "docker",
-        "release",
+        "docker-image",
+        "oci",
+        "registry",
+        "ghcr",
         "publish",
+        "push",
         "tag",
         "build",
-        "push",
-        "versioning"
+        "versioning",
+        "semver",
+        "github-action",
+        "cli"
     ],
     "publishConfig": {
         "access": "public"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tada5hi/action-docker-image-publish.git"
+        "url": "git+https://github.com/tada5hi/dimp.git"
     },
     "bugs": {
-        "url": "https://github.com/tada5hi/action-docker-image-publish/issues"
+        "url": "https://github.com/tada5hi/dimp/issues"
     },
-    "homepage": "https://github.com/tada5hi/action-docker-image-publish#readme",
+    "homepage": "https://github.com/tada5hi/dimp#readme",
     "devDependencies": {
         "@tada5hi/commitlint-config": "^1.3.1",
         "@tada5hi/eslint-config": "^2.3.1",
