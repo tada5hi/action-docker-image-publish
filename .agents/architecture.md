@@ -1,6 +1,6 @@
 # Architecture
 
-The package follows a **ports and adapters** (hexagonal) design. Every side effect — spawning a process, talking to docker, cloning a repository, writing to the console — sits behind an interface with at least two implementations: a real one and an in-memory one.
+The package follows a **ports and adapters** (hexagonal) design. Every side effect (spawning a process, talking to docker, cloning a repository, writing to the console) sits behind an interface with at least two implementations: a real one and an in-memory one.
 
 This is what makes `publish()` testable: the whole publish flow is exercised in unit tests without a docker daemon, a registry, or a network.
 
@@ -30,7 +30,7 @@ export interface IDockerClient {
 
 ### Adapters layer on each other
 
-`DockerCLIClient` and `GitCLIClient` do not spawn processes themselves — they depend on `ICommandRunner`. That is one more seam: a docker test can assert the exact argv without stubbing `node:child_process`.
+`DockerCLIClient` and `GitCLIClient` do not spawn processes themselves. They depend on `ICommandRunner`. That is one more seam: a docker test can assert the exact argv without stubbing `node:child_process`.
 
 ```typescript
 // src/core/docker/cli.ts
@@ -131,8 +131,8 @@ Options ──► parseGitHubRef(options.ref)
 
 Two independent rules can each contribute tags, and both can fire for the same ref:
 
-1. **From the git tag** — only when `gitTag` is enabled, the ref is a tag, and either `gitTagPrefix` is empty or the tag starts with it. The name is normalised by `trimRefName`.
-2. **From `registryTags`** — when the ref is not a tag, or `gitTag` is disabled, or `registryTags` is non-empty.
+1. **From the git tag**: only when `gitTag` is enabled, the ref is a tag, and either `gitTagPrefix` is empty or the tag starts with it. The name is normalised by `trimRefName`.
+2. **From `registryTags`**: when the ref is not a tag, or `gitTag` is disabled, or `registryTags` is non-empty.
 
 So `refs/tags/v1.2.3` with `registryTag: latest` pushes **both** `:1.2.3` and `:latest`.
 
@@ -140,12 +140,12 @@ So `refs/tags/v1.2.3` with `registryTag: latest` pushes **both** `:1.2.3` and `:
 
 ```typescript
 trimRefName('v1.2.3')                            // '1.2.3'
-trimRefName('vNext')                             // 'vNext'  — not semver, v is kept
+trimRefName('vNext')                             // 'vNext'  (not semver, v is kept)
 trimRefName('some-package@v1.2.3', 'some-package') // '1.2.3'
 trimRefName('some-package@1.2.3',  'some-package') // '1.2.3'
 ```
 
-The `@v…` check must run **before** the `@…` check: `semver.valid('v1.2.3')` accepts a leading `v`, so testing the bare case first would match and return the version with its `v` still attached. That ordering bug shipped until it was caught by a spec — do not "simplify" the two branches back together.
+The `@v…` check must run **before** the `@…` check: `semver.valid('v1.2.3')` accepts a leading `v`, so testing the bare case first would match and return the version with its `v` still attached. That ordering bug shipped until it was caught by a spec. Do not "simplify" the two branches back together.
 
 ### `buildDockerImageURL`
 
@@ -159,4 +159,4 @@ To add a new side effect (a registry API, a filesystem read, a clock):
 2. Add the real adapter, and a `memory.ts` fake satisfying the same interface.
 3. Re-export both from `src/core/<name>/index.ts` and add the directory to `src/core/index.ts`.
 4. Add the port to `PublishContext` and inject it in `src/cli/module.ts`.
-5. Test `publish()` against the memory adapter — see [testing](testing.md).
+5. Test `publish()` against the memory adapter, see [testing](testing.md).

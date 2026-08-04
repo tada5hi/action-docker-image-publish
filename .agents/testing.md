@@ -3,8 +3,8 @@
 ## Setup
 
 - **Runner**: [Vitest](https://vitest.dev)
-- **Test location**: `test/unit/**/*.{test,spec}.{js,ts}` — files outside this glob are **not** picked up
-- **Config**: `test/vitest.config.ts` (not in the project root — the npm scripts pass `--config` explicitly)
+- **Test location**: `test/unit/**/*.{test,spec}.{js,ts}`. Files outside this glob are **not** picked up
+- **Config**: `test/vitest.config.ts` (not in the project root; the npm scripts pass `--config` explicitly)
 - **Prerequisite**: `npm ci`. No docker daemon, database, container, or network is required.
 
 ## Running Tests
@@ -16,7 +16,7 @@ npx vitest --config test/vitest.config.ts             # watch mode
 npx vitest --config test/vitest.config.ts --run test/unit/module.spec.ts   # single file
 ```
 
-`npm run test` already passes `--run`, so it never enters watch mode — safe for CI and for agents.
+`npm run test` already passes `--run`, so it never enters watch mode, which is safe for CI and for agents.
 
 ## Prefer fakes over mocks
 
@@ -41,7 +41,7 @@ expect(result.images).toEqual(['ghcr.io/tada5hi/some-repo:latest']);
 expect(docker.pushed).toEqual(['ghcr.io/tada5hi/some-repo:latest']);
 ```
 
-`vi.spyOn` is acceptable at a genuine boundary the fakes do not cover — `test/unit/core/logger.spec.ts` spies on `consola` to prove `ConsolaLogger` delegates. `vi.mock` is not used anywhere and should stay that way.
+`vi.spyOn` is acceptable at a genuine boundary the fakes do not cover: `test/unit/core/logger.spec.ts` spies on `consola` to prove `ConsolaLogger` delegates. `vi.mock` is not used anywhere and should stay that way.
 
 ### What each fake records
 
@@ -51,11 +51,11 @@ expect(docker.pushed).toEqual(['ghcr.io/tada5hi/some-repo:latest']);
 | `MemoryDockerClient`  | `images`, `builds`, `pushed`, `removed`, `logins`, `logouts`    |
 | `MemoryGitClient`     | `clones`                                                         |
 
-`MemoryDockerClient` also *enforces* invariants — tagging or pushing an image it does not hold throws — so a test that gets the order wrong fails rather than silently passing.
+`MemoryDockerClient` also *enforces* invariants. Tagging or pushing an image it does not hold throws, so a test that gets the order wrong fails rather than silently passing.
 
 ## Test Layers
 
-### Orchestrator — `test/unit/module.spec.ts`
+### Orchestrator: `test/unit/module.spec.ts`
 
 Drives `publish()` end to end against memory adapters. A local `buildOptions(extend)` helper builds a valid `Options` so each case only states what it varies:
 
@@ -65,7 +65,7 @@ const result = await publish(buildOptions({ ref: 'refs/tags/v1.2.3', registryTag
 expect(result.images).toEqual(['ghcr.io/tada5hi/some-repo:1.2.3']);
 ```
 
-### Adapters — `test/unit/core/**`
+### Adapters: `test/unit/core/**`
 
 `DockerCLIClient` and `GitCLIClient` are tested against `MemoryCommandRunner`, asserting the exact argv:
 
@@ -78,22 +78,22 @@ expect(runner.calls[0]?.options.stdin).toBe('p@ss word');
 expect(runner.calls[0]?.args).not.toContain('p@ss word');
 ```
 
-`NodeCommandRunner` is the one adapter tested for real: `test/unit/core/command/node.spec.ts` spawns `process.execPath` with `-e` scripts to verify stdout/stderr capture, stdin, streaming, exit codes, and spawn failure. It needs no external binary — the node running the tests is the subject.
+`NodeCommandRunner` is the one adapter tested for real: `test/unit/core/command/node.spec.ts` spawns `process.execPath` with `-e` scripts to verify stdout/stderr capture, stdin, streaming, exit codes, and spawn failure. It needs no external binary; the node running the tests is the subject.
 
-### Pure helpers — `test/unit/utils/**`, `test/unit/cli/options.spec.ts`
+### Pure helpers: `test/unit/utils/**`, `test/unit/cli/options.spec.ts`
 
 Plain input/output assertions, no fakes needed.
 
 ## Conventions
 
-- The top-level `describe` names the source file under test — `describe('src/module.ts', …)`.
+- The top-level `describe` names the source file under test, as in `describe('src/module.ts', …)`.
 - `it` titles read as `should …`.
 - Tests mirror the `src/` path they cover: `src/core/docker/cli.ts` → `test/unit/core/docker/cli.spec.ts`.
 - Relative imports carry the `.ts` extension, same as `src/`.
 
 ## Testing Philosophy
 
-Tests assert *expected* behavior based on the module contract — not merely what the implementation currently does. If a test fails, it may have surfaced a real bug rather than a test error.
+Tests assert *expected* behavior based on the module contract, not merely what the implementation currently does. If a test fails, it may have surfaced a real bug rather than a test error.
 
 This has already paid off once: a spec asserting `some-package@v1.2.3` → `1.2.3` failed, and the cause was a genuine ordering bug in `trimRefName` (see [architecture](architecture.md#trimrefname)). The fix was to the implementation, not the test. Resist the reflex to change the assertion to match the output.
 
@@ -103,7 +103,7 @@ This has already paid off once: a spec asserting `some-package@v1.2.3` → `1.2.
 npm run test:coverage
 ```
 
-Provider is **v8**, measured over `src/**/*.{ts,tsx,js,jsx}` with **nothing excluded**, so the report stays honest. Thresholds are enforced — the command **fails** below any of them:
+Provider is **v8**, measured over `src/**/*.{ts,tsx,js,jsx}` with **nothing excluded**, so the report stays honest. Thresholds are enforced, so the command **fails** below any of them:
 
 | Metric     | Threshold |
 |------------|-----------|
@@ -112,7 +112,7 @@ Provider is **v8**, measured over `src/**/*.{ts,tsx,js,jsx}` with **nothing excl
 | Lines      | 80%       |
 | Statements | 80%       |
 
-The only files with no coverage are the composition roots — `src/cli.ts` and `src/cli/module.ts` — which just construct adapters and hand them to `publish()`. If you add logic there, move it into `src/cli/options.ts` (pure, fully tested) rather than lowering the threshold.
+The only files with no coverage are the composition roots `src/cli.ts` and `src/cli/module.ts`, which just construct adapters and hand them to `publish()`. If you add logic there, move it into `src/cli/options.ts` (pure, fully tested) rather than lowering the threshold.
 
 Reports land in `coverage/` (git-ignored).
 

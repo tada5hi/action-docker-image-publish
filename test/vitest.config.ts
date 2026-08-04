@@ -7,7 +7,7 @@ export default defineConfig({
             provider: 'v8',
             include: ['src/**/*.{ts,tsx,js,jsx}'],
             // Nothing is excluded. The only uncovered files are the composition
-            // roots — src/cli.ts and src/cli/module.ts — which just wire the
+            // roots src/cli.ts and src/cli/module.ts, which just wire the
             // adapters together and are exercised by running the CLI itself.
             thresholds: {
                 branches: 80,

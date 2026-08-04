@@ -5,7 +5,7 @@
 <h1 align="center">action-docker-image-publish</h1>
 
 <p align="center">
-    <b>Build, tag and push docker images — with the tags derived from the git ref.</b><br>
+    <b>Build, tag and push docker images, with the tags derived from the git ref.</b><br>
     A GitHub Action and CLI which clones the repository at a ref, builds the image once,<br>
     and pushes it under every tag that ref implies.
 </p>
@@ -83,7 +83,7 @@ jobs:
             -   uses: tada5hi/action-docker-image-publish@v4
 ```
 
-Nothing else is needed — `registryHost` defaults to `ghcr.io`, the credentials default to
+Nothing else is needed: `registryHost` defaults to `ghcr.io`, the credentials default to
 `github.actor` / `github.token`, and `registryTag` defaults to `latest`.
 
 ### Publish a version tag *and* move `latest`
@@ -119,7 +119,7 @@ For `refs/tags/v1.2.3` this pushes **both** `:1.2.3` (derived from the tag) and 
 `registryTag` and `buildArgs` are newline separated; blank lines and surrounding whitespace are
 ignored.
 
-### Monorepo — one image per package
+### Monorepo: one image per package
 
 Tags like `some-package@v1.2.3` are matched with `gitTagPrefix`, and the prefix is stripped from the
 resulting image tag:
@@ -216,7 +216,7 @@ By default the locally built image is removed once every tag has been pushed.
 ```
 
 Both default to `github.actor` / `github.token`, which is enough for the repository the workflow runs
-in. Override them to clone with a PAT — the credentials are percent-encoded into the clone url, so
+in. Override them to clone with a PAT. The credentials are percent-encoded into the clone url, so
 tokens containing `@`, `:` or `/` work.
 
 ### Reuse the runner's Node.js

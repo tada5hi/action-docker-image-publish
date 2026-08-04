@@ -30,7 +30,7 @@ export function createCLIEntryPointCommand() {
 
             const runner = new NodeCommandRunner({ stream: (chunk) => process.stdout.write(chunk) });
 
-            // A failed publish is user/environment error — report the message
+            // A failed publish is user/environment error. Report the message
             // and stop, instead of letting citty print a stack trace.
             try {
                 const result = await publish(options, {

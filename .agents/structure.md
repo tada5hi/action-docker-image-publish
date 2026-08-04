@@ -1,21 +1,21 @@
 # Project Structure
 
-Single npm package — no workspaces, no monorepo tooling. One source tree produces a library, a CLI, and a composite GitHub Action.
+Single npm package, no workspaces and no monorepo tooling. One source tree produces a library, a CLI, and a composite GitHub Action.
 
 ## Directory Layout
 
 ```
 action-docker-image-publish/
 ├── src/
-│   ├── index.ts                     # Library barrel — the public API surface
+│   ├── index.ts                     # Library barrel, the public API surface
 │   ├── cli.ts                       # CLI entry (#!/usr/bin/env node, citty runMain)
-│   ├── module.ts                    # publish() — the orchestrator, takes its ports as arguments
+│   ├── module.ts                    # publish(), the orchestrator; takes its ports as arguments
 │   ├── types.ts                     # Options, GithubRef, PublishContext, PublishResult
 │   ├── constants.ts                 # Defaults shared by the CLI args and the option builder
 │   ├── cli/
 │   │   ├── args.ts                  # citty arg definitions; defaults read GITHUB_* env vars
 │   │   ├── options.ts               # args -> Options (pure, fully tested)
-│   │   ├── module.ts                # createCLIEntryPointCommand() — composition root
+│   │   ├── module.ts                # createCLIEntryPointCommand(), composition root
 │   │   └── index.ts
 │   ├── core/                        # One directory per port
 │   │   ├── command/                 # ICommandRunner: spawn a process with an explicit argv
@@ -26,8 +26,8 @@ action-docker-image-publish/
 │   │   │   └── index.ts
 │   │   ├── docker/                  # IDockerClient: login/logout/exists/build/tag/push/remove
 │   │   │   ├── types.ts
-│   │   │   ├── cli.ts               #   DockerCLIClient — shells out via ICommandRunner
-│   │   │   ├── memory.ts            #   MemoryDockerClient — tracks an in-memory image set
+│   │   │   ├── cli.ts               #   DockerCLIClient, shells out via ICommandRunner
+│   │   │   ├── memory.ts            #   MemoryDockerClient, tracks an in-memory image set
 │   │   │   ├── url.ts               #   buildDockerImageURL (pure)
 │   │   │   └── index.ts
 │   │   ├── git/                     # IGitClient: clone
@@ -53,14 +53,14 @@ action-docker-image-publish/
 │   │   ├── cli/options.spec.ts
 │   │   ├── core/{command,docker,git}/…
 │   │   └── utils/…
-│   └── vitest.config.ts             # NOT in the project root — scripts pass --config
+│   └── vitest.config.ts             # NOT in the project root; scripts pass --config
 ├── dist/                            # Build output (git-ignored, produced by tsdown)
 ├── .github/
 │   ├── assets/logo.svg              # README header logo
 │   ├── actions/{install,build}/     # Composite actions reused by both workflows
 │   ├── workflows/
 │   │   ├── main.yml                 # CI: install -> build -> (lint, test:coverage)
-│   │   └── release.yml              # release-please -> monoship publish -> docker image
+│   │   └── release.yml              # release-please -> build -> monoship publish
 │   └── dependabot.yml
 ├── action.yml                       # The composite action; maps inputs -> CLI flags
 ├── tsconfig.json                    # extends @tada5hi/tsconfig; noEmit; types: ["node"]
@@ -75,7 +75,7 @@ action-docker-image-publish/
 
 | Module                   | Purpose                                                                                                  |
 |--------------------------|----------------------------------------------------------------------------------------------------------|
-| `src/module.ts`          | The whole publish flow. Pure orchestration — it never spawns a process itself, only calls its ports.       |
+| `src/module.ts`          | The whole publish flow. Pure orchestration; it never spawns a process itself, only calls its ports.       |
 | `src/cli/module.ts`      | Composition root: constructs `NodeCommandRunner`, `DockerCLIClient`, `GitCLIClient`, `ConsolaLogger`.      |
 | `src/cli/options.ts`     | Translates citty args into `Options`. Where defaults and multi-value splitting live.                       |
 | `src/core/*/types.ts`    | The `I`-prefixed interface for that port. Everything else in the directory implements it.                  |
@@ -91,7 +91,7 @@ cli.ts ──► cli/module.ts ──► core/*/{cli,node,consola}.ts   (adapter
                           └──► utils/                       (pure)
 ```
 
-`src/module.ts` imports **only** interfaces and pure helpers — never a concrete adapter. That is what lets the tests run it against memory adapters. If you find yourself importing `DockerCLIClient` into `module.ts`, the design has been broken.
+`src/module.ts` imports **only** interfaces and pure helpers, never a concrete adapter. That is what lets the tests run it against memory adapters. If you find yourself importing `DockerCLIClient` into `module.ts`, the design has been broken.
 
 ## Key Dependencies
 

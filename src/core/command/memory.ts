@@ -34,7 +34,7 @@ export class MemoryCommandRunner implements ICommandRunner {
     /**
      * Script the result of the next matching invocation.
      *
-     * @param prefix e.g. "docker images" — matched against `${command} ${args.join(' ')}`
+     * @param prefix e.g. "docker images", matched against `${command} ${args.join(' ')}`
      */
     respondTo(prefix: string, response: MemoryCommandResponse) : this {
         this.responses.set(prefix, response);
