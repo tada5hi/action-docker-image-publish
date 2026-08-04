@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2022-2025.
+ * Copyright (c) 2022-2026.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
  */
 
-export * from './boolean';
-export * from './ref';
-export * from './ref-name';
-export * from './options';
-export * from './url';
+export * from './boolean.ts';
+export * from './ref.ts';
+export * from './ref-name.ts';
+export * from './url.ts';

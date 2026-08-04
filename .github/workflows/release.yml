@@ -8,13 +8,14 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 env:
-    NODE_VERSION: 22
+    PRIMARY_NODE_VERSION: 24
 
 permissions:
     issues: write
     packages: write
     contents: write
     pull-requests: write
+    id-token: write
 
 defaults:
     run:
@@ -26,7 +27,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            -   uses: google-github-actions/release-please-action@v4
+            -   uses: googleapis/release-please-action@v4
                 id: release
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
@@ -60,7 +61,8 @@ jobs:
                 if: steps.release.outputs.releases_created == 'true'
                 uses: ./.github/actions/install
                 with:
-                    node-version: ${{ env.NODE_VERSION }}
+                    node-version: ${{ env.PRIMARY_NODE_VERSION }}
+                    registry-url: 'https://registry.npmjs.org'
 
             -   name: Build
                 if: steps.release.outputs.releases_created == 'true'
@@ -68,13 +70,6 @@ jobs:
 
             -   name: Publish
                 if: steps.release.outputs.releases_created == 'true'
-                run: npx workspaces-publish
-                env:
-                    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-            -   name: Docker
-                if: steps.release.outputs.releases_created == 'true'
-                uses: ./
-
-
-
+                uses: tada5hi/monoship@v2
+                with:
+                    token: ${{ secrets.NPM_TOKEN }}

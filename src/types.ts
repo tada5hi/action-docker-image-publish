@@ -1,24 +1,40 @@
 /*
- * Copyright (c) 2022-2025.
+ * Copyright (c) 2022-2026.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
  */
 
+import type { IDockerClient, IGitClient, ILogger } from './core/index.ts';
+
 export type Options = {
     /**
-     * Dockerfile name
+     * Dockerfile name.
      *
-     * default: Dockerfile
+     * Default: Dockerfile
      */
     dockerFileName: string,
 
     /**
-     * Path to Dockerfile
+     * Path to the Dockerfile, relative to the repository root.
      *
-     * Default: ""
+     * Default: ''
      */
     dockerFilePath: string,
+
+    /**
+     * Additional docker build args, as KEY=VALUE strings.
+     *
+     * Default: []
+     */
+    buildArgs: string[],
+
+    /**
+     * Delete the built image at the end.
+     *
+     * Default: true
+     */
+    cleanup: boolean,
 
     /**
      * Whether to create an image tag for a git tag.
@@ -28,23 +44,19 @@ export type Options = {
     gitTag: boolean,
 
     /**
-     * Match for git tag with given prefix.
+     * Only match git tags with this prefix.
      *
      * Default: ''
      */
     gitTagPrefix: string,
 
     /**
-     * Git user
-     *
-     * Default: github.actor
+     * User for cloning the repository.
      */
     gitUser: string,
 
     /**
-     * Git password
-     *
-     * Default: github.password
+     * Password/token for cloning the repository.
      */
     gitPassword: string,
 
@@ -53,48 +65,82 @@ export type Options = {
      */
     registryHost: string,
 
-    /**
-     * Default: github.repository.owner.name
-     */
     registryUser: string,
 
-    /**
-     * Default: github.secret
-     */
     registryPassword: string,
 
     /**
-     * Default: github.repository
+     * Registry repository full name (e.g. project/repository).
      */
     registryRepository: string,
 
     /**
-     * Registry image tag (e.g. latest)
+     * Registry image tags (e.g. latest).
      *
      * Default: ['latest']
      */
     registryTags: string[],
 
     /**
-     * Delete the built image at the end
+     * The git ref to publish (e.g. refs/tags/v1.2.3).
+     */
+    ref: string,
+
+    /**
+     * Repository full name (e.g. owner/repository).
+     */
+    repository: string,
+
+    /**
+     * Base url of the git server.
      *
-     * Default: true
+     * Default: https://github.com
      */
-    cleanup: boolean,
+    serverUrl: string,
 
     /**
-     * GitHub access token
+     * Applied as an image label, when set.
      */
-    token: string
+    runId?: string,
 
     /**
-     * Additional docker build args.
+     * Applied as an image label, when set.
      */
-    buildArgs: string[]
+    runNumber?: string,
+
+    /**
+     * Directory the repository is cloned into.
+     */
+    root: string
 };
 
 export type GithubRef = {
     type: 'branch' | 'tag' | 'pull',
 
     value: string
+};
+
+export type PublishContext = {
+    docker: IDockerClient,
+
+    git: IGitClient,
+
+    logger: ILogger
+};
+
+export type PublishResult = {
+    /**
+     * Local id the image was built under.
+     */
+    imageId: string,
+
+    /**
+     * Whether the image had to be built.
+     */
+    built: boolean,
+
+    /**
+     * Fully qualified references pushed to the registry.
+     */
+    images: string[]
 };

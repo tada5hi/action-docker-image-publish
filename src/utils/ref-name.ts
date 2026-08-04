@@ -14,21 +14,22 @@ export function trimRefName(name: string, prefix?: string) {
     ) {
         name = name.substring(prefix.length);
 
-        // monorepo tag support
-        if (
-            name[0] === '@' &&
-            semver.valid(name.substring(1))
-        ) {
-            return name.substring(1);
-        }
-
         // monorepo tag support with version sign
+        // (must be checked first, semver.valid() also accepts a leading v)
         if (
             name[0] === '@' &&
             name[1] === 'v' &&
             semver.valid(name.substring(2))
         ) {
             return name.substring(2);
+        }
+
+        // monorepo tag support
+        if (
+            name[0] === '@' &&
+            semver.valid(name.substring(1))
+        ) {
+            return name.substring(1);
         }
     }
 

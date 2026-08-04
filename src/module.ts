@@ -1,147 +1,147 @@
 /*
- * Copyright (c) 2022-2025.
+ * Copyright (c) 2022-2026.
  * Author Peter Placzek (tada5hi)
  * For the full copyright and license information,
  * view the LICENSE file that was distributed with this source code.
  */
 
-import core from '@actions/core';
-import github from '@actions/github';
-import { execSync } from 'node:child_process';
 import md5 from 'md5';
-import path from 'path';
+import path from 'node:path';
+import { buildDockerImageURL } from './core/index.ts';
+import type {
+    Options,
+    PublishContext,
+    PublishResult,
+} from './types.ts';
 import {
-    buildDockerImage,
-    buildDockerImageURL,
-    checkDockerImage,
-    pushDockerImage,
-    removeDockerImage,
-    tagDockerImage,
-} from './docker';
-import {
-    buildOptions,
     cleanDoubleSlashes,
     parseGitHubRef,
     trimRefName,
-} from './utils';
-import { clone } from './utils/clone';
+} from './utils/index.ts';
 
-export async function execute() {
-    core.info('Booting...');
+const CLONE_DIRECTORY = '.output';
 
-    const options = buildOptions();
+export async function publish(
+    options: Options,
+    context: PublishContext,
+) : Promise<PublishResult> {
+    const {
+        docker, 
+        git, 
+        logger, 
+    } = context;
 
-    const ref = parseGitHubRef(github.context.ref);
+    logger.info('Booting...');
+
+    const ref = parseGitHubRef(options.ref);
     if (!ref) {
-        core.error('The git ref could not be parsed.');
-        return;
+        throw new Error(`The git ref ${options.ref} could not be parsed.`);
     }
 
-    const root = process.cwd();
-    const directory = '.output';
+    logger.info('Cloning repository...');
 
-    core.info('Cloning github repository...');
-
-    clone({
-        ref,
-        directory,
-        root,
+    await git.clone({
+        url: cleanDoubleSlashes(`${options.serverUrl}/${options.repository}`),
+        directory: CLONE_DIRECTORY,
+        cwd: options.root,
+        branch: ref.type === 'branch' ? ref.value : undefined,
         user: options.gitUser,
         password: options.gitPassword,
     });
 
-    const imageId = md5(github.context.ref);
-    const imageExists = await checkDockerImage(imageId);
+    const imageId = md5(options.ref);
+    const imageExists = await docker.imageExists(imageId);
 
-    execSync(
-        `echo "${options.registryPassword}" | docker login ${options.registryHost} -u ${options.registryUser} --password-stdin`,
-    );
+    await docker.login({
+        host: options.registryHost,
+        user: options.registryUser,
+        password: options.registryPassword,
+    });
 
-    if (!imageExists) {
-        let cwd = path.join(root, directory);
-        if (options.dockerFilePath.length > 0) {
-            cwd = path.join(cwd, options.dockerFilePath);
+    const result : PublishResult = {
+        imageId,
+        built: false,
+        images: [],
+    };
+
+    try {
+        if (!imageExists) {
+            logger.info('Image does not exist.');
+
+            let cwd = path.join(options.root, CLONE_DIRECTORY);
+            if (options.dockerFilePath.length > 0) {
+                cwd = path.join(cwd, options.dockerFilePath);
+            }
+
+            const labels : Record<string, string> = {};
+            if (options.runId) {
+                labels.runId = options.runId;
+            }
+            if (options.runNumber) {
+                labels.runNumber = options.runNumber;
+            }
+
+            await docker.buildImage({
+                image: imageId,
+                fileName: options.dockerFileName,
+                cwd,
+                labels,
+                buildArgs: options.buildArgs,
+            });
+
+            result.built = true;
         }
 
-        core.info('Image does not exist.');
+        const imageBase = cleanDoubleSlashes(
+            `${options.registryHost}/${options.registryRepository}`,
+        ).toLowerCase();
 
-        await buildDockerImage({
-            fileName: options.dockerFileName,
-            cwd,
-            imageId,
-            labels: {
-                runId: `${github.context.runId}`,
-                runNumber: `${github.context.runNumber}`,
-            },
-            buildArgs: options.buildArgs,
-        });
-    }
+        const tags : string[] = [];
 
-    const imageIdRemote = cleanDoubleSlashes(
-        `${options.registryHost}/${options.registryRepository}`,
-    ).toLowerCase();
-
-    let imageUrl : string;
-
-    // ----------------------------------------------------
-
-    // build docker image for git tag
-    if (
-        options.gitTag &&
-        ref.type === 'tag'
-    ) {
-        core.info('Creating tags...');
-
+        // an image tag derived from the git tag
         if (
-            options.gitTagPrefix.length === 0 ||
-            ref.value.startsWith(options.gitTagPrefix)
+            options.gitTag &&
+            ref.type === 'tag' &&
+            (
+                options.gitTagPrefix.length === 0 ||
+                ref.value.startsWith(options.gitTagPrefix)
+            )
         ) {
-            imageUrl = buildDockerImageURL(
-                imageIdRemote,
-                trimRefName(ref.value, options.gitTagPrefix),
-            );
-
-            await tagDockerImage(imageId, imageUrl);
-
-            await pushDockerImage(imageUrl);
-
-            await removeDockerImage(imageUrl);
+            tags.push(trimRefName(ref.value, options.gitTagPrefix));
         }
 
-        core.info('Created tags.');
-    }
-
-    // ----------------------------------------------------
-
-    if (
-        ref.type !== 'tag' ||
-        !options.gitTag ||
-        options.registryTags.length > 0
-    ) {
-        core.info('Creating tags...');
-
-        for (let i = 0; i < options.registryTags.length; i++) {
-            imageUrl = buildDockerImageURL(imageIdRemote, options.registryTags[i]);
-
-            await tagDockerImage(imageId, imageUrl);
-
-            await pushDockerImage(imageUrl);
-
-            await removeDockerImage(imageUrl);
+        // the explicitly requested image tags
+        if (
+            ref.type !== 'tag' ||
+            !options.gitTag ||
+            options.registryTags.length > 0
+        ) {
+            tags.push(...options.registryTags);
         }
 
-        core.info('Created tags.');
+        for (const tag of tags) {
+            const image = buildDockerImageURL(imageBase, tag);
+
+            logger.info(`Tagging image ${imageId} with ${image}`);
+            await docker.tagImage(imageId, image);
+
+            logger.info(`Pushing image ${image}`);
+            await docker.pushImage(image);
+
+            await docker.removeImage(image);
+
+            result.images.push(image);
+        }
+
+        if (options.cleanup) {
+            logger.info('Deleting built image...');
+            await docker.removeImage(imageId);
+        }
+    } finally {
+        await docker.logout(options.registryHost);
     }
 
-    // ----------------------------------------------------
+    logger.info('Finished.');
 
-    if (options.cleanup) {
-        core.info('Deleting built image...');
-        await removeDockerImage(imageId);
-        core.info('Deleted built image.');
-    }
-
-    execSync(`docker logout ${options.registryHost}`);
-
-    core.info('Finished.');
+    return result;
 }

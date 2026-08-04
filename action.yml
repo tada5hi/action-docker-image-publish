@@ -1,53 +1,128 @@
 name: 'DockerImagePublish'
 description: 'Build, tag and push docker images under certain conditions.'
+
 inputs:
     dockerFileName:
         description: 'Name of Dockerfile'
+        required: false
         default: 'Dockerfile'
-        required: true
     dockerFilePath:
         description: 'Relative path to DockerFile'
+        required: false
         default: ''
-        required: true
-    gitTag:
-        description: 'Whether to create an image tag for a git tag.'
-        default: 'true'
-    gitTagPrefix:
-        description: 'Prefix for matching git tags'
-        default: ''
-    gitUser:
-        description: 'Git user'
-        default: ${{ github.actor }}
-    gitPassword:
-        description: 'Git password'
-        default: ${{ github.token }}
-    registryHost:
-        description: 'Registry host'
-        default: 'ghcr.io'
-        required: true
-    registryUser:
-        description: 'Registry user'
-        default: ${{ github.actor }}
-    registryPassword:
-        description: 'Registry password'
-        default: ${{ github.token }}
-    registryRepository:
-        description: 'Registry repository full name (e.g. project/repository)'
-        default: ${{ github.repository }}
-        required: true
-    registryTag:
-        description: 'Registry image tag (e.g. latest)'
+    buildArgs:
+        description: 'Provide additional build args (KEY=VALUE), one per line'
+        required: false
         default: ''
     cleanup:
         description: 'Delete the built image at the end'
+        required: false
         default: 'true'
-    token:
-        description: 'Token to access GitHub API'
-        default: ${{ github.token }}
-    buildArgs:
-        description: 'Provide additional build args'
+    gitTag:
+        description: 'Whether to create an image tag for a git tag.'
+        required: false
+        default: 'true'
+    gitTagPrefix:
+        description: 'Prefix for matching git tags'
+        required: false
         default: ''
+    gitUser:
+        description: 'Git user'
+        required: false
+        default: ${{ github.actor }}
+    gitPassword:
+        description: 'Git password'
+        required: false
+        default: ${{ github.token }}
+    registryHost:
+        description: 'Registry host'
+        required: false
+        default: 'ghcr.io'
+    registryUser:
+        description: 'Registry user'
+        required: false
+        default: ${{ github.actor }}
+    registryPassword:
+        description: 'Registry password'
+        required: false
+        default: ${{ github.token }}
+    registryRepository:
+        description: 'Registry repository full name (e.g. project/repository)'
+        required: false
+        default: ${{ github.repository }}
+    registryTag:
+        description: 'Registry image tags (e.g. latest), one per line'
+        required: false
+        default: ''
+    token:
+        description: 'Deprecated and unused. Declared so existing workflows do not warn.'
+        required: false
+        default: ''
+    node-version:
+        description: 'Node.js version to use. Set to an empty string to use the existing installation.'
+        required: false
+        default: '24'
+
+branding:
+    icon: 'package'
+    color: 'blue'
 
 runs:
-    using: 'docker'
-    image: 'Dockerfile'
+    using: 'composite'
+    steps:
+        -   name: Setup Node.js
+            if: inputs.node-version != ''
+            uses: actions/setup-node@v4
+            with:
+                node-version: ${{ inputs.node-version }}
+
+        -   name: Install dependencies
+            shell: bash
+            run: npm ci --ignore-scripts
+            working-directory: ${{ github.action_path }}
+
+        -   name: Build
+            shell: bash
+            run: npm run build
+            working-directory: ${{ github.action_path }}
+
+        -   name: Publish
+            shell: bash
+            # Inputs travel through the environment instead of being interpolated
+            # into the script, so newlines and shell metacharacters stay inert.
+            env:
+                INPUT_DOCKER_FILE_NAME: ${{ inputs.dockerFileName }}
+                INPUT_DOCKER_FILE_PATH: ${{ inputs.dockerFilePath }}
+                INPUT_BUILD_ARGS: ${{ inputs.buildArgs }}
+                INPUT_CLEANUP: ${{ inputs.cleanup }}
+                INPUT_GIT_TAG: ${{ inputs.gitTag }}
+                INPUT_GIT_TAG_PREFIX: ${{ inputs.gitTagPrefix }}
+                INPUT_GIT_USER: ${{ inputs.gitUser }}
+                INPUT_GIT_PASSWORD: ${{ inputs.gitPassword }}
+                INPUT_REGISTRY_HOST: ${{ inputs.registryHost }}
+                INPUT_REGISTRY_USER: ${{ inputs.registryUser }}
+                INPUT_REGISTRY_PASSWORD: ${{ inputs.registryPassword }}
+                INPUT_REGISTRY_REPOSITORY: ${{ inputs.registryRepository }}
+                INPUT_REGISTRY_TAG: ${{ inputs.registryTag }}
+                ACTION_PATH: ${{ github.action_path }}
+            run: |
+                set -euo pipefail
+
+                args=(
+                    --dockerFileName "$INPUT_DOCKER_FILE_NAME"
+                    --dockerFilePath "$INPUT_DOCKER_FILE_PATH"
+                    --buildArgs "$INPUT_BUILD_ARGS"
+                    --gitTagPrefix "$INPUT_GIT_TAG_PREFIX"
+                    --gitUser "$INPUT_GIT_USER"
+                    --gitPassword "$INPUT_GIT_PASSWORD"
+                    --registryHost "$INPUT_REGISTRY_HOST"
+                    --registryUser "$INPUT_REGISTRY_USER"
+                    --registryPassword "$INPUT_REGISTRY_PASSWORD"
+                    --registryRepository "$INPUT_REGISTRY_REPOSITORY"
+                    --registryTag "$INPUT_REGISTRY_TAG"
+                )
+
+                if [ "$INPUT_CLEANUP" = "false" ]; then args+=(--no-cleanup); fi
+                if [ "$INPUT_GIT_TAG" = "false" ]; then args+=(--no-gitTag); fi
+
+                node "${ACTION_PATH}/dist/cli.mjs" "${args[@]}"

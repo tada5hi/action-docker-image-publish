@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-label="action-docker-image-publish">
+    <defs>
+        <linearGradient id="mark" x1="4" y1="116" x2="116" y2="4" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1D63ED"/>
+            <stop offset="1" stop-color="#22D3EE"/>
+        </linearGradient>
+        <linearGradient id="shine" x1="60" y1="4" x2="60" y2="74" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+    </defs>
+
+    <rect x="4" y="4" width="112" height="112" rx="28" fill="url(#mark)"/>
+    <rect x="4" y="4" width="112" height="112" rx="28" fill="url(#shine)"/>
+
+    <!-- the push: the image leaves for the registry -->
+    <path d="M60 20 L76 38 H66 V52 H54 V38 H44 Z" fill="#ffffff"/>
+
+    <!-- the image: layers stacked widest last, as they are written -->
+    <rect x="38" y="60" width="44" height="12" rx="4" fill="#ffffff"/>
+    <rect x="32" y="78" width="56" height="12" rx="4" fill="#ffffff" fill-opacity="0.8"/>
+    <rect x="26" y="96" width="68" height="12" rx="4" fill="#ffffff" fill-opacity="0.6"/>
+</svg>

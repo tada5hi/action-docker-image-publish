@@ -5,7 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import type { GithubRef } from '../types';
+import type { GithubRef } from '../types.ts';
 
 export function parseGitHubRef(ref: string) : GithubRef | undefined {
     const parts = ref.split('/');
@@ -23,7 +23,7 @@ export function parseGitHubRef(ref: string) : GithubRef | undefined {
         case 'pulls': {
             return {
                 type: 'pull',
-                value: parts[2],
+                value: parts[2] ?? '',
             };
         }
         case 'tags': {
