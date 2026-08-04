@@ -94,7 +94,8 @@ Tests build the same shape from memory adapters. Nothing else in `src/` construc
 Options ──► parseGitHubRef(options.ref)
                 │  invalid -> throw
                 ▼
-            git.clone()            branch refs clone with --branch, tags/pulls clone the default
+            options.clone ?        opt-in; the workspace is the build context by default.
+                git.clone()        --branch pins branches AND tags; pull refs clone the default
                 │
                 ▼
             imageId = md5(ref)     the same ref always maps to the same local id

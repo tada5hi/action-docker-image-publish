@@ -58,6 +58,7 @@ export function buildOptionsFromArgs(args: PublishCommandArgs) : Options {
         dockerFilePath: toStringValue(args.dockerFilePath),
         buildArgs: toLines(args.buildArgs),
         cleanup: toBooleanValue(args.cleanup, true),
+        clone: toBooleanValue(args.clone, false),
 
         gitTag: toBooleanValue(args.gitTag, true),
         gitTagPrefix: toStringValue(args.gitTagPrefix),

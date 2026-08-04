@@ -18,6 +18,7 @@ function buildOptions(extend: Partial<Options> = {}) : Options {
         dockerFilePath: '',
         buildArgs: [],
         cleanup: true,
+        clone: false,
 
         gitTag: true,
         gitTagPrefix: '',
@@ -63,15 +64,35 @@ describe('src/module.ts', () => {
         expect(docker.pushed).toEqual(['ghcr.io/tada5hi/some-repo:latest']);
     });
 
+    it('should not clone by default', async () => {
+        await publish(buildOptions(), context);
+
+        expect(git.clones).toHaveLength(0);
+    });
+
+    it('should build the working directory when not cloning', async () => {
+        await publish(buildOptions({ dockerFilePath: 'services/api' }), context);
+
+        expect(docker.builds[0]?.cwd).toBe('/workspace/services/api');
+    });
+
     it('should clone the branch of a branch ref', async () => {
-        await publish(buildOptions({ ref: 'refs/heads/feature/some-thing' }), context);
+        await publish(buildOptions({ clone: true, ref: 'refs/heads/feature/some-thing' }), context);
 
         expect(git.clones[0]?.branch).toBe('feature/some-thing');
         expect(git.clones[0]?.url).toBe('https://github.com/tada5hi/some-repo');
     });
 
-    it('should not restrict the clone to a branch for a tag ref', async () => {
-        await publish(buildOptions({ ref: 'refs/tags/v1.2.3' }), context);
+    it('should pin the clone to the tag of a tag ref', async () => {
+        await publish(buildOptions({ clone: true, ref: 'refs/tags/v1.2.3' }), context);
+
+        // --branch accepts a tag, which is what keeps the build off the
+        // default branch tip when the tag is older than HEAD
+        expect(git.clones[0]?.branch).toBe('v1.2.3');
+    });
+
+    it('should not restrict the clone for a pull ref', async () => {
+        await publish(buildOptions({ clone: true, ref: 'refs/pulls/42' }), context);
 
         expect(git.clones[0]?.branch).toBeUndefined();
     });
@@ -196,8 +217,8 @@ describe('src/module.ts', () => {
         expect(docker.builds[0]?.labels).toEqual({ runId: '42', runNumber: '7' });
     });
 
-    it('should forward the docker file path to the build context', async () => {
-        await publish(buildOptions({ dockerFilePath: 'services/api' }), context);
+    it('should forward the docker file path to the clone directory', async () => {
+        await publish(buildOptions({ clone: true, dockerFilePath: 'services/api' }), context);
 
         expect(docker.builds[0]?.cwd).toBe('/workspace/.output/services/api');
     });

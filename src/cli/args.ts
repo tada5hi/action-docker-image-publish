@@ -37,6 +37,11 @@ export const PUBLISH_COMMAND_ARGS = {
         description: 'Delete the built image at the end.',
         default: true,
     },
+    clone: {
+        type: 'boolean',
+        description: 'Clone the repository at the ref instead of building the working directory.',
+        default: false,
+    },
     gitTag: {
         type: 'boolean',
         description: 'Create an image tag for a git tag.',

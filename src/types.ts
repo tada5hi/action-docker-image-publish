@@ -37,6 +37,17 @@ export type Options = {
     cleanup: boolean,
 
     /**
+     * Clone the repository at the ref before building, instead of building
+     * the working directory.
+     *
+     * On a GitHub runner the repository is already checked out, so this is
+     * only needed for standalone use.
+     *
+     * Default: false
+     */
+    clone: boolean,
+
+    /**
      * Whether to create an image tag for a git tag.
      *
      * Default: true

@@ -18,6 +18,10 @@ inputs:
         description: 'Delete the built image at the end'
         required: false
         default: 'true'
+    clone:
+        description: 'Clone the repository at the ref instead of building the checked out workspace. Only needed when the workflow does not run actions/checkout.'
+        required: false
+        default: 'false'
     gitTag:
         description: 'Whether to create an image tag for a git tag.'
         required: false
@@ -95,6 +99,7 @@ runs:
                 INPUT_DOCKER_FILE_PATH: ${{ inputs.dockerFilePath }}
                 INPUT_BUILD_ARGS: ${{ inputs.buildArgs }}
                 INPUT_CLEANUP: ${{ inputs.cleanup }}
+                INPUT_CLONE: ${{ inputs.clone }}
                 INPUT_GIT_TAG: ${{ inputs.gitTag }}
                 INPUT_GIT_TAG_PREFIX: ${{ inputs.gitTagPrefix }}
                 INPUT_GIT_USER: ${{ inputs.gitUser }}
@@ -124,5 +129,6 @@ runs:
 
                 if [ "$INPUT_CLEANUP" = "false" ]; then args+=(--no-cleanup); fi
                 if [ "$INPUT_GIT_TAG" = "false" ]; then args+=(--no-gitTag); fi
+                if [ "$INPUT_CLONE" = "true" ]; then args+=(--clone); fi
 
                 node "${ACTION_PATH}/dist/cli.mjs" "${args[@]}"

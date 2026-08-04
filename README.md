@@ -6,8 +6,8 @@
 
 <p align="center">
     <b>Build, tag and push docker images, with the tags derived from the git ref.</b><br>
-    A GitHub Action and CLI which clones the repository at a ref, builds the image once,<br>
-    and pushes it under every tag that ref implies.
+    A GitHub Action and CLI which builds the image once, then pushes it under<br>
+    every tag that ref implies.
 </p>
 
 <p align="center">
@@ -51,6 +51,8 @@ resulting reference. A ref which has already been built during the same job is n
 ## Usage
 
 ```yaml
+-   uses: actions/checkout@v4
+
 -   uses: tada5hi/dimp@v4
     with:
         registryTag: 'latest'
@@ -59,9 +61,14 @@ resulting reference. A ref which has already been built during the same job is n
 That is the whole configuration for the common case: every other input defaults to the right thing
 from the workflow context.
 
-> **`actions/checkout` is not required.** The action clones the repository at the ref it is running
-> for into `.output` and builds from there, so it works on its own. Checking out first is harmless
-> but does nothing for it.
+The action builds the **checked out workspace**, so `actions/checkout` has to run first. If a
+workflow cannot check out, set `clone: 'true'` and the repository is cloned at the ref instead:
+
+```yaml
+-   uses: tada5hi/dimp@v4
+    with:
+        clone: 'true'
+```
 
 Since **v4** this is a **composite** action rather than a Docker action, so it no longer builds a
 container image of itself before doing any work. It runs directly on the runner, using the `docker`
@@ -86,6 +93,7 @@ jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
+            -   uses: actions/checkout@v4
             -   uses: tada5hi/dimp@v4
 ```
 
@@ -103,6 +111,7 @@ jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
+            -   uses: actions/checkout@v4
             -   uses: tada5hi/dimp@v4
                 with:
                     registryTag: 'latest'
@@ -214,9 +223,13 @@ By default the locally built image is removed once every tag has been pushed.
 
 ### Clone a private repository
 
+Only relevant together with `clone: 'true'`, since the credentials are used for the clone and
+nothing else:
+
 ```yaml
 -   uses: tada5hi/dimp@v4
     with:
+        clone: 'true'
         gitUser: ${{ github.actor }}
         gitPassword: ${{ secrets.SOME_PAT }}
 ```
@@ -247,6 +260,7 @@ An empty `node-version` skips the action's own `setup-node` step.
 | `dockerFilePath`     | Relative path to the Dockerfile                                   | `''`                       |
 | `buildArgs`          | Additional build args (`KEY=VALUE`), one per line                 | `''`                       |
 | `cleanup`            | Delete the built image at the end                                 | `true`                     |
+| `clone`              | Clone the repo at the ref instead of building the workspace       | `false`                    |
 | `gitTag`             | Create an image tag for a git tag                                 | `true`                     |
 | `gitTagPrefix`       | Only match git tags with this prefix                              | `''`                       |
 | `gitUser`            | User for cloning the repository                                   | `${{ github.actor }}`      |
@@ -282,6 +296,7 @@ The same logic is available as a CLI, so it can run outside GitHub Actions:
 
 ```bash
 npx dimp \
+    --clone \
     --ref refs/tags/v1.2.3 \
     --repository tada5hi/some-repo \
     --registryHost ghcr.io \
@@ -294,6 +309,9 @@ npx dimp \
 Every flag defaults to the corresponding `GITHUB_*` environment variable (`GITHUB_REF`,
 `GITHUB_REPOSITORY`, `GITHUB_ACTOR`, `GITHUB_TOKEN`, …), so inside a workflow no flags are required.
 Boolean flags are negated with `--no-` (e.g. `--no-cleanup`, `--no-gitTag`).
+
+`--clone` is usually what you want outside a workflow: without it the CLI builds the current working
+directory, with it the repository is cloned at `--ref` into `.output` and built from there.
 
 Run `dimp --help` for the full list.
 

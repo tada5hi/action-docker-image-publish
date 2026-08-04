@@ -29,6 +29,7 @@ describe('src/cli/options.ts', () => {
             expect(options.buildArgs).toEqual([]);
             expect(options.cleanup).toBe(true);
             expect(options.gitTag).toBe(true);
+            expect(options.clone).toBe(false);
         });
 
         it('should split the multi value args', () => {
@@ -42,10 +43,15 @@ describe('src/cli/options.ts', () => {
         });
 
         it('should accept booleans as parsed by citty', () => {
-            const options = buildOptionsFromArgs({ cleanup: false, gitTag: false });
+            const options = buildOptionsFromArgs({
+                cleanup: false, 
+                gitTag: false, 
+                clone: true, 
+            });
 
             expect(options.cleanup).toBe(false);
             expect(options.gitTag).toBe(false);
+            expect(options.clone).toBe(true);
         });
 
         it('should accept booleans as strings', () => {

@@ -38,16 +38,28 @@ export async function publish(
         throw new Error(`The git ref ${options.ref} could not be parsed.`);
     }
 
-    logger.info('Cloning repository...');
+    // On a runner the repository is already checked out at this ref, so the
+    // build context is the working directory. Cloning is for standalone use,
+    // where there is no checkout to build from.
+    let source = options.root;
 
-    await git.clone({
-        url: cleanDoubleSlashes(`${options.serverUrl}/${options.repository}`),
-        directory: CLONE_DIRECTORY,
-        cwd: options.root,
-        branch: ref.type === 'branch' ? ref.value : undefined,
-        user: options.gitUser,
-        password: options.gitPassword,
-    });
+    if (options.clone) {
+        logger.info('Cloning repository...');
+
+        await git.clone({
+            url: cleanDoubleSlashes(`${options.serverUrl}/${options.repository}`),
+            directory: CLONE_DIRECTORY,
+            cwd: options.root,
+            // --branch takes a tag name just as well as a branch name. Passing
+            // it for tags is what pins the clone to the tagged commit instead
+            // of leaving it on the default branch.
+            branch: ref.type === 'pull' ? undefined : ref.value,
+            user: options.gitUser,
+            password: options.gitPassword,
+        });
+
+        source = path.join(options.root, CLONE_DIRECTORY);
+    }
 
     const imageId = md5(options.ref);
     const imageExists = await docker.imageExists(imageId);
@@ -68,7 +80,7 @@ export async function publish(
         if (!imageExists) {
             logger.info('Image does not exist.');
 
-            let cwd = path.join(options.root, CLONE_DIRECTORY);
+            let cwd = source;
             if (options.dockerFilePath.length > 0) {
                 cwd = path.join(cwd, options.dockerFilePath);
             }
