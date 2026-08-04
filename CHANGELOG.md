@@ -36,6 +36,21 @@
 
 * clone repo in output directory ([6286c63](https://github.com/Tada5hi/action-docker-release/commit/6286c6378934f2b019e7988f9f77b537dd850937))
 
+## [4.0.0](https://github.com/tada5hi/dimp/compare/v3.4.0...v4.0.0) (2026-08-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* the action builds the checked out workspace, so workflows must run actions/checkout first. Workflows which relied on the implicit clone should set "clone: true".
+* the npm package is now published as "dimp" and the binary is "dimp" rather than "action-docker-image-publish". The old npm package stays frozen at 3.4.0. GitHub redirects the old repository path, so
+* action.yml is a composite action instead of a docker action, so it no longer builds a container image of itself before doing any work. The Dockerfile and the container image published to ghcr are gone with it; use npx action-docker-image-publish instead. The unused "token" input is deprecated and "node-version" was added.
+
+### Features
+
+* build the workspace by default, make cloning opt-in ([680bffb](https://github.com/tada5hi/dimp/commit/680bffba50889c09880ad312dba9e4fcb66ba919))
+* rename the project to dimp ([49ea54c](https://github.com/tada5hi/dimp/commit/49ea54c6359b53dfc0404430acd825188fc5b069))
+* restructure as library, citty cli and composite action ([2d98f16](https://github.com/tada5hi/dimp/commit/2d98f16196b2e75202ffc8c125341088fe4fbc64))
+
 ## [3.4.0](https://github.com/tada5hi/action-docker-image-publish/compare/v3.3.0...v3.4.0) (2025-08-08)
 
 
